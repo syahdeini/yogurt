@@ -2,6 +2,7 @@ import { attendeeMembership as stamp } from '../../shared/people'
 import type { Meeting, Store } from '../store'
 import type { NotesModel } from './model'
 import type { NoteSaveResult, NoteSide, NoteStatus, NoteView } from '../../shared/types'
+import { titleFromSummary } from '../../engine/summaryProvider'
 import { cleanTitle, enhance, languageName, titlePrompt, type Llm, type PartSummary } from './enhance'
 import { meetingWords } from '../vocab'
 import type { Queue } from './queue'
@@ -45,6 +46,12 @@ export function hookNotes(p: {
   peopleRewriteMs?: number
   /** the person's own name, so the invite's other person is known */
   me?: () => string
+  /** Preferred by Nature cloud: upload the recording and use the API's summary instead of the on-device model */
+  cloud?: {
+    enabled(): boolean
+    prepare(id: string, signal: AbortSignal): Promise<void>
+    summarize(id: string, input: { title: string; instruction?: string; language?: string }, signal: AbortSignal): Promise<{ markdown: string }>
+  }
 }) {
   const stopped = new Set<string>()
   const stopping = new Map<string, Promise<void>>()
@@ -121,6 +128,7 @@ export function hookNotes(p: {
     const m = p.store.meeting(id)
     if (!m || m.state === 'recording' || resuming.has(id)) return
     const was = currentNotes(id)
+    if (p.cloud?.enabled()) return writeCloud(id, m, was, signal, quiet, note)
     const mine = was.mine
     const segments = p.store.segments(id)
     // nothing said and nothing typed: there is nothing to write up
@@ -176,6 +184,51 @@ export function hookNotes(p: {
       // stopped for a recording: it runs again after
       if (signal.aborted) { if (!stopped.has(id)) set(id, 'waiting'); throw e }
       console.error('writing the notes failed', id, e)
+      set(id, 'failed')
+      throw e
+    } finally { if (writingPeople.get(id) === used) writingPeople.delete(id) }
+  }
+
+  const writeCloud = async (id: string, m: Meeting, was: ReturnType<typeof currentNotes>, signal: AbortSignal, quiet: boolean, note?: string) => {
+    const used = { stamp: stamp(m.attendees) }
+    writingPeople.set(id, used)
+    try {
+      console.info('NOTES', `writing the notes of ${id} in the cloud`)
+      await p.cloud!.prepare(id, signal)
+      signal.throwIfAborted()
+      const segments = p.store.segments(id)
+      const mine = currentNotes(id).mine
+      if (!segments.length && !mine.trim()) { if (!quiet) finish(m, 'empty'); return }
+      if (!quiet) set(id, 'writing')
+      const language = p.store.meeting(id)?.language ?? m.language ?? p.language(id) ?? undefined
+      const result = await p.cloud!.summarize(id, { title: m.title, instruction: note, language: language ?? undefined }, signal)
+      signal.throwIfAborted()
+      const md = result.markdown
+      if (quiet) {
+        const now = currentNotes(id)
+        if (signal.aborted || live.has(id)) return
+        if (now.edited || now.enhanced !== was.enhanced) return
+        stampBefore.set(id, p.store.writtenWith(id))
+        p.store.setNotes(id, { enhanced: md, edited: false })
+        p.store.setWrittenWith(id, used.stamp)
+        p.send({ ...view(id), rewrittenFrom: was.enhanced ?? '' })
+        p.summarized?.(id)
+        return
+      }
+      p.store.setNotes(id, { enhanced: md, edited: false })
+      p.store.setWrittenWith(id, used.stamp)
+      const current = p.store.meeting(id) ?? m
+      const title = titleFromSummary(md)
+      if (title && (current.titleSource === 'generic' || current.titleSource === 'auto')) {
+        p.store.updateMeeting(id, { title, titleSource: 'auto' })
+        p.changed(id)
+      }
+      finish(current, 'done')
+      p.summarized?.(id)
+    } catch (e) {
+      if (quiet) { if (!signal.aborted) console.error('writing the notes again for new people failed', id, e); throw e }
+      if (signal.aborted) { if (!stopped.has(id)) set(id, 'waiting'); throw e }
+      console.error('writing the cloud notes failed', id, e)
       set(id, 'failed')
       throw e
     } finally { if (writingPeople.get(id) === used) writingPeople.delete(id) }

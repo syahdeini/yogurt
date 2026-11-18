@@ -707,5 +707,16 @@
   "Yogurt couldn't reach that address. Check your connection and the address.": "Yogurt ওই ঠিকানায় পৌঁছাতে পারেনি। আপনার সংযোগ ও ঠিকানাটি দেখুন।",
   "{name} is connected. You can change this any time in Settings.": "{name} যুক্ত হয়েছে। সেটিংসে যেকোনো সময় এটি বদলাতে পারেন।",
   "Only see \"Public address in iCal format\"? Your organization turned off secret addresses, so this calendar can't be connected this way.": "শুধু \"Public address in iCal format\" দেখছেন? আপনার প্রতিষ্ঠান গোপন ঠিকানা বন্ধ করে রেখেছে, তাই এই ক্যালেন্ডারটি এভাবে যুক্ত করা যাবে না।",
-  "That's the public address, which only works if your calendar is public. Copy \"Secret address in iCal format\" instead.": "এটি পাবলিক ঠিকানা, যা শুধু আপনার ক্যালেন্ডার পাবলিক হলে কাজ করে। এর বদলে \"Secret address in iCal format\" কপি করুন।"
+  "That's the public address, which only works if your calendar is public. Copy \"Secret address in iCal format\" instead.": "এটি পাবলিক ঠিকানা, যা শুধু আপনার ক্যালেন্ডার পাবলিক হলে কাজ করে। এর বদলে \"Secret address in iCal format\" কপি করুন।",
+  "Cloud notes": "ক্লাউড নোট",
+  "Use cloud notes": "ক্লাউড নোট ব্যবহার করুন",
+  "Sign in": "সাইন ইন",
+  "Sign out": "সাইন আউট",
+  "Signed in as {name}": "{name} হিসেবে সাইন ইন করা আছে",
+  "Preferred by Nature cloud writes the transcript and summary. Your copy stays on this computer.": "Preferred by Nature ক্লাউড প্রতিলিপি ও সারাংশ লেখে। আপনার কপি এই কম্পিউটারে থাকে।",
+  "Restart Yogurt to switch between this computer and the cloud.": "এই কম্পিউটার এবং ক্লাউডের মধ্যে বদলাতে Yogurt আবার চালু করুন।",
+  "Sign-in was cancelled.": "সাইন ইন বাতিল করা হয়েছে।",
+  "Yogurt couldn't use the system keychain to keep you signed in.": "Yogurt আপনাকে সাইন ইন রাখতে সিস্টেম কীচেইন ব্যবহার করতে পারেনি।",
+  "Add the cloud tenant, client and API address first.": "আগে ক্লাউড টেন্যান্ট, ক্লায়েন্ট এবং API ঠিকানা যোগ করুন।",
+  "Sign-in didn't finish. Try again.": "সাইন ইন শেষ হয়নি। আবার চেষ্টা করুন।"
 }

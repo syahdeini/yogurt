@@ -735,5 +735,16 @@
   "Yogurt couldn't reach that address. Check your connection and the address.": "Yogurt n’a pas pu joindre cette adresse. Vérifiez votre connexion et l’adresse.",
   "{name} is connected. You can change this any time in Settings.": "{name} est connecté. Vous pouvez changer cela à tout moment dans les Réglages.",
   "Only see \"Public address in iCal format\"? Your organization turned off secret addresses, so this calendar can't be connected this way.": "Vous ne voyez que « Public address in iCal format » ? Votre organisation a désactivé les adresses secrètes : ce calendrier ne peut pas être connecté de cette façon.",
-  "That's the public address, which only works if your calendar is public. Copy \"Secret address in iCal format\" instead.": "C’est l’adresse publique, qui ne fonctionne que si votre calendrier est public. Copiez plutôt « Secret address in iCal format »."
+  "That's the public address, which only works if your calendar is public. Copy \"Secret address in iCal format\" instead.": "C’est l’adresse publique, qui ne fonctionne que si votre calendrier est public. Copiez plutôt « Secret address in iCal format ».",
+  "Cloud notes": "Notes dans le cloud",
+  "Use cloud notes": "Utiliser les notes dans le cloud",
+  "Sign in": "Se connecter",
+  "Sign out": "Se déconnecter",
+  "Signed in as {name}": "Connecté en tant que {name}",
+  "Preferred by Nature cloud writes the transcript and summary. Your copy stays on this computer.": "Le cloud de Preferred by Nature rédige la transcription et le compte rendu. Votre copie reste sur cet ordinateur.",
+  "Restart Yogurt to switch between this computer and the cloud.": "Redémarrez Yogurt pour passer de cet ordinateur au cloud.",
+  "Sign-in was cancelled.": "La connexion a été annulée.",
+  "Yogurt couldn't use the system keychain to keep you signed in.": "Yogurt n’a pas pu utiliser le trousseau du système pour vous garder connecté.",
+  "Add the cloud tenant, client and API address first.": "Ajoutez d’abord le locataire cloud, le client et l’adresse de l’API.",
+  "Sign-in didn't finish. Try again.": "La connexion ne s’est pas terminée. Réessayez."
 }

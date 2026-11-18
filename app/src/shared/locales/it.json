@@ -738,5 +738,16 @@
   "Yogurt couldn't reach that address. Check your connection and the address.": "Yogurt non è riuscito a raggiungere quell’indirizzo. Controlla la connessione e l’indirizzo.",
   "{name} is connected. You can change this any time in Settings.": "{name} è collegato. Puoi cambiarlo quando vuoi in Impostazioni.",
   "Only see \"Public address in iCal format\"? Your organization turned off secret addresses, so this calendar can't be connected this way.": "Vedi solo \"Public address in iCal format\"? La tua organizzazione ha disattivato gli indirizzi segreti, quindi questo calendario non si può collegare così.",
-  "That's the public address, which only works if your calendar is public. Copy \"Secret address in iCal format\" instead.": "Quello è l’indirizzo pubblico, che funziona solo se il calendario è pubblico. Copia invece \"Secret address in iCal format\"."
+  "That's the public address, which only works if your calendar is public. Copy \"Secret address in iCal format\" instead.": "Quello è l’indirizzo pubblico, che funziona solo se il calendario è pubblico. Copia invece \"Secret address in iCal format\".",
+  "Cloud notes": "Note nel cloud",
+  "Use cloud notes": "Usa le note nel cloud",
+  "Sign in": "Accedi",
+  "Sign out": "Esci",
+  "Signed in as {name}": "Accesso effettuato come {name}",
+  "Preferred by Nature cloud writes the transcript and summary. Your copy stays on this computer.": "Il cloud di Preferred by Nature scrive la trascrizione e il riepilogo. La tua copia resta su questo computer.",
+  "Restart Yogurt to switch between this computer and the cloud.": "Riavvia Yogurt per passare da questo computer al cloud.",
+  "Sign-in was cancelled.": "Accesso annullato.",
+  "Yogurt couldn't use the system keychain to keep you signed in.": "Yogurt non ha potuto usare il portachiavi di sistema per tenerti connesso.",
+  "Add the cloud tenant, client and API address first.": "Aggiungi prima il tenant cloud, il client e l’indirizzo API.",
+  "Sign-in didn't finish. Try again.": "L’accesso non è terminato. Riprova."
 }

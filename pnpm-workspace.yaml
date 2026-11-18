@@ -1,6 +1,7 @@
 packages:
   - packages/*
   - app
+  - cloud
 onlyBuiltDependencies:
   - electron
   - esbuild

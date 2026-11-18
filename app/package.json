@@ -13,6 +13,7 @@
     "typecheck": "tsc -p ."
   },
   "dependencies": {
+    "@azure/msal-node": "^3.5.3",
     "chrono-node": "2.10.3",
     "electron-updater": "6.8.10",
     "ical.js": "2.2.1",

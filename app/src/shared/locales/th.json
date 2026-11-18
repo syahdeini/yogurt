@@ -677,5 +677,16 @@
   "Yogurt couldn't reach that address. Check your connection and the address.": "Yogurt เข้าถึงที่อยู่นั้นไม่ได้ ตรวจสอบการเชื่อมต่อและที่อยู่",
   "{name} is connected. You can change this any time in Settings.": "เชื่อมต่อ {name} แล้ว เปลี่ยนได้ทุกเมื่อในการตั้งค่า",
   "Only see \"Public address in iCal format\"? Your organization turned off secret addresses, so this calendar can't be connected this way.": "เห็นแค่ \"Public address in iCal format\" ใช่ไหม องค์กรของคุณปิดที่อยู่ลับไว้ จึงเชื่อมต่อปฏิทินนี้ด้วยวิธีนี้ไม่ได้",
-  "That's the public address, which only works if your calendar is public. Copy \"Secret address in iCal format\" instead.": "นั่นคือที่อยู่สาธารณะ ซึ่งใช้ได้เฉพาะเมื่อปฏิทินเป็นแบบสาธารณะ ให้คัดลอก \"Secret address in iCal format\" แทน"
+  "That's the public address, which only works if your calendar is public. Copy \"Secret address in iCal format\" instead.": "นั่นคือที่อยู่สาธารณะ ซึ่งใช้ได้เฉพาะเมื่อปฏิทินเป็นแบบสาธารณะ ให้คัดลอก \"Secret address in iCal format\" แทน",
+  "Cloud notes": "บันทึกบนคลาวด์",
+  "Use cloud notes": "ใช้บันทึกบนคลาวด์",
+  "Sign in": "ลงชื่อเข้าใช้",
+  "Sign out": "ลงชื่อออก",
+  "Signed in as {name}": "ลงชื่อเข้าใช้ในชื่อ {name}",
+  "Preferred by Nature cloud writes the transcript and summary. Your copy stays on this computer.": "คลาวด์ของ Preferred by Nature เขียนถอดความและสรุป สำเนาของคุณยังอยู่บนคอมพิวเตอร์เครื่องนี้",
+  "Restart Yogurt to switch between this computer and the cloud.": "เริ่ม Yogurt ใหม่เพื่อสลับระหว่างคอมพิวเตอร์เครื่องนี้กับคลาวด์",
+  "Sign-in was cancelled.": "ยกเลิกการลงชื่อเข้าใช้แล้ว",
+  "Yogurt couldn't use the system keychain to keep you signed in.": "Yogurt ใช้พวงกุญแจของระบบเพื่อให้คุณลงชื่อเข้าใช้ต่อไม่ได้",
+  "Add the cloud tenant, client and API address first.": "เพิ่มผู้เช่าคลาวด์ ไคลเอ็นต์ และที่อยู่ API ก่อน",
+  "Sign-in didn't finish. Try again.": "การลงชื่อเข้าใช้ไม่เสร็จ ลองอีกครั้ง"
 }

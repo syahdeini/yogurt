@@ -719,5 +719,16 @@
   "Yogurt couldn't reach that address. Check your connection and the address.": "Yogurt nådde ikke den adressen. Sjekk tilkoblingen og adressen.",
   "{name} is connected. You can change this any time in Settings.": "{name} er koblet til. Du kan endre dette når som helst i Innstillinger.",
   "Only see \"Public address in iCal format\"? Your organization turned off secret addresses, so this calendar can't be connected this way.": "Ser du bare «Public address in iCal format»? Organisasjonen din har slått av hemmelige adresser, så denne kalenderen kan ikke kobles til på denne måten.",
-  "That's the public address, which only works if your calendar is public. Copy \"Secret address in iCal format\" instead.": "Det er den offentlige adressen, som bare fungerer hvis kalenderen er offentlig. Kopier «Secret address in iCal format» i stedet."
+  "That's the public address, which only works if your calendar is public. Copy \"Secret address in iCal format\" instead.": "Det er den offentlige adressen, som bare fungerer hvis kalenderen er offentlig. Kopier «Secret address in iCal format» i stedet.",
+  "Cloud notes": "Skynotater",
+  "Use cloud notes": "Bruk skynotater",
+  "Sign in": "Logg på",
+  "Sign out": "Logg av",
+  "Signed in as {name}": "Logget på som {name}",
+  "Preferred by Nature cloud writes the transcript and summary. Your copy stays on this computer.": "Preferred by Nature-skyen skriver transkripsjonen og sammendraget. Kopien din blir på denne datamaskinen.",
+  "Restart Yogurt to switch between this computer and the cloud.": "Start Yogurt på nytt for å bytte mellom denne datamaskinen og skyen.",
+  "Sign-in was cancelled.": "Påloggingen ble avbrutt.",
+  "Yogurt couldn't use the system keychain to keep you signed in.": "Yogurt kunne ikke bruke systemets nøkkelring for å holde deg pålogget.",
+  "Add the cloud tenant, client and API address first.": "Legg til sky-tenant, klient og API-adresse først.",
+  "Sign-in didn't finish. Try again.": "Påloggingen ble ikke fullført. Prøv igjen."
 }

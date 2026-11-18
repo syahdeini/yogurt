@@ -747,5 +747,16 @@
   "Yogurt couldn't reach that address. Check your connection and the address.": "Yogurt не зміг відкрити цю адресу. Перевірте з’єднання та адресу.",
   "{name} is connected. You can change this any time in Settings.": "{name}: під’єднано. Це можна змінити будь-коли в Параметрах.",
   "Only see \"Public address in iCal format\"? Your organization turned off secret addresses, so this calendar can't be connected this way.": "Бачите лише «Public address in iCal format»? Ваша організація вимкнула секретні адреси, тож цей календар так під’єднати не вийде.",
-  "That's the public address, which only works if your calendar is public. Copy \"Secret address in iCal format\" instead.": "Це загальнодоступна адреса, вона працює лише для загальнодоступного календаря. Скопіюйте натомість «Secret address in iCal format»."
+  "That's the public address, which only works if your calendar is public. Copy \"Secret address in iCal format\" instead.": "Це загальнодоступна адреса, вона працює лише для загальнодоступного календаря. Скопіюйте натомість «Secret address in iCal format».",
+  "Cloud notes": "Хмарні нотатки",
+  "Use cloud notes": "Використовувати хмарні нотатки",
+  "Sign in": "Увійти",
+  "Sign out": "Вийти",
+  "Signed in as {name}": "Вхід виконано як {name}",
+  "Preferred by Nature cloud writes the transcript and summary. Your copy stays on this computer.": "Хмара Preferred by Nature пише розшифровку й підсумок. Ваша копія лишається на цьому комп’ютері.",
+  "Restart Yogurt to switch between this computer and the cloud.": "Перезапустіть Yogurt, щоб перемкнутися між цим комп’ютером і хмарою.",
+  "Sign-in was cancelled.": "Вхід скасовано.",
+  "Yogurt couldn't use the system keychain to keep you signed in.": "Yogurt не зміг скористатися в’язкою ключів системи, щоб лишити вас у системі.",
+  "Add the cloud tenant, client and API address first.": "Спочатку додайте хмарного клієнта, програму й адресу API.",
+  "Sign-in didn't finish. Try again.": "Вхід не завершився. Спробуйте ще раз."
 }

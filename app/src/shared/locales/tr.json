@@ -707,5 +707,16 @@
   "Yogurt couldn't reach that address. Check your connection and the address.": "Yogurt bu adrese ulaşamadı. Bağlantınızı ve adresi kontrol edin.",
   "{name} is connected. You can change this any time in Settings.": "{name} bağlandı. Bunu istediğiniz zaman Ayarlar’dan değiştirebilirsiniz.",
   "Only see \"Public address in iCal format\"? Your organization turned off secret addresses, so this calendar can't be connected this way.": "Yalnızca \"Public address in iCal format\" mı görünüyor? Kuruluşunuz gizli adresleri kapatmış, bu yüzden bu takvim bu yolla bağlanamaz.",
-  "That's the public address, which only works if your calendar is public. Copy \"Secret address in iCal format\" instead.": "Bu, yalnızca takviminiz herkese açıksa çalışan genel adres. Bunun yerine \"Secret address in iCal format\" adresini kopyalayın."
+  "That's the public address, which only works if your calendar is public. Copy \"Secret address in iCal format\" instead.": "Bu, yalnızca takviminiz herkese açıksa çalışan genel adres. Bunun yerine \"Secret address in iCal format\" adresini kopyalayın.",
+  "Cloud notes": "Bulut notları",
+  "Use cloud notes": "Bulut notlarını kullan",
+  "Sign in": "Oturum aç",
+  "Sign out": "Oturumu kapat",
+  "Signed in as {name}": "{name} olarak oturum açıldı",
+  "Preferred by Nature cloud writes the transcript and summary. Your copy stays on this computer.": "Preferred by Nature bulutu dökümü ve özeti yazar. Kopyanız bu bilgisayarda kalır.",
+  "Restart Yogurt to switch between this computer and the cloud.": "Bu bilgisayar ile bulut arasında geçmek için Yogurt’u yeniden başlatın.",
+  "Sign-in was cancelled.": "Oturum açma iptal edildi.",
+  "Yogurt couldn't use the system keychain to keep you signed in.": "Yogurt oturumunuzu açık tutmak için sistem anahtarlığını kullanamadı.",
+  "Add the cloud tenant, client and API address first.": "Önce bulut kiracısını, istemciyi ve API adresini ekleyin.",
+  "Sign-in didn't finish. Try again.": "Oturum açma tamamlanmadı. Yeniden deneyin."
 }

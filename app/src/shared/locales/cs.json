@@ -750,5 +750,16 @@
   "Yogurt couldn't reach that address. Check your connection and the address.": "Yogurt se k té adrese nedostal. Zkontrolujte připojení a adresu.",
   "{name} is connected. You can change this any time in Settings.": "{name} je připojený. Můžete to kdykoli změnit v Nastavení.",
   "Only see \"Public address in iCal format\"? Your organization turned off secret addresses, so this calendar can't be connected this way.": "Vidíte jen „Public address in iCal format“? Vaše organizace vypnula tajné adresy, takže tento kalendář takto připojit nejde.",
-  "That's the public address, which only works if your calendar is public. Copy \"Secret address in iCal format\" instead.": "To je veřejná adresa, která funguje jen u veřejného kalendáře. Zkopírujte místo ní „Secret address in iCal format“."
+  "That's the public address, which only works if your calendar is public. Copy \"Secret address in iCal format\" instead.": "To je veřejná adresa, která funguje jen u veřejného kalendáře. Zkopírujte místo ní „Secret address in iCal format“.",
+  "Cloud notes": "Cloudové poznámky",
+  "Use cloud notes": "Používat cloudové poznámky",
+  "Sign in": "Přihlásit se",
+  "Sign out": "Odhlásit se",
+  "Signed in as {name}": "Přihlášeno jako {name}",
+  "Preferred by Nature cloud writes the transcript and summary. Your copy stays on this computer.": "Cloud Preferred by Nature napíše přepis a shrnutí. Vaše kopie zůstane v tomto počítači.",
+  "Restart Yogurt to switch between this computer and the cloud.": "Restartujte Yogurt pro přepnutí mezi tímto počítačem a cloudem.",
+  "Sign-in was cancelled.": "Přihlášení bylo zrušeno.",
+  "Yogurt couldn't use the system keychain to keep you signed in.": "Yogurt nemohl použít systémovou klíčovou kartu, aby vás nechal přihlášené.",
+  "Add the cloud tenant, client and API address first.": "Nejprve přidejte tenanta cloudu, klienta a adresu API.",
+  "Sign-in didn't finish. Try again.": "Přihlášení se nedokončilo. Zkuste to znovu."
 }

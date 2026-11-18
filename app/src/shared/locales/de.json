@@ -719,5 +719,16 @@
   "Yogurt couldn't reach that address. Check your connection and the address.": "Yogurt konnte diese Adresse nicht erreichen. Prüfe deine Verbindung und die Adresse.",
   "{name} is connected. You can change this any time in Settings.": "{name} ist verbunden. Du kannst das jederzeit in den Einstellungen ändern.",
   "Only see \"Public address in iCal format\"? Your organization turned off secret addresses, so this calendar can't be connected this way.": "Siehst du nur „Public address in iCal format“? Deine Organisation hat geheime Adressen abgeschaltet, daher lässt sich dieser Kalender so nicht verbinden.",
-  "That's the public address, which only works if your calendar is public. Copy \"Secret address in iCal format\" instead.": "Das ist die öffentliche Adresse, die nur bei einem öffentlichen Kalender funktioniert. Kopiere stattdessen „Secret address in iCal format“."
+  "That's the public address, which only works if your calendar is public. Copy \"Secret address in iCal format\" instead.": "Das ist die öffentliche Adresse, die nur bei einem öffentlichen Kalender funktioniert. Kopiere stattdessen „Secret address in iCal format“.",
+  "Cloud notes": "Cloud-Notizen",
+  "Use cloud notes": "Cloud-Notizen verwenden",
+  "Sign in": "Anmelden",
+  "Sign out": "Abmelden",
+  "Signed in as {name}": "Angemeldet als {name}",
+  "Preferred by Nature cloud writes the transcript and summary. Your copy stays on this computer.": "Die Cloud von Preferred by Nature schreibt Transkript und Zusammenfassung. Ihre Kopie bleibt auf diesem Computer.",
+  "Restart Yogurt to switch between this computer and the cloud.": "Starten Sie Yogurt neu, um zwischen diesem Computer und der Cloud zu wechseln.",
+  "Sign-in was cancelled.": "Die Anmeldung wurde abgebrochen.",
+  "Yogurt couldn't use the system keychain to keep you signed in.": "Yogurt konnte die System-Schlüsselbund nicht verwenden, um Sie angemeldet zu lassen.",
+  "Add the cloud tenant, client and API address first.": "Fügen Sie zuerst den Cloud-Mandanten, den Client und die API-Adresse hinzu.",
+  "Sign-in didn't finish. Try again.": "Die Anmeldung wurde nicht abgeschlossen. Versuchen Sie es erneut."
 }

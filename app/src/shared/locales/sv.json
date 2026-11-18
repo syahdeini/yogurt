@@ -719,5 +719,16 @@
   "Yogurt couldn't reach that address. Check your connection and the address.": "Yogurt nådde inte den adressen. Kontrollera anslutningen och adressen.",
   "{name} is connected. You can change this any time in Settings.": "{name} är ansluten. Du kan ändra det när som helst i Inställningar.",
   "Only see \"Public address in iCal format\"? Your organization turned off secret addresses, so this calendar can't be connected this way.": "Ser du bara ”Public address in iCal format”? Din organisation har stängt av hemliga adresser, så den här kalendern kan inte anslutas på det här sättet.",
-  "That's the public address, which only works if your calendar is public. Copy \"Secret address in iCal format\" instead.": "Det är den offentliga adressen, som bara fungerar om kalendern är offentlig. Kopiera ”Secret address in iCal format” i stället."
+  "That's the public address, which only works if your calendar is public. Copy \"Secret address in iCal format\" instead.": "Det är den offentliga adressen, som bara fungerar om kalendern är offentlig. Kopiera ”Secret address in iCal format” i stället.",
+  "Cloud notes": "Molnanteckningar",
+  "Use cloud notes": "Använd molnanteckningar",
+  "Sign in": "Logga in",
+  "Sign out": "Logga ut",
+  "Signed in as {name}": "Inloggad som {name}",
+  "Preferred by Nature cloud writes the transcript and summary. Your copy stays on this computer.": "Preferred by Natures moln skriver transkriberingen och sammanfattningen. Din kopia stannar på den här datorn.",
+  "Restart Yogurt to switch between this computer and the cloud.": "Starta om Yogurt för att växla mellan den här datorn och molnet.",
+  "Sign-in was cancelled.": "Inloggningen avbröts.",
+  "Yogurt couldn't use the system keychain to keep you signed in.": "Yogurt kunde inte använda systemets nyckelring för att hålla dig inloggad.",
+  "Add the cloud tenant, client and API address first.": "Lägg först till molnklienten, klienten och API-adressen.",
+  "Sign-in didn't finish. Try again.": "Inloggningen slutfördes inte. Försök igen."
 }

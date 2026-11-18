@@ -707,5 +707,16 @@
   "Yogurt couldn't reach that address. Check your connection and the address.": "A Yogurt nem érte el ezt a címet. Ellenőrizd a kapcsolatot és a címet.",
   "{name} is connected. You can change this any time in Settings.": "{name} csatlakoztatva. Bármikor módosíthatod a Beállításokban.",
   "Only see \"Public address in iCal format\"? Your organization turned off secret addresses, so this calendar can't be connected this way.": "Csak a „Public address in iCal format” látszik? A szervezeted kikapcsolta a titkos címeket, így ez a naptár így nem csatlakoztatható.",
-  "That's the public address, which only works if your calendar is public. Copy \"Secret address in iCal format\" instead.": "Ez a nyilvános cím, ami csak nyilvános naptárnál működik. Másold ki helyette a „Secret address in iCal format” címet."
+  "That's the public address, which only works if your calendar is public. Copy \"Secret address in iCal format\" instead.": "Ez a nyilvános cím, ami csak nyilvános naptárnál működik. Másold ki helyette a „Secret address in iCal format” címet.",
+  "Cloud notes": "Felhőjegyzetek",
+  "Use cloud notes": "Felhőjegyzetek használata",
+  "Sign in": "Bejelentkezés",
+  "Sign out": "Kijelentkezés",
+  "Signed in as {name}": "Bejelentkezve: {name}",
+  "Preferred by Nature cloud writes the transcript and summary. Your copy stays on this computer.": "A Preferred by Nature felhője megírja a leiratot és az összefoglalót. A másolat ezen a számítógépen marad.",
+  "Restart Yogurt to switch between this computer and the cloud.": "Indítsa újra a Yogurtot a számítógép és a felhő közötti váltáshoz.",
+  "Sign-in was cancelled.": "A bejelentkezés megszakadt.",
+  "Yogurt couldn't use the system keychain to keep you signed in.": "A Yogurt nem tudta használni a rendszer kulcstartóját, hogy bejelentkezve tartsa.",
+  "Add the cloud tenant, client and API address first.": "Először adja meg a felhő bérlőjét, az ügyfelet és az API-címet.",
+  "Sign-in didn't finish. Try again.": "A bejelentkezés nem fejeződött be. Próbálja újra."
 }

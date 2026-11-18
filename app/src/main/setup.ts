@@ -32,6 +32,8 @@ export type SetupDeps = {
   upgradePreference?: { load(): boolean; save(skipped: boolean): void }
   /** Windows and Linux: the speed check picks the speech model (a Mac never has it: turbo, as always) */
   speed?: SpeedDeps
+  /** cloud mode: recording works without downloading a speech or notes model */
+  cloud?: boolean
 }
 
 /** Where the models ended up, for the parts of the app that use them; llm once the first notes model is in (after ready) */
@@ -198,6 +200,10 @@ export class SetupController {
 
   private async run() {
     this.set({ phase: 'checking', fraction: 0 })
+    if (this.deps.cloud) {
+      this.set({ phase: 'ready', fraction: 1 })
+      return
+    }
     try {
       const [hw, catalog] = await Promise.all([this.deps.getHardware(), this.deps.getCatalog()])
       const llm = pick(hw, catalog.models)

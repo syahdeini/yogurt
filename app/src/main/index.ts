@@ -21,6 +21,8 @@ import { pathToFileURL } from 'node:url'
 import { isFake, userDataDir } from './paths'
 import { logToFile } from './log'
 import { loadSettings, localeOf, keepsRecording, recordingReminderOn, spokenSetting, stopsWhenCallEnds, updateSettings, visibilityOf, summaryLanguageSetting } from './settings'
+import { cloudModeEnabled } from './cloud/config'
+import { hookCloud } from './cloud/ipc'
 import { CALL_GONE_MS, useCallApps, watchEveryMs } from './detect'
 import { systemLocale } from './locale'
 import { language as uiLanguage, onLanguage, setLanguage, t } from '../shared/i18n'
@@ -167,7 +169,9 @@ function createWindow() {
 let probeGpu: () => Promise<GpuProbe | null> = async () => null
 function createSetup(): SetupController {
   const modelsDir = join(userDataDir(), 'models')
+  const settingsFile = join(userDataDir(), 'settings.json')
   return new SetupController({
+    cloud: cloudModeEnabled(loadSettings(settingsFile)),
     modelsDir,
     upgradePreference: {
       load: () => loadSettings(join(userDataDir(), 'settings.json')).notesUpgradeSkipped === true,
@@ -529,7 +533,7 @@ app.whenReady().then(() => {
   initMeetings(store)
   // the person's own names, never given to the other side: the one in Settings and the Mac's
   const settingsFile = join(userDataDir(), 'settings.json')
-  setCalendarSelection(() => loadSettings(settingsFile))
+  const cloudOn = cloudModeEnabled(loadSettings(settingsFile))
   setCalendarOwnEmail(email => {
     try { if (store.rememberOwnEmail(email)) win?.webContents.send('meetings:changed') }
     catch (e) { console.warn('could not save own calendar address', e) }
@@ -547,7 +551,7 @@ app.whenReady().then(() => {
   })
   // Windows and Linux: whisper left the graphics card in a meeting, so the speed check (timed with it) runs again next start
   onWhisperGpuOff(() => speedStore(speedFile()).forget())
-  hookTranscription({ store, modelPath: () => setup.installed()?.asr, send: (seg) => {
+  if (!cloudOn) hookTranscription({ store, modelPath: () => setup.installed()?.asr, send: (seg) => {
     const order = seg.track === 'them' && seg.speaker ? store.speakerOrder(seg.meetingId, seg.speaker) : []
     const colored = { ...seg, speakerColor: speakerColor(seg.track, seg.speaker, order) }
     win?.webContents.send('transcript:segment', colored); sendWidgetTranscript('transcript:segment', colored)
@@ -564,6 +568,9 @@ app.whenReady().then(() => {
       ui: () => localeOf(loadSettings(join(userDataDir(), 'settings.json')), systemLocale()), last: () => store.lastLanguage(),
       ...(isFake() ? { locales: async () => ({ available: true, supported: ['en-US', 'es-ES'], installed: ['en-US'] }), install: async () => true } : {}),
     } })
+  const cloud = hookCloud({ file: settingsFile, userData: userDataDir(), meetingDir: (id) => join(userDataDir(), 'meetings', id), exts: isFake() && process.env.YOGURT_FAKE_AUDIO_M4A === '1' ? ['m4a'] : audioExts(process.platform, isFake()), store, windows: () => BrowserWindow.getAllWindows(), sendSegments: (id) => {
+    win?.webContents.send('transcript:speakers', id); sendWidgetTranscript('transcript:speakers', id); win?.webContents.send('meetings:changed')
+  }, openBrowser: (url) => shell.openExternal(url) })
   ipcMain.handle('transcript:get', (_e, id: unknown, o: unknown) => {
     if (!isId(id)) return []
     const order = store.speakerOrder(id)
@@ -589,7 +596,7 @@ app.whenReady().then(() => {
     // recording that can't go on ends the meeting, with the notes kept
     stopMeeting: (id) => { stopMeeting(id) } })
   // 32 GB and up: the notes model reads each meeting in as it happens (notes/readAhead.ts)
-  const readsAhead = !isFake() && readAheadAllowed(os.totalmem())
+  const readsAhead = !isFake() && !cloudOn && readAheadAllowed(os.totalmem())
   // the notes model: one job at a time, recording first; loaded when needed, the best one downloaded
   const engine = isFake() ? new FakeEngine() : new UtilityEngine(join(__dirname, 'engine.js'), { gpuFallback: process.platform !== 'darwin', cpuCrashes: process.platform === 'linux' })
   if (engine instanceof UtilityEngine) probeGpu = () => engine.probe().then((g) => {
@@ -603,7 +610,7 @@ app.whenReady().then(() => {
   // first run: the notes model lands after recording already works; jobs wait in the queue for it
   // the embedding model (meaning search across meetings) runs in the same worker and is let go with the notes model
   const embedder = createEmbedder({ engine, modelPath: () => setup.installed()?.embed, id: bundledCatalog.embedding.id, dims: bundledCatalog.embedding.dims })
-  const queue = createQueue({ recording: () => !!activeMeeting(), smallMac, idleMs: memory.idleMs, backlogMs: transcriptionBacklogMs, onIdle: () => { void model.unload().catch(e => console.error('letting the notes model go failed', e)); void embedder.unload() }, modelReady: () => !!setup.notesPath() })
+  const queue = createQueue({ recording: () => !!activeMeeting(), smallMac, idleMs: memory.idleMs, backlogMs: transcriptionBacklogMs, onIdle: () => { void model.unload().catch(e => console.error('letting the notes model go failed', e)); void embedder.unload() }, modelReady: () => !!setup.notesPath(), readyWithoutModel: (kind) => cloudOn && kind === 'enhance' })
   ipcMain.handle('setup:remove-upgrade', () => setup.removeUpgrade(remove => queue.enqueue(async () => {
     await model.unload()
     remove()
@@ -636,7 +643,8 @@ app.whenReady().then(() => {
     showLoading: platform !== 'darwin',
     summaryLanguage: () => summaryLanguageSetting(loadSettings(settingsFile)),
     store, queue, model, language: meetingLanguage, onStop: onMeetingStopSaved, named: (id) => callNames.finished(id), earlier: (id) => readAhead.parts(id), me,
-    transcribed: async (id) => { await recordingFinished(id); await transcriptFinished(id) },
+    cloud: cloudOn ? cloud : undefined,
+    transcribed: async (id) => { await recordingFinished(id); if (!cloudOn) await transcriptFinished(id) },
     send: (v) => win?.webContents.send('notes:changed', v),
     // the notes are written: the meeting goes into the library for chat across meetings
     changed: () => { win?.webContents.send('meetings:changed'); void indexer.schedule() },

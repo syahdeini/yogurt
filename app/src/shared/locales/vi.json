@@ -677,5 +677,16 @@
   "Yogurt couldn't reach that address. Check your connection and the address.": "Yogurt không truy cập được địa chỉ đó. Hãy kiểm tra kết nối và địa chỉ.",
   "{name} is connected. You can change this any time in Settings.": "Đã kết nối {name}. Bạn có thể đổi bất cứ lúc nào trong Cài đặt.",
   "Only see \"Public address in iCal format\"? Your organization turned off secret addresses, so this calendar can't be connected this way.": "Chỉ thấy \"Public address in iCal format\"? Tổ chức của bạn đã tắt địa chỉ bí mật, nên không thể kết nối lịch này theo cách này.",
-  "That's the public address, which only works if your calendar is public. Copy \"Secret address in iCal format\" instead.": "Đó là địa chỉ công khai, chỉ dùng được khi lịch của bạn ở chế độ công khai. Hãy sao chép \"Secret address in iCal format\" thay vào đó."
+  "That's the public address, which only works if your calendar is public. Copy \"Secret address in iCal format\" instead.": "Đó là địa chỉ công khai, chỉ dùng được khi lịch của bạn ở chế độ công khai. Hãy sao chép \"Secret address in iCal format\" thay vào đó.",
+  "Cloud notes": "Ghi chú trên đám mây",
+  "Use cloud notes": "Dùng ghi chú trên đám mây",
+  "Sign in": "Đăng nhập",
+  "Sign out": "Đăng xuất",
+  "Signed in as {name}": "Đã đăng nhập với tên {name}",
+  "Preferred by Nature cloud writes the transcript and summary. Your copy stays on this computer.": "Đám mây của Preferred by Nature viết bản ghi và tóm tắt. Bản sao của bạn ở lại trên máy tính này.",
+  "Restart Yogurt to switch between this computer and the cloud.": "Khởi động lại Yogurt để chuyển giữa máy tính này và đám mây.",
+  "Sign-in was cancelled.": "Đã hủy đăng nhập.",
+  "Yogurt couldn't use the system keychain to keep you signed in.": "Yogurt không dùng được móc khóa hệ thống để giữ bạn đăng nhập.",
+  "Add the cloud tenant, client and API address first.": "Hãy thêm tenant đám mây, máy khách và địa chỉ API trước.",
+  "Sign-in didn't finish. Try again.": "Đăng nhập chưa xong. Hãy thử lại."
 }

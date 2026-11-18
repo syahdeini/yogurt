@@ -677,5 +677,16 @@
   "Yogurt couldn't reach that address. Check your connection and the address.": "Yogurt はそのアドレスにアクセスできませんでした。接続とアドレスを確認してください。",
   "{name} is connected. You can change this any time in Settings.": "{name}を接続しました。設定でいつでも変更できます。",
   "Only see \"Public address in iCal format\"? Your organization turned off secret addresses, so this calendar can't be connected this way.": "「Public address in iCal format」しか表示されませんか？組織が非公開アドレスをオフにしているため、このカレンダーはこの方法では接続できません。",
-  "That's the public address, which only works if your calendar is public. Copy \"Secret address in iCal format\" instead.": "それは公開アドレスで、カレンダーが公開されている場合にしか使えません。代わりに「Secret address in iCal format」をコピーしてください。"
+  "That's the public address, which only works if your calendar is public. Copy \"Secret address in iCal format\" instead.": "それは公開アドレスで、カレンダーが公開されている場合にしか使えません。代わりに「Secret address in iCal format」をコピーしてください。",
+  "Cloud notes": "クラウドのメモ",
+  "Use cloud notes": "クラウドのメモを使う",
+  "Sign in": "サインイン",
+  "Sign out": "サインアウト",
+  "Signed in as {name}": "{name} としてサインイン中",
+  "Preferred by Nature cloud writes the transcript and summary. Your copy stays on this computer.": "Preferred by Nature のクラウドが文字起こしと要約を書きます。手元のコピーはこのコンピューターに残ります。",
+  "Restart Yogurt to switch between this computer and the cloud.": "このコンピューターとクラウドを切り替えるには Yogurt を再起動します。",
+  "Sign-in was cancelled.": "サインインはキャンセルされました。",
+  "Yogurt couldn't use the system keychain to keep you signed in.": "Yogurt はシステムのキーチェーンを使ってサインインを維持できませんでした。",
+  "Add the cloud tenant, client and API address first.": "先にクラウドのテナント、クライアント、API アドレスを追加してください。",
+  "Sign-in didn't finish. Try again.": "サインインが完了しませんでした。もう一度お試しください。"
 }
