@@ -132,7 +132,9 @@ Sign in from Settings → Cloud notes. The app opens the system browser, receive
 
 ## 5. Unsigned Windows installer
 
-On a Windows build machine, from the repo:
+GitHub can build it. Open Actions → **Pilot Windows installer** → **Run workflow** on `main`. That workflow is manual only: it does not run on push, is not part of the release workflow, and does not sign or publish. The installer is an artifact on the run (`Yogurt-windows-x64`). The form is filled with the pilot tenant, desktop client, API scope and `https://func-yogurt-pilot.azurewebsites.net/api`. Those values are written into the app at build time, so cloud mode is on after install. A repository variable of the same name (`YOGURT_ENTRA_TENANT_ID`, `YOGURT_ENTRA_CLIENT_ID`, `YOGURT_ENTRA_API_SCOPE`, `YOGURT_CLOUD_API_URL`) overrides the form. They are not secrets.
+
+To build it yourself on a Windows machine, from the repo:
 
 ```powershell
 pnpm install

@@ -36,4 +36,24 @@ describe('cloud mode', () => {
     expect(cloudConfigured(readCloudConfig(empty, {}))).toBe(false)
     expect(JSON.stringify(config)).not.toMatch(/api[-_]?key|secret|subscription/i)
   })
+
+  it('uses addresses baked into a pilot installer, unless the setting or YOGURT_CLOUD=0 says otherwise', () => {
+    const baked = {
+      enabled: true,
+      tenantId: '6a94fd93-b4dc-42db-9712-8defab2a3e93',
+      clientId: '9e9aa69e-3390-42f4-8076-a5f1f6ce16f6',
+      apiUrl: 'https://func-yogurt-pilot.azurewebsites.net/api/',
+      scope: 'api://e797299f-c081-494b-8864-9fb143e2e84f/access_as_user',
+    }
+    expect(readCloudConfig(empty, {}, baked)).toEqual({
+      enabled: true,
+      tenantId: baked.tenantId,
+      clientId: baked.clientId,
+      apiUrl: 'https://func-yogurt-pilot.azurewebsites.net/api',
+      scope: baked.scope,
+    })
+    expect(cloudModeEnabled({ cloudMode: false }, {}, baked)).toBe(false)
+    expect(cloudModeEnabled(empty, { YOGURT_CLOUD: '0' }, baked)).toBe(false)
+    expect(readCloudConfig({ cloudTenantId: 'from-settings' }, {}, baked).tenantId).toBe('from-settings')
+  })
 })

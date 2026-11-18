@@ -34,6 +34,108 @@ function Invoke-Az {
   if ($LASTEXITCODE -ne 0) { throw "az $($AzArgs -join ' ') failed" }
 }
 
+function Write-JsonFile {
+  param([string]$Path, [string]$Json)
+  [System.IO.File]::WriteAllText($Path, $Json)
+}
+
+# Graph rejects preAuthorizedApplications in the same PATCH that creates the scope.
+function Write-ApiScopeJson {
+  param([string]$Path, [string]$ApiAppId, [string]$ScopeGuid, [string]$DesktopAppId, [bool]$PreAuthorize)
+  $pre = ''
+  if ($PreAuthorize) {
+    $pre = @"
+,
+      "preAuthorizedApplications": [
+        { "appId": "$DesktopAppId", "delegatedPermissionIds": ["$ScopeGuid"] }
+      ]
+"@
+  }
+  $json = @"
+{
+  "identifierUris": ["api://$ApiAppId"],
+  "signInAudience": "AzureADMyOrg",
+  "api": {
+    "requestedAccessTokenVersion": 2,
+    "oauth2PermissionScopes": [
+      {
+        "adminConsentDisplayName": "Access Yogurt notes",
+        "adminConsentDescription": "Upload meeting audio and read your own transcripts and summaries.",
+        "id": "$ScopeGuid",
+        "isEnabled": true,
+        "type": "User",
+        "userConsentDisplayName": "Access your Yogurt notes",
+        "userConsentDescription": "Upload meeting audio and read your transcripts and summaries.",
+        "value": "access_as_user"
+      }
+    ]$pre
+  }
+}
+"@
+  Write-JsonFile -Path $Path -Json $json
+}
+
+function Grant-PilotGroup {
+  param([string]$ResourceSpId, [string]$GroupId)
+  $file = Join-Path $env:TEMP "yogurt-assign-$ResourceSpId.json"
+  Write-JsonFile -Path $file -Json "{`"principalId`":`"$GroupId`",`"resourceId`":`"$ResourceSpId`",`"appRoleId`":`"00000000-0000-0000-0000-000000000000`"}"
+  & az rest --method POST --uri "https://graph.microsoft.com/v1.0/servicePrincipals/$ResourceSpId/appRoleAssignedTo" --headers 'Content-Type=application/json' --body "@$file"
+  if ($LASTEXITCODE -ne 0) { Write-Warning "Yogurt Pilot is already assigned to $ResourceSpId, or the assignment failed." }
+}
+
+function Write-BicepParameters {
+  param([string]$Path, [bool]$Events)
+  $eventsJson = 'false'
+  if ($Events) { $eventsJson = 'true' }
+  $json = @"
+{
+  "`$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "location": { "value": "$Location" },
+    "openAiLocation": { "value": "$OpenAiLocation" },
+    "speechLocation": { "value": "$SpeechLocation" },
+    "namePrefix": { "value": "$NamePrefix" },
+    "sqlServerName": { "value": "$SqlServerName" },
+    "sqlDatabaseName": { "value": "$SqlDatabaseName" },
+    "sqlResourceGroup": { "value": "$SqlResourceGroup" },
+    "sqlSubscriptionId": { "value": "$SqlSubscriptionId" },
+    "entraTenantId": { "value": "$TenantId" },
+    "entraApiAudience": { "value": "$ApiAudience" },
+    "entraAllowedClientId": { "value": "$DesktopClientId" },
+    "includeEventSubscription": { "value": $eventsJson }
+  }
+}
+"@
+  Write-JsonFile -Path $Path -Json $json
+}
+
+# Compress-Archive stores backslashes. Azure's host wants forward slashes.
+function Compress-ForwardSlashZip {
+  param([string]$Source, [string]$Destination)
+  if (Test-Path $Destination) { Remove-Item $Destination -Force }
+  $tar = Join-Path $env:SystemRoot 'System32\tar.exe'
+  if (Test-Path $tar) {
+    Push-Location $Source
+    try {
+      & $tar -a -c -f $Destination *
+      if ($LASTEXITCODE -eq 0) { return }
+      Write-Warning "tar.exe failed ($LASTEXITCODE); zipping with forward-slash entry names instead."
+    } finally { Pop-Location }
+    if (Test-Path $Destination) { Remove-Item $Destination -Force }
+  }
+  Add-Type -AssemblyName System.IO.Compression
+  Add-Type -AssemblyName System.IO.Compression.FileSystem
+  $archive = [System.IO.Compression.ZipFile]::Open($Destination, [System.IO.Compression.ZipArchiveMode]::Create)
+  try {
+    $root = (Resolve-Path $Source).Path.TrimEnd('\', '/')
+    Get-ChildItem -Path $root -Recurse -File | ForEach-Object {
+      $name = $_.FullName.Substring($root.Length + 1).Replace('\', '/')
+      [void][System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($archive, $_.FullName, $name)
+    }
+  } finally { $archive.Dispose() }
+}
+
 Write-Host "Using subscription $SubscriptionId in tenant $TenantId"
 az account show --query id -o tsv 1>$null 2>$null
 if ($LASTEXITCODE -ne 0) { Invoke-Az login --tenant $TenantId }
@@ -64,26 +166,10 @@ if ($CreateEntraApps) {
   $apiObject = az ad app show --id $api --query id -o tsv
   $existingScope = az ad app show --id $api --query "api.oauth2PermissionScopes[?value=='access_as_user'].id | [0]" -o tsv
   if ($existingScope) { $scopeId = $existingScope } else { $scopeId = [guid]::NewGuid().ToString() }
-  $apiBody = @{
-    identifierUris = @("api://$api")
-    signInAudience = 'AzureADMyOrg'
-    api = @{
-      requestedAccessTokenVersion = 2
-      oauth2PermissionScopes = @(@{
-        adminConsentDisplayName = 'Access Yogurt notes'
-        adminConsentDescription = 'Upload meeting audio and read your own transcripts and summaries.'
-        id = $scopeId
-        isEnabled = $true
-        type = 'User'
-        userConsentDisplayName = 'Access your Yogurt notes'
-        userConsentDescription = 'Upload meeting audio and read your transcripts and summaries.'
-        value = 'access_as_user'
-      })
-      preAuthorizedApplications = @(@{ appId = $desktop; delegatedPermissionIds = @($scopeId) })
-    }
-  } | ConvertTo-Json -Depth 8
   $apiFile = Join-Path $env:TEMP 'yogurt-api-app.json'
-  [System.IO.File]::WriteAllText($apiFile, $apiBody)
+  Write-ApiScopeJson -Path $apiFile -ApiAppId $api -ScopeGuid $scopeId -DesktopAppId $desktop -PreAuthorize $false
+  Invoke-Az rest --method PATCH --uri "https://graph.microsoft.com/v1.0/applications/$apiObject" --headers 'Content-Type=application/json' --body "@$apiFile"
+  Write-ApiScopeJson -Path $apiFile -ApiAppId $api -ScopeGuid $scopeId -DesktopAppId $desktop -PreAuthorize $true
   Invoke-Az rest --method PATCH --uri "https://graph.microsoft.com/v1.0/applications/$apiObject" --headers 'Content-Type=application/json' --body "@$apiFile"
   az ad app permission add --id $desktop --api $api --api-permissions "$scopeId=Scope"
   if ($LASTEXITCODE -ne 0) { Write-Warning 'The desktop app already has the API permission, or it could not be added.' }
@@ -102,10 +188,8 @@ if ($CreateEntraApps) {
     $group = az ad group create --display-name 'Yogurt Pilot' --mail-nickname 'yogurt-pilot' --query id -o tsv
     if ($LASTEXITCODE -ne 0) { throw 'Could not create the Yogurt Pilot security group' }
   }
-  $assignment = @{ principalId = $group; resourceId = $apiSp; appRoleId = '00000000-0000-0000-0000-000000000000' } | ConvertTo-Json -Compress
-  $assignFile = Join-Path $env:TEMP 'yogurt-group-assign.json'
-  [System.IO.File]::WriteAllText($assignFile, $assignment)
-  az rest --method POST --uri "https://graph.microsoft.com/v1.0/servicePrincipals/$apiSp/appRoleAssignedTo" --headers 'Content-Type=application/json' --body "@$assignFile" 1>$null 2>$null
+  Grant-PilotGroup -ResourceSpId $apiSp -GroupId $group
+  Grant-PilotGroup -ResourceSpId $desktopSp -GroupId $group
   foreach ($upn in $PilotUserUpns) {
     $member = az ad user show --id $upn --query id -o tsv
     if ($LASTEXITCODE -ne 0) { throw "No Entra user $upn" }
@@ -124,26 +208,12 @@ Write-Host "Creating $ResourceGroup in $Location"
 Invoke-Az group create --name $ResourceGroup --location $Location --tags project=yogurt-pilot customer=preferred-by-nature
 
 $bicep = Join-Path $cloud 'infra\main.bicep'
-$common = @(
-  'location=' + $Location,
-  'openAiLocation=' + $OpenAiLocation,
-  'speechLocation=' + $SpeechLocation,
-  'namePrefix=' + $NamePrefix,
-  'sqlServerName=' + $SqlServerName,
-  'sqlDatabaseName=' + $SqlDatabaseName,
-  'sqlResourceGroup=' + $SqlResourceGroup,
-  'sqlSubscriptionId=' + $SqlSubscriptionId,
-  'entraTenantId=' + $TenantId,
-  'entraApiAudience=' + $ApiAudience,
-  'entraAllowedClientId=' + $DesktopClientId
-)
+$paramFile = Join-Path $env:TEMP 'yogurt-pilot.parameters.json'
 
 function Deploy-Pilot {
   param([bool]$Events)
-  $flag = 'includeEventSubscription=false'
-  if ($Events) { $flag = 'includeEventSubscription=true' }
-  $params = @($common) + $flag
-  & az deployment group create --name yogurt-pilot --resource-group $ResourceGroup --template-file $bicep --parameters @params
+  Write-BicepParameters -Path $paramFile -Events $Events
+  & az deployment group create --name yogurt-pilot --resource-group $ResourceGroup --template-file $bicep --parameters "@$paramFile"
   if ($LASTEXITCODE -ne 0) { throw 'Bicep deployment failed' }
 }
 
@@ -173,7 +243,7 @@ try {
   & npm install --omit=dev --ignore-scripts
   if ($LASTEXITCODE -ne 0) { throw 'npm install of function dependencies failed' }
 } finally { Pop-Location }
-Compress-Archive -Path (Join-Path $stage '*') -DestinationPath $zip
+Compress-ForwardSlashZip -Source $stage -Destination $zip
 
 $functionName = az deployment group show --resource-group $ResourceGroup --name yogurt-pilot --query properties.outputs.functionAppName.value -o tsv
 if ($LASTEXITCODE -ne 0 -or -not $functionName) { throw 'Could not read the function app name' }
