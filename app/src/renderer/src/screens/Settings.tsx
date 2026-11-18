@@ -1,7 +1,7 @@
 import { LoadingContent } from '../components/LoadingContent'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Check, ChevronDown, Copy, Download, ExternalLink, Globe, Lock, Upload, FileText } from 'lucide-react'
-import type { Access, AppVisibility, McpStatus, PermissionKind, PermissionStatus, SetupState, Theme, UpdateStatus } from '../../../shared/types'
+import type { Access, AppVisibility, CloudStatus, McpStatus, PermissionKind, PermissionStatus, SetupState, Theme, UpdateStatus } from '../../../shared/types'
 import { notesDownloadText, notesUpgradeSize } from '../notesSetup'
 import { permissionCopy } from '../permissionCopy'
 import { LOCALES, t } from '../../../shared/i18n'
@@ -164,6 +164,8 @@ export function Settings({ revision = 0, focus }: { revision?: number; focus?: s
 
           <Backup />
 
+          <CloudNotes />
+
           <AiApps />
 
           <Updates />
@@ -178,6 +180,59 @@ export function Settings({ revision = 0, focus }: { revision?: number; focus?: s
         </div>
       </div>
     </div>
+  )
+}
+
+function CloudNotes() {
+  const [status, setStatus] = useState<CloudStatus>()
+  const [busy, setBusy] = useState(false)
+  useEffect(() => {
+    let active = true
+    const apply = (next: CloudStatus) => { if (active) setStatus(next) }
+    void window.yogurt.cloud.status().then(apply).catch(() => {})
+    const off = window.yogurt.cloud.onStatus(apply)
+    return () => { active = false; off() }
+  }, [])
+  if (!status || (!status.configured && !status.enabled)) return null
+  const account = status.account
+  const toggle = () => {
+    if (!status || status.forced) return
+    setBusy(true)
+    void window.yogurt.cloud.setEnabled(!status.enabled).then(setStatus).finally(() => setBusy(false))
+  }
+  const sign = () => {
+    setBusy(true)
+    const run = account ? window.yogurt.cloud.signOut() : window.yogurt.cloud.signIn()
+    void run.then(setStatus).finally(() => setBusy(false))
+  }
+  const problem = status.error === 'cancelled' ? t('Sign-in was cancelled.')
+    : status.error === 'keychain' ? t("Yogurt couldn't use the system keychain to keep you signed in.")
+    : status.error === 'not-configured' ? t('Add the cloud tenant, client and API address first.')
+    : status.error === 'failed' ? t("Sign-in didn't finish. Try again.")
+    : ''
+  return (
+    <>
+      <h2 className="settings-section-heading">{t('Cloud notes')}</h2>
+      <div data-testid="settings-cloud" className="settings-group">
+        <div className="settings-row">
+          <div className="settings-row-copy">
+            <p className="settings-label">{t('Use cloud notes')}</p>
+            <p className="settings-description">{t('Preferred by Nature cloud writes the transcript and summary. Your copy stays on this computer.')}</p>
+          </div>
+          <button data-testid="cloud-toggle" role="switch" aria-checked={status.enabled} aria-label={t('Use cloud notes')} disabled={!!status.forced || busy} onClick={toggle} className="settings-toggle">
+            <span className="settings-toggle-knob" />
+          </button>
+        </div>
+        <div className="settings-row">
+          <div className="settings-row-copy">
+            <p className="settings-label">{account ? t('Signed in as {name}', { name: account.name || account.username }) : t('Sign in')}</p>
+            <p className="settings-description">{t('Restart Yogurt to switch between this computer and the cloud.')}</p>
+            {problem && <p data-testid="cloud-error" className="settings-description">{problem}</p>}
+          </div>
+          <button data-testid="cloud-sign" type="button" disabled={busy} onClick={sign} className="ghost-btn">{account ? t('Sign out') : t('Sign in')}</button>
+        </div>
+      </div>
+    </>
   )
 }
 

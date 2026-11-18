@@ -677,5 +677,16 @@
   "Yogurt couldn't reach that address. Check your connection and the address.": "Yogurt가 그 주소에 연결하지 못했어요. 인터넷 연결과 주소를 확인하세요.",
   "{name} is connected. You can change this any time in Settings.": "{name}이(가) 연결됐어요. 설정에서 언제든 바꿀 수 있어요.",
   "Only see \"Public address in iCal format\"? Your organization turned off secret addresses, so this calendar can't be connected this way.": "\"Public address in iCal format\"만 보이나요? 조직에서 비밀 주소를 꺼 두어서 이 캘린더는 이 방법으로 연결할 수 없어요.",
-  "That's the public address, which only works if your calendar is public. Copy \"Secret address in iCal format\" instead.": "그건 공개 주소라서 캘린더가 공개일 때만 작동해요. 대신 \"Secret address in iCal format\"을 복사하세요."
+  "That's the public address, which only works if your calendar is public. Copy \"Secret address in iCal format\" instead.": "그건 공개 주소라서 캘린더가 공개일 때만 작동해요. 대신 \"Secret address in iCal format\"을 복사하세요.",
+  "Cloud notes": "클라우드 메모",
+  "Use cloud notes": "클라우드 메모 사용",
+  "Sign in": "로그인",
+  "Sign out": "로그아웃",
+  "Signed in as {name}": "{name}(으)로 로그인됨",
+  "Preferred by Nature cloud writes the transcript and summary. Your copy stays on this computer.": "Preferred by Nature 클라우드가 받아쓰기와 요약을 작성합니다. 내 복사본은 이 컴퓨터에 남습니다.",
+  "Restart Yogurt to switch between this computer and the cloud.": "이 컴퓨터와 클라우드를 전환하려면 Yogurt를 다시 시작하세요.",
+  "Sign-in was cancelled.": "로그인이 취소되었습니다.",
+  "Yogurt couldn't use the system keychain to keep you signed in.": "Yogurt가 시스템 키체인을 사용해 로그인 상태를 유지하지 못했습니다.",
+  "Add the cloud tenant, client and API address first.": "먼저 클라우드 테넌트, 클라이언트, API 주소를 추가하세요.",
+  "Sign-in didn't finish. Try again.": "로그인이 끝나지 않았습니다. 다시 시도하세요."
 }

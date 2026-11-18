@@ -736,5 +736,16 @@
   "Yogurt couldn't reach that address. Check your connection and the address.": "Yogurt nu a putut accesa această adresă. Verificați conexiunea și adresa.",
   "{name} is connected. You can change this any time in Settings.": "{name} este conectat. Puteți schimba asta oricând din Setări.",
   "Only see \"Public address in iCal format\"? Your organization turned off secret addresses, so this calendar can't be connected this way.": "Vedeți doar „Public address in iCal format”? Organizația dvs. a dezactivat adresele secrete, așa că acest calendar nu poate fi conectat astfel.",
-  "That's the public address, which only works if your calendar is public. Copy \"Secret address in iCal format\" instead.": "Aceasta este adresa publică, care funcționează doar dacă calendarul este public. Copiați în schimb „Secret address in iCal format”."
+  "That's the public address, which only works if your calendar is public. Copy \"Secret address in iCal format\" instead.": "Aceasta este adresa publică, care funcționează doar dacă calendarul este public. Copiați în schimb „Secret address in iCal format”.",
+  "Cloud notes": "Notițe în cloud",
+  "Use cloud notes": "Folosește notițele în cloud",
+  "Sign in": "Conectare",
+  "Sign out": "Deconectare",
+  "Signed in as {name}": "Conectat ca {name}",
+  "Preferred by Nature cloud writes the transcript and summary. Your copy stays on this computer.": "Cloud-ul Preferred by Nature scrie transcrierea și rezumatul. Copia ta rămâne pe acest computer.",
+  "Restart Yogurt to switch between this computer and the cloud.": "Repornește Yogurt ca să treci între acest computer și cloud.",
+  "Sign-in was cancelled.": "Conectarea a fost anulată.",
+  "Yogurt couldn't use the system keychain to keep you signed in.": "Yogurt nu a putut folosi brelocul sistemului ca să te țină conectat.",
+  "Add the cloud tenant, client and API address first.": "Adaugă mai întâi tenantul cloud, clientul și adresa API.",
+  "Sign-in didn't finish. Try again.": "Conectarea nu s-a terminat. Încearcă din nou."
 }

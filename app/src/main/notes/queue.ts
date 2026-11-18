@@ -54,6 +54,8 @@ export function createQueue(o: {
   idleMs?: number
   /** a notes model is on the Mac (first run: not until its download lands); nothing runs before */
   modelReady?: () => boolean
+  /** cloud summaries run with no on-device model; other jobs still wait for one */
+  readyWithoutModel?: (kind: JobKind) => boolean
 }) {
   const waiting: Entry[] = []
   let running: { entry: Entry; abort: AbortController } | undefined
@@ -68,7 +70,7 @@ export function createQueue(o: {
 
   const backlog = () => o.backlogMs?.() ?? 0
   const allowed = (kind: JobKind) => {
-    if (o.modelReady && !o.modelReady()) return false
+    if (o.modelReady && !o.modelReady() && !o.readyWithoutModel?.(kind)) return false
     if ((kind === 'index' || kind === 'folder') && o.recording()) return false
     if (kind === 'readahead' && !o.smallMac && backlog() > READ_BACKLOG_MS) return false
     if (o.smallMac) return !o.recording()

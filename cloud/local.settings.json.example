@@ -1,0 +1,18 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "FUNCTIONS_WORKER_RUNTIME": "node",
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "ENTRA_TENANT_ID": "6a94fd93-b4dc-42db-9712-8defab2a3e93",
+    "ENTRA_API_AUDIENCE": "api://<api-app-id>",
+    "ENTRA_ALLOWED_CLIENT_ID": "<desktop-app-id>",
+    "SQL_SERVER": "sql-external-landing-pbn.database.windows.net",
+    "SQL_DATABASE": "<existing-database>",
+    "STORAGE_ACCOUNT_NAME": "",
+    "STORAGE_CONTAINER": "audio",
+    "SPEECH_ENDPOINT": "https://<speech-name>.cognitiveservices.azure.com",
+    "AZURE_OPENAI_ENDPOINT": "https://<openai-name>.cognitiveservices.azure.com",
+    "AZURE_OPENAI_DEPLOYMENT": "gpt-5-mini",
+    "SUMMARY_PROVIDER": "azure-openai-gpt-5-mini"
+  }
+}

@@ -44,6 +44,7 @@ site/.vercel/
 .env
 .env.local
 .env.*.local
+cloud/local.settings.json
 *.p12
 *.p8
 

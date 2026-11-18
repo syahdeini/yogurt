@@ -280,6 +280,14 @@ export type YogurtApi = {
     /** English only or Multi-language: the meeting being recorded and the next ones */
     setSpoken(v: import('./spoken').Spoken): Promise<void>
   }
+  /** Preferred by Nature cloud notes. Hidden until the pilot is configured. Local notes stay the default. */
+  cloud: {
+    status(): Promise<CloudStatus>
+    signIn(): Promise<CloudStatus>
+    signOut(): Promise<CloudStatus>
+    setEnabled(on: boolean): Promise<CloudStatus>
+    onStatus(cb: (status: CloudStatus) => void): () => void
+  }
   /** finds meetings by date, title, attendees, folders, transcript and notes; nothing typed: the latest. folder: only the meetings in it */
   search: { query(q: string, folder?: string, people?: Person[]): Promise<SearchResult[]>; people(): Promise<Person[]> }
   /** named folders of meetings; a meeting can be in several, and deleting a folder keeps its meetings */
@@ -356,6 +364,15 @@ export type { CalEvent, CalendarSource, CalendarStatus } from '../main/calendar'
 export type AgendaEvent = CalEvent & { note?: { id: string; state: Meeting['state'] } }
 /** Start notes: the meeting's id, or why it didn't start (gone: the event left the calendar) */
 export type StartResult = { id: string; alreadyRecording?: true; resumeRequested?: true } | { error: 'gone' | 'failed' }
+
+export type CloudStatus = {
+  enabled: boolean
+  configured: boolean
+  /** YOGURT_CLOUD forces the mode until the app is opened without it */
+  forced: 'on' | 'off' | null
+  account: { username: string; name: string } | null
+  error: 'not-configured' | 'cancelled' | 'keychain' | 'failed' | null
+}
 /** one meeting found: parts is a piece of its notes or transcript, hit on the words matched */
 export type SearchResult = { meetingId: string; title: string; startedAt: number; parts: SnippetPart[]; confident?: boolean }
 

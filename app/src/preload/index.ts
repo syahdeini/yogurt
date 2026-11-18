@@ -1,7 +1,7 @@
 import type { WidgetLayout } from '../shared/widgetMorph'
 import { contextBridge, ipcRenderer } from 'electron'
 import { capabilities, platformOf } from '../shared/platform'
-import type { ChatView, ConversationSummary, ConversationView, NoteView, PromptAction, SetupState, UpdateStatus, WidgetView, YogurtApi } from '../shared/types'
+import type { ChatView, CloudStatus, ConversationSummary, ConversationView, NoteView, PromptAction, SetupState, UpdateStatus, WidgetView, YogurtApi } from '../shared/types'
 
 const api: YogurtApi = {
   reportRendererError: report => ipcRenderer.send('renderer:error', report),
@@ -242,6 +242,17 @@ const api: YogurtApi = {
     setSummaryLanguage: (id) => ipcRenderer.invoke('settings:summary-language', id),
     onLanguage: (cb) => { const f = (_e: unknown, locale: string) => cb(locale); ipcRenderer.on('settings:language', f); return () => { ipcRenderer.off('settings:language', f) } },
     setSpoken: (v) => ipcRenderer.invoke('settings:spoken', v),
+  },
+  cloud: {
+    status: () => ipcRenderer.invoke('cloud:status'),
+    signIn: () => ipcRenderer.invoke('cloud:sign-in'),
+    signOut: () => ipcRenderer.invoke('cloud:sign-out'),
+    setEnabled: (on) => ipcRenderer.invoke('cloud:enabled', on),
+    onStatus: (cb) => {
+      const on = (_e: unknown, status: CloudStatus) => cb(status)
+      ipcRenderer.on('cloud:status', on)
+      return () => { ipcRenderer.removeListener('cloud:status', on) }
+    },
   },
   search: { query: (q, folder, people) => ipcRenderer.invoke('search:query', q, folder, people), people: () => ipcRenderer.invoke('search:people') },
   folders: {

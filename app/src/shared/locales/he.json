@@ -729,5 +729,16 @@
   "Yogurt couldn't reach that address. Check your connection and the address.": "Yogurt לא הצליח להגיע לכתובת הזו. בדקו את החיבור ואת הכתובת.",
   "{name} is connected. You can change this any time in Settings.": "{name} מחובר. אפשר לשנות זאת בכל עת בהגדרות.",
   "Only see \"Public address in iCal format\"? Your organization turned off secret addresses, so this calendar can't be connected this way.": "רואים רק את \"Public address in iCal format\"? הארגון שלכם כיבה כתובות סודיות, ולכן אי אפשר לחבר את היומן הזה כך.",
-  "That's the public address, which only works if your calendar is public. Copy \"Secret address in iCal format\" instead.": "זו הכתובת הציבורית, והיא עובדת רק אם היומן שלכם ציבורי. העתיקו במקומה את \"Secret address in iCal format\"."
+  "That's the public address, which only works if your calendar is public. Copy \"Secret address in iCal format\" instead.": "זו הכתובת הציבורית, והיא עובדת רק אם היומן שלכם ציבורי. העתיקו במקומה את \"Secret address in iCal format\".",
+  "Cloud notes": "הערות בענן",
+  "Use cloud notes": "להשתמש בהערות בענן",
+  "Sign in": "כניסה",
+  "Sign out": "יציאה",
+  "Signed in as {name}": "מחובר בתור {name}",
+  "Preferred by Nature cloud writes the transcript and summary. Your copy stays on this computer.": "הענן של Preferred by Nature כותב את התמליל ואת הסיכום. העותק שלך נשאר במחשב הזה.",
+  "Restart Yogurt to switch between this computer and the cloud.": "הפעילו את Yogurt מחדש כדי לעבור בין המחשב הזה לענן.",
+  "Sign-in was cancelled.": "הכניסה בוטלה.",
+  "Yogurt couldn't use the system keychain to keep you signed in.": "Yogurt לא הצליח להשתמש במחזיק המפתחות של המערכת כדי להשאיר אותך מחובר.",
+  "Add the cloud tenant, client and API address first.": "הוסיפו קודם את דייר הענן, הלקוח וכתובת ה-API.",
+  "Sign-in didn't finish. Try again.": "הכניסה לא הושלמה. נסו שוב."
 }

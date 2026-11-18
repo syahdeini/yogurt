@@ -719,5 +719,16 @@
   "Yogurt couldn't reach that address. Check your connection and the address.": "Yogurt kon dat adres niet bereiken. Controleer je verbinding en het adres.",
   "{name} is connected. You can change this any time in Settings.": "{name} is gekoppeld. Je kunt dit altijd wijzigen in Instellingen.",
   "Only see \"Public address in iCal format\"? Your organization turned off secret addresses, so this calendar can't be connected this way.": "Zie je alleen \"Public address in iCal format\"? Je organisatie heeft geheime adressen uitgezet, dus deze agenda kan niet op deze manier worden gekoppeld.",
-  "That's the public address, which only works if your calendar is public. Copy \"Secret address in iCal format\" instead.": "Dat is het openbare adres, dat alleen werkt als je agenda openbaar is. Kopieer in plaats daarvan \"Secret address in iCal format\"."
+  "That's the public address, which only works if your calendar is public. Copy \"Secret address in iCal format\" instead.": "Dat is het openbare adres, dat alleen werkt als je agenda openbaar is. Kopieer in plaats daarvan \"Secret address in iCal format\".",
+  "Cloud notes": "Cloudnotities",
+  "Use cloud notes": "Cloudnotities gebruiken",
+  "Sign in": "Aanmelden",
+  "Sign out": "Afmelden",
+  "Signed in as {name}": "Aangemeld als {name}",
+  "Preferred by Nature cloud writes the transcript and summary. Your copy stays on this computer.": "De cloud van Preferred by Nature schrijft het transcript en de samenvatting. Jouw kopie blijft op deze computer.",
+  "Restart Yogurt to switch between this computer and the cloud.": "Start Yogurt opnieuw om te wisselen tussen deze computer en de cloud.",
+  "Sign-in was cancelled.": "Aanmelden is geannuleerd.",
+  "Yogurt couldn't use the system keychain to keep you signed in.": "Yogurt kon de systeem-sleutelhanger niet gebruiken om je aangemeld te houden.",
+  "Add the cloud tenant, client and API address first.": "Voeg eerst de cloud-tenant, de client en het API-adres toe.",
+  "Sign-in didn't finish. Try again.": "Aanmelden is niet gelukt. Probeer het opnieuw."
 }

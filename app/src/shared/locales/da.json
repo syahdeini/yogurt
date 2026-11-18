@@ -719,5 +719,16 @@
   "Yogurt couldn't reach that address. Check your connection and the address.": "Yogurt kunne ikke nå den adresse. Tjek din forbindelse og adressen.",
   "{name} is connected. You can change this any time in Settings.": "{name} er forbundet. Du kan ændre det når som helst i Indstillinger.",
   "Only see \"Public address in iCal format\"? Your organization turned off secret addresses, so this calendar can't be connected this way.": "Ser du kun \"Public address in iCal format\"? Din organisation har slået hemmelige adresser fra, så kalenderen kan ikke forbindes på denne måde.",
-  "That's the public address, which only works if your calendar is public. Copy \"Secret address in iCal format\" instead.": "Det er den offentlige adresse, som kun virker, hvis din kalender er offentlig. Kopiér \"Secret address in iCal format\" i stedet."
+  "That's the public address, which only works if your calendar is public. Copy \"Secret address in iCal format\" instead.": "Det er den offentlige adresse, som kun virker, hvis din kalender er offentlig. Kopiér \"Secret address in iCal format\" i stedet.",
+  "Cloud notes": "Cloud-noter",
+  "Use cloud notes": "Brug cloud-noter",
+  "Sign in": "Log på",
+  "Sign out": "Log af",
+  "Signed in as {name}": "Logget på som {name}",
+  "Preferred by Nature cloud writes the transcript and summary. Your copy stays on this computer.": "Preferred by Nature-cloud skriver transskriptionen og referatet. Din kopi bliver på denne computer.",
+  "Restart Yogurt to switch between this computer and the cloud.": "Start Yogurt igen for at skifte mellem denne computer og cloud.",
+  "Sign-in was cancelled.": "Logon blev annulleret.",
+  "Yogurt couldn't use the system keychain to keep you signed in.": "Yogurt kunne ikke bruge systemets nøglering til at holde dig logget på.",
+  "Add the cloud tenant, client and API address first.": "Tilføj først cloud-tenant, klient og API-adresse.",
+  "Sign-in didn't finish. Try again.": "Logon blev ikke færdigt. Prøv igen."
 }

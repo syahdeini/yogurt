@@ -775,5 +775,16 @@
   "Yogurt couldn't reach that address. Check your connection and the address.": "لم يتمكن Yogurt من الوصول إلى هذا العنوان. تحقق من اتصالك ومن العنوان.",
   "{name} is connected. You can change this any time in Settings.": "تم ربط {name}. يمكنك تغيير ذلك في أي وقت من الإعدادات.",
   "Only see \"Public address in iCal format\"? Your organization turned off secret addresses, so this calendar can't be connected this way.": "ترى \"Public address in iCal format\" فقط؟ أوقفت مؤسستك العناوين السرية، لذا لا يمكن ربط هذا التقويم بهذه الطريقة.",
-  "That's the public address, which only works if your calendar is public. Copy \"Secret address in iCal format\" instead.": "هذا هو العنوان العام، ولا يعمل إلا إذا كان تقويمك عامًا. انسخ \"Secret address in iCal format\" بدلًا منه."
+  "That's the public address, which only works if your calendar is public. Copy \"Secret address in iCal format\" instead.": "هذا هو العنوان العام، ولا يعمل إلا إذا كان تقويمك عامًا. انسخ \"Secret address in iCal format\" بدلًا منه.",
+  "Cloud notes": "ملاحظات سحابية",
+  "Use cloud notes": "استخدام الملاحظات السحابية",
+  "Sign in": "تسجيل الدخول",
+  "Sign out": "تسجيل الخروج",
+  "Signed in as {name}": "تم تسجيل الدخول باسم {name}",
+  "Preferred by Nature cloud writes the transcript and summary. Your copy stays on this computer.": "تكتب سحابة Preferred by Nature النص المكتوب والملخص. تبقى نسختك على هذا الكمبيوتر.",
+  "Restart Yogurt to switch between this computer and the cloud.": "أعد تشغيل Yogurt للتبديل بين هذا الكمبيوتر والسحابة.",
+  "Sign-in was cancelled.": "تم إلغاء تسجيل الدخول.",
+  "Yogurt couldn't use the system keychain to keep you signed in.": "لم يتمكن Yogurt من استخدام سلسلة مفاتيح النظام لإبقائك مسجلاً للدخول.",
+  "Add the cloud tenant, client and API address first.": "أضف أولاً مستأجر السحابة ومعرف العميل وعنوان واجهة API.",
+  "Sign-in didn't finish. Try again.": "لم يكتمل تسجيل الدخول. حاول مرة أخرى."
 }

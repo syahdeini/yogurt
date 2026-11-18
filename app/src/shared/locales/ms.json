@@ -677,5 +677,16 @@
   "Yogurt couldn't reach that address. Check your connection and the address.": "Yogurt tidak dapat mencapai alamat itu. Semak sambungan dan alamat anda.",
   "{name} is connected. You can change this any time in Settings.": "{name} disambungkan. Anda boleh menukarnya bila-bila masa dalam Tetapan.",
   "Only see \"Public address in iCal format\"? Your organization turned off secret addresses, so this calendar can't be connected this way.": "Hanya nampak \"Public address in iCal format\"? Organisasi anda telah mematikan alamat rahsia, jadi kalendar ini tidak boleh disambungkan dengan cara ini.",
-  "That's the public address, which only works if your calendar is public. Copy \"Secret address in iCal format\" instead.": "Itu alamat awam, yang hanya berfungsi jika kalendar anda awam. Salin \"Secret address in iCal format\" sebaliknya."
+  "That's the public address, which only works if your calendar is public. Copy \"Secret address in iCal format\" instead.": "Itu alamat awam, yang hanya berfungsi jika kalendar anda awam. Salin \"Secret address in iCal format\" sebaliknya.",
+  "Cloud notes": "Nota awan",
+  "Use cloud notes": "Guna nota awan",
+  "Sign in": "Log masuk",
+  "Sign out": "Log keluar",
+  "Signed in as {name}": "Log masuk sebagai {name}",
+  "Preferred by Nature cloud writes the transcript and summary. Your copy stays on this computer.": "Awan Preferred by Nature menulis transkrip dan ringkasan. Salinan anda kekal di komputer ini.",
+  "Restart Yogurt to switch between this computer and the cloud.": "Mulakan semula Yogurt untuk bertukar antara komputer ini dan awan.",
+  "Sign-in was cancelled.": "Log masuk dibatalkan.",
+  "Yogurt couldn't use the system keychain to keep you signed in.": "Yogurt tidak dapat menggunakan rantai kunci sistem untuk memastikan anda kekal log masuk.",
+  "Add the cloud tenant, client and API address first.": "Tambah penyewa awan, klien dan alamat API dahulu.",
+  "Sign-in didn't finish. Try again.": "Log masuk tidak selesai. Cuba lagi."
 }

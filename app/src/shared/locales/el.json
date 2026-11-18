@@ -722,5 +722,16 @@
   "Yogurt couldn't reach that address. Check your connection and the address.": "Το Yogurt δεν μπόρεσε να φτάσει σε αυτή τη διεύθυνση. Ελέγξτε τη σύνδεση και τη διεύθυνση.",
   "{name} is connected. You can change this any time in Settings.": "Το {name} συνδέθηκε. Μπορείτε να το αλλάξετε όποτε θέλετε στις Ρυθμίσεις.",
   "Only see \"Public address in iCal format\"? Your organization turned off secret addresses, so this calendar can't be connected this way.": "Βλέπετε μόνο το «Public address in iCal format»; Ο οργανισμός σας έχει απενεργοποιήσει τις μυστικές διευθύνσεις, οπότε αυτό το ημερολόγιο δεν μπορεί να συνδεθεί έτσι.",
-  "That's the public address, which only works if your calendar is public. Copy \"Secret address in iCal format\" instead.": "Αυτή είναι η δημόσια διεύθυνση, που λειτουργεί μόνο αν το ημερολόγιό σας είναι δημόσιο. Αντιγράψτε το «Secret address in iCal format»."
+  "That's the public address, which only works if your calendar is public. Copy \"Secret address in iCal format\" instead.": "Αυτή είναι η δημόσια διεύθυνση, που λειτουργεί μόνο αν το ημερολόγιό σας είναι δημόσιο. Αντιγράψτε το «Secret address in iCal format».",
+  "Cloud notes": "Σημειώσεις στο cloud",
+  "Use cloud notes": "Χρήση σημειώσεων στο cloud",
+  "Sign in": "Σύνδεση",
+  "Sign out": "Αποσύνδεση",
+  "Signed in as {name}": "Σύνδεση ως {name}",
+  "Preferred by Nature cloud writes the transcript and summary. Your copy stays on this computer.": "Το cloud της Preferred by Nature γράφει την απομαγνητοφώνηση και την περίληψη. Το αντίγραφό σας μένει σε αυτόν τον υπολογιστή.",
+  "Restart Yogurt to switch between this computer and the cloud.": "Επανεκκινήστε το Yogurt για εναλλαγή μεταξύ αυτού του υπολογιστή και του cloud.",
+  "Sign-in was cancelled.": "Η σύνδεση ακυρώθηκε.",
+  "Yogurt couldn't use the system keychain to keep you signed in.": "Το Yogurt δεν μπόρεσε να χρησιμοποιήσει την κλειδοθήκη του συστήματος για να σας κρατήσει συνδεδεμένους.",
+  "Add the cloud tenant, client and API address first.": "Προσθέστε πρώτα τον μισθωτή cloud, τον πελάτη και τη διεύθυνση API.",
+  "Sign-in didn't finish. Try again.": "Η σύνδεση δεν ολοκληρώθηκε. Δοκιμάστε ξανά."
 }

@@ -21,11 +21,12 @@ describe('the catalog', () => {
 const files = (dir: string): string[] => readdirSync(dir).flatMap((f) => (statSync(join(dir, f)).isDirectory() ? files(join(dir, f)) : [join(dir, f)]))
 
 describe('nothing leaves the Mac', () => {
-  it('only model downloads (pinned URLs) and whisper-server on 127.0.0.1 make requests; the update check is electron-updater', () => {
+  it('only model downloads (pinned URLs) and whisper-server on 127.0.0.1 make requests; the update check is electron-updater. Cloud mode is the only other path, and it is off unless turned on', () => {
     const src = join(__dirname, '../src')
-    // files allowed to make requests: model downloads from the catalog's pinned URLs, whisper-server on 127.0.0.1
-    // and the person's own calendar link (Windows and Linux), straight from this computer to their calendar provider
-    const allowed = new Set(['main/downloader.ts', 'main/asr/server.ts', 'main/asr/transcribe.ts', 'main/calendarLink/get.ts'])
+    // files allowed to make requests: model downloads from the catalog's pinned URLs, whisper-server on 127.0.0.1,
+    // the person's own calendar link, and — only when cloud mode is on — the Preferred by Nature API,
+    // the Entra sign-in loopback, and the upload SAS. Local mode never calls those.
+    const allowed = new Set(['main/downloader.ts', 'main/asr/server.ts', 'main/asr/transcribe.ts', 'main/calendarLink/get.ts', 'main/cloud/api.ts', 'main/cloud/entra.ts', 'main/cloud/upload.ts'])
     const calls = files(src).filter((f) => /\.(ts|tsx)$/.test(f))
       .filter((f) => /(?<![.\w]|async )fetch\(|(\?\?|=) fetch\b|net\.request|from 'node:https?'|require\('https?'\)|new WebSocket|XMLHttpRequest|raw\.githubusercontent/.test(readFileSync(f, 'utf8')))
       .map((f) => f.slice(src.length + 1).replaceAll('\\', '/'))

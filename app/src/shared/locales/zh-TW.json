@@ -677,5 +677,16 @@
   "Yogurt couldn't reach that address. Check your connection and the address.": "Yogurt 無法連到這個地址。請檢查網路連線和地址。",
   "{name} is connected. You can change this any time in Settings.": "{name}已連接。你隨時可以在設定中更改。",
   "Only see \"Public address in iCal format\"? Your organization turned off secret addresses, so this calendar can't be connected this way.": "只看到「Public address in iCal format」？你的組織已關閉私人地址，因此無法用這種方式連接這個行事曆。",
-  "That's the public address, which only works if your calendar is public. Copy \"Secret address in iCal format\" instead.": "這是公開地址，只有行事曆公開時才能使用。請改為複製「Secret address in iCal format」。"
+  "That's the public address, which only works if your calendar is public. Copy \"Secret address in iCal format\" instead.": "這是公開地址，只有行事曆公開時才能使用。請改為複製「Secret address in iCal format」。",
+  "Cloud notes": "雲端筆記",
+  "Use cloud notes": "使用雲端筆記",
+  "Sign in": "登入",
+  "Sign out": "登出",
+  "Signed in as {name}": "已登入為 {name}",
+  "Preferred by Nature cloud writes the transcript and summary. Your copy stays on this computer.": "Preferred by Nature 雲端會寫下逐字稿和摘要。你的副本仍留在這台電腦上。",
+  "Restart Yogurt to switch between this computer and the cloud.": "重新啟動 Yogurt，以在這台電腦和雲端之間切換。",
+  "Sign-in was cancelled.": "已取消登入。",
+  "Yogurt couldn't use the system keychain to keep you signed in.": "Yogurt 無法使用系統鑰匙圈讓你保持登入。",
+  "Add the cloud tenant, client and API address first.": "請先加入雲端租用戶、用戶端和 API 位址。",
+  "Sign-in didn't finish. Try again.": "登入沒有完成。請再試一次。"
 }

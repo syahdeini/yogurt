@@ -735,5 +735,16 @@
   "Yogurt couldn't reach that address. Check your connection and the address.": "O Yogurt não conseguiu acessar esse endereço. Verifique sua conexão e o endereço.",
   "{name} is connected. You can change this any time in Settings.": "{name} está conectado. Você pode mudar isso quando quiser nos Ajustes.",
   "Only see \"Public address in iCal format\"? Your organization turned off secret addresses, so this calendar can't be connected this way.": "Só aparece \"Public address in iCal format\"? Sua organização desativou os endereços secretos, então este calendário não pode ser conectado assim.",
-  "That's the public address, which only works if your calendar is public. Copy \"Secret address in iCal format\" instead.": "Esse é o endereço público, que só funciona se o seu calendário for público. Copie \"Secret address in iCal format\" no lugar."
+  "That's the public address, which only works if your calendar is public. Copy \"Secret address in iCal format\" instead.": "Esse é o endereço público, que só funciona se o seu calendário for público. Copie \"Secret address in iCal format\" no lugar.",
+  "Cloud notes": "Notas na nuvem",
+  "Use cloud notes": "Usar notas na nuvem",
+  "Sign in": "Entrar",
+  "Sign out": "Sair",
+  "Signed in as {name}": "Conectado como {name}",
+  "Preferred by Nature cloud writes the transcript and summary. Your copy stays on this computer.": "A nuvem da Preferred by Nature escreve a transcrição e o resumo. Sua cópia fica neste computador.",
+  "Restart Yogurt to switch between this computer and the cloud.": "Reinicie o Yogurt para alternar entre este computador e a nuvem.",
+  "Sign-in was cancelled.": "O login foi cancelado.",
+  "Yogurt couldn't use the system keychain to keep you signed in.": "O Yogurt não conseguiu usar as chaves do sistema para manter você conectado.",
+  "Add the cloud tenant, client and API address first.": "Adicione primeiro o locatário da nuvem, o cliente e o endereço da API.",
+  "Sign-in didn't finish. Try again.": "O login não terminou. Tente de novo."
 }
