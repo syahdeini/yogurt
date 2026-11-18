@@ -1,0 +1,91 @@
+# Unsigned Windows installer for the Preferred by Nature pilot.
+# Started by hand: Actions → Pilot Windows installer → Run workflow.
+# It does not run on a push, is not called by release.yml, and does not sign or publish.
+# The installer is attached to the run. Cloud addresses baked in here are not secrets.
+name: Pilot Windows installer
+
+on:
+  workflow_dispatch:
+    inputs:
+      cloud:
+        description: Bake cloud mode into the installer
+        type: boolean
+        default: true
+      tenant_id:
+        description: Entra tenant id
+        type: string
+        default: 6a94fd93-b4dc-42db-9712-8defab2a3e93
+      client_id:
+        description: Desktop app client id
+        type: string
+        default: 9e9aa69e-3390-42f4-8076-a5f1f6ce16f6
+      api_scope:
+        description: API scope
+        type: string
+        default: api://e797299f-c081-494b-8864-9fb143e2e84f/access_as_user
+      api_url:
+        description: Cloud API base URL
+        type: string
+        default: https://func-yogurt-pilot.azurewebsites.net/api
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pilot-windows-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  installer:
+    runs-on: windows-latest
+    timeout-minutes: 120
+    env:
+      CARGO_TERM_COLOR: always
+      # libopus's CMakeLists asks for an old policy that CMake 4 refuses
+      CMAKE_POLICY_VERSION_MINIMUM: '3.5'
+      # repo variables win when set; otherwise the workflow inputs (the pilot defaults)
+      YOGURT_CLOUD: ${{ inputs.cloud && '1' || '0' }}
+      YOGURT_ENTRA_TENANT_ID: ${{ vars.YOGURT_ENTRA_TENANT_ID || inputs.tenant_id }}
+      YOGURT_ENTRA_CLIENT_ID: ${{ vars.YOGURT_ENTRA_CLIENT_ID || inputs.client_id }}
+      YOGURT_ENTRA_API_SCOPE: ${{ vars.YOGURT_ENTRA_API_SCOPE || inputs.api_scope }}
+      YOGURT_CLOUD_API_URL: ${{ vars.YOGURT_CLOUD_API_URL || inputs.api_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.7.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - name: Rust
+        uses: dtolnay/rust-toolchain@stable
+      - name: MSVC
+        uses: ilammy/msvc-dev-cmd@v1
+      - name: CMake
+        run: cmake --version
+      # Official LunarG SDK, the layout whisper-server's CMake expects. Same version as the preview builds.
+      - name: Vulkan SDK
+        uses: jakoch/install-vulkan-sdk-action@v1.8.1
+        with:
+          vulkan_version: 1.4.341.1
+          cache: true
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Bake pilot cloud defaults
+        run: node app/scripts/bake-cloud.mjs
+      - name: Build
+        run: pnpm -C app build
+      - name: Package unsigned installer
+        working-directory: app
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+          # the runner's token must not publish a GitHub release
+          GH_TOKEN: ''
+        run: pnpm exec electron-builder --win --publish never
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Yogurt-windows-x64
+          path: app/dist/Yogurt-windows-*.exe
+          if-no-files-found: error
+          retention-days: 14

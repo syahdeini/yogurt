@@ -82,7 +82,8 @@ export function hookCloud(deps: {
   })
   ipcMain.handle('cloud:enabled', async (_e, on: unknown) => {
     if (runtime.forced() || typeof on !== 'boolean') return status()
-    updateSettings(deps.file, { cloudMode: on ? true : undefined })
+    // false is stored, so it overrides defaults baked into a pilot installer
+    updateSettings(deps.file, { cloudMode: on })
     const next = await status()
     publish(next)
     return next
