@@ -50,7 +50,7 @@ export const dirOf = (id: string): 'rtl' | 'ltr' => (LOCALES.find((l) => l.id ==
 const ALIASES: Record<string, string> = { no: 'nb', nn: 'nb', tl: 'fil', iw: 'he', in: 'id', pt: 'pt-BR', zh: 'zh-CN' }
 const TRADITIONAL = /^zh-(hant|tw|hk|mo)\b/
 
-/** The first of the computer's languages that Yogurt has; English when none */
+/** The first of the computer's languages that PBN Whisper has; English when none */
 export function matchLocale(preferred: readonly string[]): string {
   for (const raw of preferred) {
     const tag = raw.replace(/_/g, '-').toLowerCase()

@@ -1,6 +1,6 @@
 # Preferred by Nature cloud pilot
 
-Five people can record a meeting in Yogurt, sign in with their work account, and get a transcript and summary without downloading a speech or notes model. On-device notes stay the default. Cloud mode turns on only with a setting or `YOGURT_CLOUD=1`. `YOGURT_CLOUD=0` forces on-device notes.
+Five people can record a meeting in PBN Whisper, sign in with their Preferred by Nature account, and get a transcript and summary without downloading a speech or notes model. On-device notes stay the default. Cloud mode turns on only with a setting or `YOGURT_CLOUD=1`. `YOGURT_CLOUD=0` forces on-device notes.
 
 Nothing in this setup is deployed into `rg-dat-bui-asana`. The existing SQL server stays there.
 
@@ -19,7 +19,7 @@ Azure AI Speech batch transcription, with diarization, is available in North Eur
 
 ```mermaid
 flowchart LR
-  subgraph desktop [Yogurt on Windows]
+  subgraph desktop [PBN Whisper on Windows]
     Rec[Recording stops]
     Auth[Entra sign-in MSAL PKCE]
     Up[Chunked upload]
@@ -72,7 +72,25 @@ You need Application Administrator (or a similar role that can register apps and
 
 To add someone by hand: Microsoft Entra ID → Groups → Yogurt Pilot → Members. Or pass `-PilotUserUpns user@pbn.org` (up to the five people) on the deploy script.
 
-The API checks the token's tenant, audience (`api://<api-app-id>`), scope `access_as_user`, and the desktop client id. Row-level security in SQL then limits each person to their own object id.
+The API checks the token's issuer and tenant (`6a94fd93-b4dc-42db-9712-8defab2a3e93`), audience (`api://<api-app-id>`), scope `access_as_user`, and the desktop client id. A token for another tenant or audience is rejected with 403. Republish the Function app (`func-yogurt-pilot`) after pulling this change so those checks are live. Row-level security in SQL then limits each person to their own object id.
+
+The desktop app uses the tenant-specific authority `https://login.microsoftonline.com/6a94fd93-b4dc-42db-9712-8defab2a3e93` and refuses an id token whose `tid` is not that tenant, or whose username is not `@pbn.org`. Cloud mode shows only the sign-in screen until that succeeds. Sign-out returns to it.
+
+Apps that already exist stay single-tenant and assignment-required with:
+
+```powershell
+az login --tenant 6a94fd93-b4dc-42db-9712-8defab2a3e93
+pwsh -File cloud/deploy.ps1 -LockExistingApps
+```
+
+That runs, and nothing else:
+
+```text
+az ad app update --id 9e9aa69e-3390-42f4-8076-a5f1f6ce16f6 --sign-in-audience AzureADMyOrg
+az ad app update --id e797299f-c081-494b-8864-9fb143e2e84f --sign-in-audience AzureADMyOrg
+az ad sp update --id <desktop-enterprise-app-object-id> --set appRoleAssignmentRequired=true
+az ad sp update --id <api-enterprise-app-object-id> --set appRoleAssignmentRequired=true
+```
 
 ## 2. Deploy
 
@@ -112,7 +130,7 @@ The HTTP API sets `SESSION_CONTEXT` `user_oid` and clears `bypass`, and every qu
 
 Re-running `001_notes.sql` on a database that already has the `notes` tables adds the `lease_until` and `attempts` columns and recreates the policy.
 
-## 4. Configure Yogurt
+## 4. Configure PBN Whisper
 
 Cloud mode does not download the local whisper or notes models. Restart after changing it.
 
@@ -126,7 +144,7 @@ YOGURT_ENTRA_API_SCOPE=api://<api app id>/access_as_user
 YOGURT_CLOUD_API_URL=https://<function>.azurewebsites.net/api
 ```
 
-Or the same fields in `%APPDATA%\Yogurt\settings.json` (`cloudMode`, `cloudTenantId`, `cloudClientId`, `cloudApiScope`, `cloudApiUrl`). Environment variables win. These are not secrets.
+Or the same fields in `%APPDATA%\PBN Whisper\settings.json` (`cloudMode`, `cloudTenantId`, `cloudClientId`, `cloudApiScope`, `cloudApiUrl`). A new install uses that folder, not the old `Yogurt` profile. Environment variables win. These are not secrets.
 
 Sign in from Settings → Cloud notes. The app opens the system browser, receives the code on `localhost`, and stores the MSAL cache with Windows DPAPI (`safeStorage`). The access token is refreshed silently. Sign out clears the cache. While cloud mode is on, stopping a recording uploads `me` and `them` in 4 MB blocks, resumes blocks that already landed, and retries when the network is down. The meeting view then shows the transcript and the summary the API stored. Generate summary runs the summary again. The summary model is chosen on the server (`SUMMARY_PROVIDER`, default `azure-openai-gpt-5-mini`). `claude` and `openai` are the later swaps and are refused until a provider is added.
 
@@ -134,7 +152,7 @@ Sign in from Settings → Cloud notes. The app opens the system browser, receive
 
 ## 5. Unsigned Windows installer
 
-GitHub can build it. Open Actions → **Pilot Windows installer** → **Run workflow** on `main`. That workflow is manual only: it does not run on push, is not part of the release workflow, and does not sign or publish. The installer is an artifact on the run (`Yogurt-windows-x64`). The form is filled with the pilot tenant, desktop client, API scope and `https://func-yogurt-pilot.azurewebsites.net/api`. Those values are written into the app at build time, so cloud mode is on after install. A repository variable of the same name (`YOGURT_ENTRA_TENANT_ID`, `YOGURT_ENTRA_CLIENT_ID`, `YOGURT_ENTRA_API_SCOPE`, `YOGURT_CLOUD_API_URL`) overrides the form. They are not secrets.
+GitHub can build it. Open Actions → **Pilot Windows installer** → **Run workflow** on `main`. That workflow is manual only: it does not run on push, is not part of the release workflow, and does not sign or publish. The installer is an artifact on the run (`PBN-Whisper-windows-x64`). The form is filled with the pilot tenant, desktop client, API scope and `https://func-yogurt-pilot.azurewebsites.net/api`. Those values are written into the app at build time, so cloud mode is on after install. A repository variable of the same name (`YOGURT_ENTRA_TENANT_ID`, `YOGURT_ENTRA_CLIENT_ID`, `YOGURT_ENTRA_API_SCOPE`, `YOGURT_CLOUD_API_URL`) overrides the form. They are not secrets.
 
 To build it yourself on a Windows machine, from the repo:
 
@@ -145,7 +163,7 @@ pnpm -C app build
 pnpm -C app exec electron-builder --win
 ```
 
-The installer is `app\dist\Yogurt-windows-x64.exe`. It is unsigned. SmartScreen will warn the five people; they choose More info → Run anyway. Installed copies look for updates on `syahdeini/yogurt` (see `publish` in `app/electron-builder.yml`). Signing workflows are unchanged.
+The installer is `app\dist\PBN-Whisper-Setup.exe`. It is unsigned. SmartScreen will warn the five people; they choose More info → Run anyway. Installed copies look for updates on `syahdeini/yogurt` (see `publish` in `app/electron-builder.yml`). Signing workflows are unchanged.
 
 Give each person the installer, put them in the Yogurt Pilot group, and give them the five configuration values above. Each person signs in with their own work account. They only see their own meetings.
 

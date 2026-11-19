@@ -110,7 +110,7 @@ export function Search({ folder, folders, onOpen, onNavigate, onSettingsChange, 
     { id: 'theme-dark', synonyms: ['theme', 'appearance', 'mode', 'dark'], label: t('Dark theme'), group: t('Appearance'), Icon: Moon, run: () => settingsAction(() => window.yogurt.settings.setTheme('dark')) },
     { id: 'theme-system', synonyms: ['theme', 'appearance', 'mode', 'system'], label: osWords({ mac: t('Match my Mac'), windows: t('Match Windows'), linux: t('Match my system') }), group: t('Appearance'), Icon: Monitor, run: () => settingsAction(() => window.yogurt.settings.setTheme('system')) },
     ...(prefs ? [
-      { id: 'login', label: prefs.openAtLogin ? t('Turn off open at login') : t('Open Yogurt at login'), group: t('Settings'), Icon: LogIn, run: () => settingsAction(() => window.yogurt.settings.setOpenAtLogin(!prefs.openAtLogin)) },
+      { id: 'login', label: prefs.openAtLogin ? t('Turn off open at login') : t('Open PBN Whisper at login'), group: t('Settings'), Icon: LogIn, run: () => settingsAction(() => window.yogurt.settings.setOpenAtLogin(!prefs.openAtLogin)) },
       { id: 'auto-stop', label: prefs.stopWhenCallEnds ? t('Keep recording when the call ends') : t('Finish recording when the call ends'), group: t('Settings'), Icon: AudioLines, run: () => settingsAction(() => window.yogurt.settings.setStopWhenCallEnds(!prefs.stopWhenCallEnds)) },
     ] : []),
   ].filter((c) => !c.id.startsWith('theme-') || !!prefs)
@@ -244,7 +244,7 @@ export function Search({ folder, folders, onOpen, onNavigate, onSettingsChange, 
               <li id="search-ask" data-testid="search-ask" role="option" aria-selected={activeIndex === i} aria-disabled={running}
                 onMouseMove={(e) => hover(e, i)} onClick={() => void ask(row.query)} className="search-row command-row">
                 <MessageCircle size={16} strokeWidth={1.75} aria-hidden="true" />
-                <span className="shrink-0">{t('Ask Yogurt')}</span><span className="command-label truncate text-muted">{row.query}</span>
+                <span className="shrink-0">{t('Ask PBN Whisper')}</span><span className="command-label truncate text-muted">{row.query}</span>
                 <kbd className="search-key search-return" aria-hidden="true">↵</kbd>
               </li>
             </Fragment>
@@ -298,7 +298,7 @@ export function Search({ folder, folders, onOpen, onNavigate, onSettingsChange, 
           </li>
         )}
         </ul>
-        {error && <p role="alert" className="px-5 pb-3 text-xs text-danger">{t("Yogurt couldn't make that change. Try again.")}</p>}
+        {error && <p role="alert" className="px-5 pb-3 text-xs text-danger">{t("PBN Whisper couldn't make that change. Try again.")}</p>}
         <div className="search-footer">
           <span><kbd className="search-key">↑↓</kbd>{t('Navigate')}</span>
           <span data-testid="search-primary-hint"><kbd className="search-key">↵</kbd>{t('Select')}</span>

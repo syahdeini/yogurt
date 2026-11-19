@@ -63,7 +63,7 @@ it('never creates a native icon in background tests, even when toggled on', () =
   const tray = createTray({ show: false, ...d })
   tray.setVisible(false); tray.setVisible(true)
   expect(state.trays).toHaveLength(0)
-  expect(tray.items()).toContain('Open Yogurt')
+  expect(tray.items()).toContain('Open PBN Whisper')
   tray.click('open'); expect(d.open).toHaveBeenCalledOnce()
 })
 
@@ -99,7 +99,7 @@ it('refreshes calendar targets without letting an older read overwrite a newer o
   tray.click('join'); expect(d.event).toHaveBeenCalledTimes(2)
 })
 
-it('Windows and Linux: a colour icon that turns to the recording one, the time in the tooltip, and a click opens Yogurt', () => {
+it('Windows and Linux: a colour icon that turns to the recording one, the time in the tooltip, and a click opens PBN Whisper', () => {
   const d = actions()
   const tray = createTray({ show: true, os: 'win32', ...d })
   const icon = state.trays[0]
@@ -110,9 +110,9 @@ it('Windows and Linux: a colour icon that turns to the recording one, the time i
   state.meeting = { id: 'm1', title: 'Standup' }; state.change()
   expect(basename(icon.setImage.mock.lastCall[0].path)).toBe('tray-recording.png')
   expect(icon.setTitle).not.toHaveBeenCalled()
-  expect(icon.setToolTip).toHaveBeenLastCalledWith('Yogurt is recording · 12:03')
+  expect(icon.setToolTip).toHaveBeenLastCalledWith('PBN Whisper is recording · 12:03')
   vi.advanceTimersByTime(1000)
-  expect(icon.setToolTip).toHaveBeenLastCalledWith('Yogurt is recording · 12:03')
+  expect(icon.setToolTip).toHaveBeenLastCalledWith('PBN Whisper is recording · 12:03')
   state.paused = true; state.recording({ t: 'paused' })
   expect(basename(icon.setImage.mock.lastCall[0].path)).toBe('tray-color.png')
   expect(tray.accelerators()).toEqual({ 'Settings…': 'Ctrl+,' })

@@ -65,7 +65,7 @@ export function MeetingSelectionBar({ ids, memberships, list, busy, clear, trash
     </div>
     {naming && <FolderName onDone={made => {
       setNaming(false); trigger.current?.focus()
-      if (made) void addMeetingsToFolder(made.id, ids).catch(() => toasts.add({ title: t("Yogurt couldn't add this note to the folder. Try again.") }))
+      if (made) void addMeetingsToFolder(made.id, ids).catch(() => toasts.add({ title: t("PBN Whisper couldn't add this note to the folder. Try again.") }))
     }} />}
   </>, document.body)
 }

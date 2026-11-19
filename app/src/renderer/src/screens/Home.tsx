@@ -34,7 +34,7 @@ export function Home({ open, openFolder, agendaJump }: { open: (id: string) => v
     const r = await window.yogurt.meetings.start(eventId).catch(() => ({ error: 'failed' as const }))
     if (!('error' in r)) return
     if (r.error === 'gone') setCalendarRevision((revision) => revision + 1)
-    toasts.add({ id: 'home-message', data: { testId: 'home-message' }, title: r.error === 'gone' ? t('That meeting is no longer on your calendar.') : t("Yogurt couldn't start the notes. Try again in a moment.") })
+    toasts.add({ id: 'home-message', data: { testId: 'home-message' }, title: r.error === 'gone' ? t('That meeting is no longer on your calendar.') : t("PBN Whisper couldn't start the notes. Try again in a moment.") })
   }
   const noMeetings = past.cards?.length === 0
   const calendar = window.yogurt.capabilities.calendar
@@ -44,7 +44,7 @@ export function Home({ open, openFolder, agendaJump }: { open: (id: string) => v
       <h1>{t('Your meetings')}</h1>
       <LoadingContent pending={!past.cards} testId="meetings-loading" skeleton={<MeetingListLoading />} className="library-load">{noMeetings ? <section data-testid="past-empty" className="library-empty empty-state"><div className="empty-state-content">
         <div className="empty-tile"><FileText size={28} strokeWidth={1.5} aria-hidden="true" /></div><h2>{t('Your notes will show up here')}</h2>
-        <p>{t('Yogurt writes a summary after you finish recording.')}</p>
+        <p>{t('PBN Whisper writes a summary after you finish recording.')}</p>
       </div></section> : <PastNotes cards={past.cards ?? []} day={day} more={past.more} sentinel={past.setSentinel} onOpen={open} openFolder={openFolder} />}</LoadingContent>
     </div>
     {calendar && <Agenda revision={calendarRevision} recording={recording} onStart={start} onOpen={open} jumpTo={agendaJump} />}

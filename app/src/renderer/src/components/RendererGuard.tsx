@@ -17,7 +17,7 @@ export function RendererRecovery() {
   return <main className="renderer-recovery" data-testid="renderer-recovery">
     <div className="renderer-recovery-titlebar drag" aria-hidden="true" />
     <div className="renderer-recovery-content">
-      <p role="alert">{saveFailed ? t("Yogurt couldn't finish saving") : t("This window couldn't be displayed.")}</p>
+      <p role="alert">{saveFailed ? t("PBN Whisper couldn't finish saving") : t("This window couldn't be displayed.")}</p>
       <button autoFocus type="button" className="modal-button primary" onClick={() => {
         // Reload only after main has saved or retained every pending edit.
         if (handoffOpenNotes()) window.location.reload()

@@ -129,7 +129,7 @@ function readZoom(windows: AxWindow[]): CallReading {
           for (const key of TALKING) if (v.startsWith(key)) { const name = cleanZoom(v.slice(key.length).replace(/^\s*[:：]\s*/, '')); if (name) speaking.push(name) }
         }
       }
-      // a row of the participants list: its first text is the name, "(me)" on the person using Yogurt
+      // a row of the participants list: its first text is the name, "(me)" on the person using PBN Whisper
       if (ROW.has(n.r) && up.some((a) => OUTLINE.has(a.r) && LISTS.has(low(a.d ?? a.t ?? '')))) {
         let text: string | undefined
         walk(n, (x) => { if (!text && STATIC_TEXT.has(x.r)) text = x.v ?? x.t })

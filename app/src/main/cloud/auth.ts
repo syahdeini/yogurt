@@ -1,6 +1,6 @@
 import { KeychainUnavailableError, NotSignedInError, openCache, sealCache, shouldForceRefresh, type TokenSeal } from './tokens'
 
-export type CloudAccount = { homeAccountId: string; localAccountId: string; username: string; name?: string }
+export type CloudAccount = { homeAccountId: string; localAccountId: string; username: string; name?: string; tid?: string }
 
 export type TokenResult = { accessToken: string; expiresOn: number; account: CloudAccount }
 
@@ -18,7 +18,7 @@ export type MsalClient = {
   clear(): Promise<void>
 }
 
-export type AuthErrorCode = 'not-configured' | 'cancelled' | 'keychain' | 'failed' | 'not-signed-in'
+export type AuthErrorCode = 'not-configured' | 'cancelled' | 'keychain' | 'failed' | 'not-signed-in' | 'wrong-org'
 
 export class CloudAuthError extends Error {
   constructor(readonly code: AuthErrorCode, message: string = code) { super(message) }

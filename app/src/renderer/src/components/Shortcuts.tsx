@@ -6,7 +6,7 @@ import { keys, onMac } from '../keys'
 
 export const appShortcuts = () => [
   [t('Meetings'), '⌘1'], [t('Ask'), '⌘2'], [t('Trash'), '⌘3'],
-  [t('Search and commands'), '⌘K'], [t('Show or hide Ask Yogurt'), '⌘J'], [t('Settings'), '⌘,'],
+  [t('Search and commands'), '⌘K'], [t('Show or hide Ask PBN Whisper'), '⌘J'], [t('Settings'), '⌘,'],
   [t('Back'), '⌘['], [t('Forward'), '⌘]'], [t('Copy notes'), '⇧⌘C'], [t('Keyboard shortcuts'), '⌘/'],
 ].map(([label, mac]) => [label, keys(mac)] as const)
 
@@ -20,7 +20,7 @@ export function Shortcuts({ onClose }: { onClose(): void }) {
     [t('Transcript'), [[t('Navigate'), '↑ ↓ ↖ ↘'], [t('Play'), '↵ / ␣']]],
     [t('Edit'), pc([[t('Undo'), '⌘Z'], [t('Redo'), '⇧⌘Z'], [t('Cut'), '⌘X'], [t('Copy'), '⌘C'], [t('Paste'), '⌘V'], [t('Paste and Match Style'), '⌥⇧⌘V'], [t('Select All'), '⌘A'], [t('Bold'), '⌘B'], [t('Italic'), '⌘I'], [t('Text formatting'), '⌥F10']])],
     // Hide is the Mac's own
-    [t('Window'), pc([[t('Close Window'), '⌘W'], [t('Minimize'), '⌘M'], ...(onMac() ? [[t('Hide {app}', { app: 'Yogurt' }), '⌘H'], [t('Hide Others'), '⌥⌘H']] as const : []), [t('Quit {app}', { app: 'Yogurt' }), '⌘Q']])],
+    [t('Window'), pc([[t('Close Window'), '⌘W'], [t('Minimize'), '⌘M'], ...(onMac() ? [[t('Hide {app}', { app: 'PBN Whisper' }), '⌘H'], [t('Hide Others'), '⌥⌘H']] as const : []), [t('Quit {app}', { app: 'PBN Whisper' }), '⌘Q']])],
     [t('View'), pc([[t('Toggle Sidebar'), '⌃⌘S'], [t('Actual Size'), '⌘0'], [t('Zoom In'), '⌘+'], [t('Zoom Out'), '⌘−'], [t('Toggle Full Screen'), '⌃⌘F']])],
   ] as const
   const words = query.trim().toLocaleLowerCase().split(/\s+/)

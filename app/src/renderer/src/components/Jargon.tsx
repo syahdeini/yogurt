@@ -32,7 +32,7 @@ export function Jargon() {
       <span className="settings-permission-icon"><BookA size={17} strokeWidth={1.75} aria-hidden="true" /></span>
       <div className="settings-row-copy">
         <label htmlFor="jargon-input" className="settings-label">{t('Custom words')}</label>
-        <p className="settings-description">{t('Yogurt uses these words to spell names and terms in your transcripts and notes.')}</p>
+        <p className="settings-description">{t('PBN Whisper uses these words to spell names and terms in your transcripts and notes.')}</p>
         <div data-testid="jargon-field" className="settings-jargon-field" onMouseDown={(e) => { if (e.target === e.currentTarget) { e.preventDefault(); input.current?.focus() } }}>
           {terms.map((term) => (
             <span key={term.toLowerCase()} data-testid="jargon-chip" className="settings-jargon-chip">

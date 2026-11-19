@@ -16,7 +16,7 @@ afterEach(() => {
 const base = { endedAt: null, eventId: null, app: null, attendees: [], state: 'done' as const, startedAt: 1 }
 
 describe('genericTitle', () => {
-  it('the titles Yogurt gives a meeting with no event are generic', () => {
+  it('the titles PBN Whisper gives a meeting with no event are generic', () => {
     for (const t of ['Meeting', 'Zoom call', 'zoom.us call', 'Microsoft Teams call', 'Google Meet', 'Teams meeting', 'Zoom meeting', 'Untitled', 'New note', '  meeting ', 'FaceTime call', 'Slack call']) expect(genericTitle(t)).toBe(true)
   })
   it("the interface language's own words, given by the app, are generic too", () => {
@@ -32,7 +32,7 @@ describe('genericTitle', () => {
     expect(src).not.toMatch(/from ['"][^'"]*i18n/)
   })
   it('a real title is not', () => {
-    for (const t of ['Testing Yogurt transcription accuracy with Dana', 'Weekly sync', 'Call with the bank about the loan', 'Design review', 'Long meeting about pricing', '']) expect(genericTitle(t)).toBe(t === '')
+    for (const t of ['Testing PBN Whisper transcription accuracy with Dana', 'Weekly sync', 'Call with the bank about the loan', 'Design review', 'Long meeting about pricing', '']) expect(genericTitle(t)).toBe(t === '')
   })
 })
 

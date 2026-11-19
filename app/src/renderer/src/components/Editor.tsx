@@ -59,7 +59,7 @@ export function Editor(p: {
     editable: p.editable ?? true,
     shouldRerenderOnTransaction: false,
     editorProps: { attributes: {
-      // notes are in the meeting's language, not the interface's: English notes read left to right in Arabic Yogurt
+      // notes are in the meeting's language, not the interface's: English notes read left to right in Arabic PBN Whisper
       dir: 'auto', 'data-testid': p.testId, class: `note-prose outline-none ${p.className ?? ''}`, spellcheck: 'true',
       role: 'textbox', 'aria-label': p.label, 'aria-multiline': 'true', 'aria-readonly': String(p.editable === false),
     } },

@@ -238,12 +238,12 @@ export type YogurtApi = {
     addLink(url: string): Promise<{ ok: true; id: string; name: string } | { ok: false; error: 'bad-url' | 'unreachable' | 'not-calendar' | 'public-address' }>
     removeLink(id: string): Promise<boolean>
   }
-  /** what Yogurt may use: read it, ask for it (the Mac's own prompt), or open its pane of System Settings */
+  /** what PBN Whisper may use: read it, ask for it (the Mac's own prompt), or open its pane of System Settings */
   permissions: {
     status(): Promise<PermissionStatus>
     request(kind: PermissionKind): Promise<Access>
     open(kind: PermissionKind): Promise<void>
-    /** quit and open Yogurt again, for a permission the Mac applies only then; false while recording */
+    /** quit and open PBN Whisper again, for a permission the Mac applies only then; false while recording */
     relaunch(): Promise<boolean>
   }
   /** first run: the intro and the questions still to ask (none once answered or put off); home's Finish setup after */
@@ -260,7 +260,7 @@ export type YogurtApi = {
   }
   settings: {
     /** myName: what the person is called in meetings (their Mac's full name, macName, when they never changed it) */
-    get(): Promise<{ theme: Theme; openAtLogin: boolean; showInMenuBar: boolean; appVisibility: AppVisibility; /** the language picked; '' follows the Mac */ language: string; /** the language in use */ locale: string; /** the Mac's language, among Yogurt's */ systemLocale: string; myName: string; macName: string; /** a recording stops by itself when its call ends (off: ask first) */ stopWhenCallEnds: boolean; recordingReminder: boolean; keepRecordings: boolean; /** personal jargon, spelled as typed */ jargon: string[]; /** the language people speak in meetings */ spoken: import('./spoken').Spoken; /** default summary language; '' follows the meeting */ summaryLanguage: string }>
+    get(): Promise<{ theme: Theme; openAtLogin: boolean; showInMenuBar: boolean; appVisibility: AppVisibility; /** the language picked; '' follows the Mac */ language: string; /** the language in use */ locale: string; /** the Mac's language, among PBN Whisper's */ systemLocale: string; myName: string; macName: string; /** a recording stops by itself when its call ends (off: ask first) */ stopWhenCallEnds: boolean; recordingReminder: boolean; keepRecordings: boolean; /** personal jargon, spelled as typed */ jargon: string[]; /** the language people speak in meetings */ spoken: import('./spoken').Spoken; /** default summary language; '' follows the meeting */ summaryLanguage: string }>
     /** blank goes back to the Mac's full name */
     setName(name: string): Promise<void>
     setTheme(v: Theme): Promise<void>
@@ -371,7 +371,7 @@ export type CloudStatus = {
   /** YOGURT_CLOUD forces the mode until the app is opened without it */
   forced: 'on' | 'off' | null
   account: { username: string; name: string } | null
-  error: 'not-configured' | 'cancelled' | 'keychain' | 'failed' | null
+  error: 'not-configured' | 'cancelled' | 'keychain' | 'failed' | 'wrong-org' | null
 }
 /** one meeting found: parts is a piece of its notes or transcript, hit on the words matched */
 export type SearchResult = { meetingId: string; title: string; startedAt: number; parts: SnippetPart[]; confident?: boolean }

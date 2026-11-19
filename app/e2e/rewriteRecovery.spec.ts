@@ -45,7 +45,7 @@ test('a failed rewrite keeps the previous edited Enhanced note visible, copyable
     await expect(retry).toHaveClass('text-action')
     await expect(retry).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)')
     await retry.hover()
-    expect(await retry.evaluate((el) => getComputedStyle(el).color)).not.toBe(await page.getByText("Yogurt couldn't regenerate the summary, so your previous version is still shown.").evaluate((el) => getComputedStyle(el).color))
+    expect(await retry.evaluate((el) => getComputedStyle(el).color)).not.toBe(await page.getByText("PBN Whisper couldn't regenerate the summary, so your previous version is still shown.").evaluate((el) => getComputedStyle(el).color))
     await expect(page.getByTestId('note-enhanced-editor')).toHaveText(prior)
     await page.getByTestId('share-button').click()
     await page.getByTestId('share-copy-summary').click()

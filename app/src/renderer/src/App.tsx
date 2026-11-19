@@ -15,13 +15,15 @@ import { TrashToast } from './components/TrashToast'
 import { Trash } from './screens/Trash'
 import { ChatPage } from './screens/ChatPage'
 import { BootScreen } from './components/BootScreen'
+import { CloudSignIn } from './components/CloudSignIn'
 import { bootHoldMs } from '../../shared/onboarding'
 import { Folder } from './screens/Folder'
 import { useFolders } from './folders'
-import type { LibrarySource, MeetingView, OnboardingPlan, SetupState } from '../../shared/types'
+import type { CloudStatus, LibrarySource, MeetingView, OnboardingPlan, SetupState } from '../../shared/types'
 
 export function App() {
   const [setup, setSetup] = useState<SetupState>()
+  const [cloud, setCloud] = useState<CloudStatus | null>(null)
   // where the app was told to go, e.g. /note/<id>
   const [route, setRouteNow] = useState('')
   const [agendaJump, setAgendaJump] = useState<{ at: number }>()
@@ -85,7 +87,7 @@ export function App() {
   useEffect(() => { void window.yogurt.onboarding.plan().then(setPlan, () => setPlan({ intro: false, steps: [] })) }, [])
   const firstRunDone = !!plan && !plan.intro && plan.steps.length === 0
   const ready = setup?.phase === 'ready' && firstRunDone
-  // the launch screen: up while Yogurt starts, and once it has shown, long enough to be seen
+  // the launch screen: up while PBN Whisper starts, and once it has shown, long enough to be seen
   // a later launch also waits for the models on disk to be checked
   const booted = !!setup && !!plan && !(setup.phase === 'checking' && firstRunDone)
   const [holding, setHolding] = useState(true)
@@ -170,7 +172,18 @@ export function App() {
     open(s.meetingId)
   }
 
+  useEffect(() => {
+    let on = true
+    const apply = (next: CloudStatus) => { if (on) setCloud(next) }
+    void window.yogurt.cloud.status().then(apply).catch(() => apply({ enabled: false, configured: false, forced: null, account: null, error: null }))
+    const off = window.yogurt.cloud.onStatus(apply)
+    return () => { on = false; off() }
+  }, [])
+
   // still starting, or checking what is on disk: the launch screen, so a finished install never flashes the first-run screen
+  if (!cloud) return <div data-testid="app-shell" className="h-full bg-bg"><TitleBar /><BootScreen /></div>
+  // Cloud mode is unusable until a Preferred by Nature account is signed in. Sign-out returns here.
+  if (cloud.enabled && !cloud.account) return <div data-testid="app-shell" className="h-full bg-bg"><TitleBar /><CloudSignIn status={cloud} /></div>
   if (!setup || !plan || holding) return <div data-testid="app-shell" className="h-full bg-bg"><TitleBar /><BootScreen /></div>
   const noteId = route.startsWith('/note/') ? route.slice(6) : null
   const settings = route === '/settings' || route.startsWith('/settings/')

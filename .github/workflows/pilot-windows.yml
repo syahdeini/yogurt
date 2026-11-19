@@ -85,7 +85,7 @@ jobs:
         run: pnpm exec electron-builder --win --publish never
       - uses: actions/upload-artifact@v4
         with:
-          name: Yogurt-windows-x64
-          path: app/dist/Yogurt-windows-*.exe
+          name: PBN-Whisper-windows-x64
+          path: app/dist/PBN-Whisper-Setup.exe
           if-no-files-found: error
           retention-days: 14

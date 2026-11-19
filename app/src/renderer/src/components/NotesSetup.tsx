@@ -77,8 +77,8 @@ export function NotesSetup({ go }: { go: (route: string) => void }) {
                 {upgrading && <button data-testid="notes-setup-skip" className="text-action" disabled={setup.notesUpgradeChanging} onClick={() => void skip()}>{t('Skip')}</button>}
               </div>}
             </div>
-            {retryFailed && <p role="alert">{t("Yogurt couldn't restart the download.")}</p>}
-            {skipFailed && <p role="alert">{t("Yogurt couldn't change the notes model.")}</p>}
+            {retryFailed && <p role="alert">{t("PBN Whisper couldn't restart the download.")}</p>}
+            {skipFailed && <p role="alert">{t("PBN Whisper couldn't change the notes model.")}</p>}
           </Popover.Popup>
         </Popover.Positioner>
       </Popover.Portal>

@@ -13,7 +13,7 @@ vi.mock('electron', () => ({ Notification: class extends EventEmitter {
   constructor() { super(); notices.push(this) }
 } }))
 vi.mock('node:child_process', () => ({ execFile: (_cmd: string, _args: string[], _opts: unknown, cb: Function) => {
-  native.reads++; cb(null, native.requirement, 'Executable=/build/Yogurt.app/Contents/MacOS/Yogurt\n')
+  native.reads++; cb(null, native.requirement, 'Executable=/build/PBN Whisper.app/Contents/MacOS/PBN Whisper\n')
 } }))
 const { createNotificationPermission, notificationIdentity } = await import('../src/main/notificationPermission')
 const local = 'designated => identifier "so.yogurt.app" and certificate leaf = H"1111111111111111111111111111111111111111"'
@@ -23,7 +23,7 @@ const dirs: string[] = []
 function rig() {
   const dir = mkdtempSync(join(tmpdir(), 'yogurt-notification-test-')); dirs.push(dir)
   const path = join(dir, 'settings.json')
-  native.requirement = `Executable=/build/Yogurt.app/Contents/MacOS/Yogurt\n${local}\n`
+  native.requirement = `Executable=/build/PBN Whisper.app/Contents/MacOS/PBN Whisper\n${local}\n`
   return { path, permission: createNotificationPermission(path) }
 }
 afterEach(() => {
@@ -32,7 +32,7 @@ afterEach(() => {
 })
 
 it('uses the bundle and signing requirement, excluding the install path', () => {
-  expect(notificationIdentity(`Executable=/somewhere/Yogurt.app\n${local}\n`)).toBe(local)
+  expect(notificationIdentity(`Executable=/somewhere/PBN Whisper.app\n${local}\n`)).toBe(local)
   expect(notificationIdentity('code object is not signed at all')).toBeNull()
   expect(notificationIdentity('designated => identifier "so.yogurt.app"')).toBeNull()
 })

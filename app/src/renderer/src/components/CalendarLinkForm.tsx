@@ -28,7 +28,7 @@ const steps = (p: Provider): string[] => p === 'google'
 
 const ERRORS = {
   'bad-url': () => t('That doesn\'t look like a calendar address. It should start with https:// or webcal://.'),
-  'unreachable': () => t('Yogurt couldn\'t reach that address. Check your connection and the address.'),
+  'unreachable': () => t('PBN Whisper couldn\'t reach that address. Check your connection and the address.'),
   'not-calendar': () => t('That address isn\'t a calendar. Copy the iCal address, not the page\'s address.'),
   'public-address': () => t('That\'s the public address, which only works if your calendar is public. Copy "Secret address in iCal format" instead.'),
 }

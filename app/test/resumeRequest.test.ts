@@ -145,11 +145,11 @@ it('waits for the first notes model but allows generation during an optional upg
   notes = { ...notes, status: 'done', enhanced: '## Plan' }; requested = undefined
   await render(); await render()
   setupChanged({ phase: 'ready', fraction: 1, notesDownloading: true }); await render()
-  expect(find(tree, NoteMenu)?.props.generation).toMatchObject({ reason: 'Waiting for Yogurt AI to download' })
+  expect(find(tree, NoteMenu)?.props.generation).toMatchObject({ reason: 'Waiting for PBN Whisper AI to download' })
   setupChanged({ phase: 'ready', fraction: 1, notesUpgradeDownloading: true }); await render()
   expect(find(tree, NoteMenu)?.props.generation).toMatchObject({ reason: undefined })
   setupChanged({ phase: 'ready', fraction: 1, notesError: 'Download failed' }); await render()
-  expect(find(tree, NoteMenu)?.props.generation).toMatchObject({ reason: 'Waiting for Yogurt AI to download' })
+  expect(find(tree, NoteMenu)?.props.generation).toMatchObject({ reason: 'Waiting for PBN Whisper AI to download' })
 })
 
 

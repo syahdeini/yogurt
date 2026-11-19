@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import type { Folder } from '../../shared/types'
 
-/** what a dragged meeting row carries: its id, under a type only Yogurt's own rows use */
+/** what a dragged meeting row carries: its id, under a type only PBN Whisper's own rows use */
 export const MEETING_DRAG = 'application/x-yogurt-meeting'
 
 /**

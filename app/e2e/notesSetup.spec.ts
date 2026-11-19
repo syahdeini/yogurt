@@ -149,7 +149,7 @@ test('both AI stages live beside recording, open below, retry failures and disap
         })
       }, state)
       await page.getByTestId('notes-setup-retry').click()
-      await expect(popup).toContainText("Yogurt couldn't restart the download.")
+      await expect(popup).toContainText("PBN Whisper couldn't restart the download.")
       await page.getByTestId('notes-setup-retry').click()
       await expect(trigger).toHaveAccessibleName(`${label} · 27%`)
       await setSetup(app, ready)
@@ -296,7 +296,7 @@ test('skipping from the popover confirms only success, opens Settings, and dismi
     await setSetup(app, upgrade)
     await page.getByTestId('notes-setup-open').click()
     await page.getByTestId('notes-setup-skip').click()
-    await expect(page.getByRole('alert')).toHaveText("Yogurt couldn't change the notes model.")
+    await expect(page.getByRole('alert')).toHaveText("PBN Whisper couldn't change the notes model.")
     await expect(toast).toHaveCount(0)
     for (const dismiss of ['settings', 'close', 'timeout']) {
       if (dismiss !== 'settings') {
@@ -383,7 +383,7 @@ test('Settings shows restore progress without a title-bar download and keeps the
       await expect(row).not.toContainText('Getting the smaller model')
       await expect(row).not.toContainText('The larger model keeps running summaries and Ask')
       if (fail) {
-        await expect(row.getByRole('alert')).toHaveText("Yogurt couldn't change the notes model.")
+        await expect(row.getByRole('alert')).toHaveText("PBN Whisper couldn't change the notes model.")
         await expect(action).toHaveText('Remove')
       } else {
         await expect(row.getByRole('alert')).toHaveCount(0)

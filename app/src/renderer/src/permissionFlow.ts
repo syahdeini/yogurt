@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import type { Access, PermissionKind } from '../../shared/types'
 import { viaSystemSettings } from '../../shared/onboarding'
 
-/** asking: the Mac's prompt is up; away: System Settings is open and Yogurt waits for it to be turned on; back: turned on there */
+/** asking: the Mac's prompt is up; away: System Settings is open and PBN Whisper waits for it to be turned on; back: turned on there */
 export type FlowPhase = 'idle' | 'asking' | 'away' | 'back' | 'failed'
 const POLL_MS = 1500
 const on = (a: Access | undefined) => a === 'granted' || a === 'asked'

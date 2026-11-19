@@ -1,17 +1,17 @@
 import type { Meeting, Store } from '../store'
 
 /**
- * Yogurt as an MCP server, so an AI app on this Mac (Claude, Cursor, …) can read the person's meetings: JSON-RPC
+ * PBN Whisper as an MCP server, so an AI app on this Mac (Claude, Cursor, …) can read the person's meetings: JSON-RPC
  * messages in, answers out (socket.ts carries them; the yogurt-mcp helper connects the app to it). Reading only.
  * Off until the person turns it on in Settings: until then every tool says where to turn it on and gives nothing.
- * Text here goes to the other app's model, never to Yogurt's interface, so it is not translated.
+ * Text here goes to the other app's model, never to PBN Whisper's interface, so it is not translated.
  */
 
 type Track = 'me' | 'them'
 export type McpDeps = {
   store: Pick<Store, 'meeting' | 'meetings' | 'segments' | 'notes' | 'search'>
   enabled: () => boolean
-  /** the person using Yogurt, by name: "You" means nothing to another app */
+  /** the person using PBN Whisper, by name: "You" means nothing to another app */
   me: () => string
   version: string
   /** a finished meeting's audio files (none while it records) */
@@ -28,9 +28,9 @@ const id = { type: 'string', description: 'The meeting id, from list_meetings or
 const readOnly = { readOnlyHint: true, destructiveHint: false, openWorldHint: false }
 /** The tools, in this computer's words: a Mac records AAC in .m4a, Windows and Linux Ogg Opus (a backup can bring either) */
 export const mcpTools = (platform: string) => [
-  { name: 'list_meetings', description: 'Meetings recorded in Yogurt, newest first: id, title, start and end (ISO times), people invited (attendees: name and email from the calendar), call app. Optional query finds meetings by words in their title, transcript or notes.',
+  { name: 'list_meetings', description: 'Meetings recorded in PBN Whisper, newest first: id, title, start and end (ISO times), people invited (attendees: name and email from the calendar), call app. Optional query finds meetings by words in their title, transcript or notes.',
     inputSchema: { type: 'object', properties: { query: { type: 'string' }, limit: { type: 'number', description: 'Most to return (default 20, at most 100)' }, before: { type: 'string', description: 'Only meetings that started before this ISO time, to page back' } } } },
-  { name: 'get_meeting', description: "One meeting: its details, its attendees with their emails, the calendar event it is linked to (calendar_event: title, start, end, calendar; null when none), the notes the person typed (myNotes) and Yogurt's written summary (Markdown).",
+  { name: 'get_meeting', description: "One meeting: its details, its attendees with their emails, the calendar event it is linked to (calendar_event: title, start, end, calendar; null when none), the notes the person typed (myNotes) and PBN Whisper's written summary (Markdown).",
     inputSchema: { type: 'object', properties: { id }, required: ['id'] } },
   { name: 'get_transcript', description: 'What was said in a meeting, line by line with who said it. format "text" (default): "[mm:ss] Name: words" lines. format "lines": JSON with start_ms, end_ms, speaker, is_me and text. "Them" is the other side of the call when the call app gave no name.',
     inputSchema: { type: 'object', properties: { id, format: { type: 'string', enum: ['text', 'lines'] } }, required: ['id'] } },
@@ -120,8 +120,8 @@ export function createMcp(d: McpDeps): Mcp {
         return ok(msgId, {
           protocolVersion: VERSIONS.includes(String(asked)) ? asked : VERSIONS[0],
           capabilities: { tools: {} },
-          serverInfo: { name: 'yogurt', title: 'Yogurt', version: d.version },
-          instructions: `Yogurt holds the person's meeting notes, transcripts and recordings on this ${mac ? 'Mac' : 'computer'}. Use list_meetings or search to find a meeting, then get_meeting, get_transcript or get_audio.`,
+          serverInfo: { name: 'yogurt', title: 'PBN Whisper', version: d.version },
+          instructions: `PBN Whisper holds the person's meeting notes, transcripts and recordings on this ${mac ? 'Mac' : 'computer'}. Use list_meetings or search to find a meeting, then get_meeting, get_transcript or get_audio.`,
         })
       }
       if (method === 'ping') return ok(msgId, {})
@@ -129,15 +129,15 @@ export function createMcp(d: McpDeps): Mcp {
       if (method === 'tools/call') {
         const name = String(params?.name ?? '')
         const tool = tools[name]
-        if (!tool) return said(msgId, `Yogurt has no tool called ${name}.`, true)
-        if (!d.enabled()) return said(msgId, 'Yogurt has connecting AI apps turned off. The person can turn it on in Yogurt: Settings, AI apps.', true)
+        if (!tool) return said(msgId, `PBN Whisper has no tool called ${name}.`, true)
+        if (!d.enabled()) return said(msgId, 'PBN Whisper has connecting AI apps turned off. The person can turn it on in PBN Whisper: Settings, AI apps.', true)
         try { return said(msgId, await tool((params?.arguments as Record<string, unknown>) ?? {})) } catch (e) {
           if (e instanceof Refusal) return said(msgId, e.message, true)
           console.error(`mcp: ${name} failed`, e)
-          return said(msgId, `Yogurt couldn't do that (${name}). Try again.`, true)
+          return said(msgId, `PBN Whisper couldn't do that (${name}). Try again.`, true)
         }
       }
-      return fail(msgId, -32601, `Yogurt doesn't do ${method}`)
+      return fail(msgId, -32601, `PBN Whisper doesn't do ${method}`)
     },
   }
 }

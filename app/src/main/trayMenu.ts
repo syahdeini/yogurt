@@ -19,10 +19,10 @@ export const trayTitle = (active: { elapsedMs: number; paused: boolean } | null)
 /** Keep native and hidden-test menus identical; only the native icon is optional. */
 export function trayItems(active: { id?: string; title: string; paused?: boolean } | null, next?: CalEvent, recent: Recent[] = [], now = Date.now(), os = 'darwin'): TrayItem[] {
   const sep: TrayItem = { id: 'sep', label: '', enabled: true }
-  const open: TrayItem = { id: 'open', label: t('Open Yogurt'), enabled: true }
-  const ask: TrayItem = { id: 'ask', label: t('Ask Yogurt'), enabled: true }
+  const open: TrayItem = { id: 'open', label: t('Open PBN Whisper'), enabled: true }
+  const ask: TrayItem = { id: 'ask', label: t('Ask PBN Whisper'), enabled: true }
   const settings: TrayItem = { id: 'settings', label: t('Settings…'), accelerator: os === 'darwin' ? 'Command+,' : 'Ctrl+,', enabled: true }
-  const quit: TrayItem = { id: 'quit', label: t('Quit Yogurt'), enabled: true }
+  const quit: TrayItem = { id: 'quit', label: t('Quit PBN Whisper'), enabled: true }
   const history: TrayItem = { id: 'recent', label: t('Recent'), enabled: recent.length > 0, submenu: [...recent].sort((a, b) => b.startedAt - a.startedAt).slice(0, 5)
     .map(m => ({ id: `note:${m.id}`, label: `${m.title || t('Untitled meeting')} · ${dayLabel(m.startedAt)}`, enabled: true })) }
   if (!active) return [
@@ -43,7 +43,7 @@ export function trayItems(active: { id?: string; title: string; paused?: boolean
  * Windows and Linux have no text beside a tray icon: a colour mark, a recording one while it records, the time in the tooltip.
  */
 export function trayLook(os: string, active: { paused: boolean } | null, elapsedMs: number): { icon: 'tray' | 'tray-color' | 'tray-recording'; template: boolean; title: string | null; tooltip: string } {
-  const tooltip = active?.paused ? t('Recording paused') : active ? t('Yogurt is recording') : 'Yogurt'
+  const tooltip = active?.paused ? t('Recording paused') : active ? t('PBN Whisper is recording') : 'PBN Whisper'
   if (os === 'darwin') return { icon: 'tray', template: true, title: trayTitle(active ? { elapsedMs, paused: active.paused } : null), tooltip }
   return { icon: active && !active.paused ? 'tray-recording' : 'tray-color', template: false, title: null, tooltip: active ? `${tooltip} · ${formatElapsed(elapsedMs)}` : tooltip }
 }

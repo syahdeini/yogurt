@@ -56,14 +56,14 @@ jobs:
         if: inputs.run_id != ''
         run: |
           if [ "$RUNNER_OS" = Windows ]; then
-            "$RUNNER_TEMP"/preview/Yogurt-windows-x64.exe //S
-            dir="$LOCALAPPDATA/Programs/Yogurt/resources"
+            "$RUNNER_TEMP"/preview/PBN-Whisper-Setup.exe //S
+            dir="$LOCALAPPDATA/Programs/PBN Whisper/resources"
             for i in $(seq 1 90); do [ -f "$dir/app.asar" ] && [ -d "$dir/app.asar.unpacked/node_modules/@node-llama-cpp" ] && break; sleep 2; done
             sleep 5
           else
             mkdir -p "$RUNNER_TEMP/appimage" && cd "$RUNNER_TEMP/appimage"
-            chmod +x "$RUNNER_TEMP"/preview/Yogurt-linux-x86_64.AppImage
-            "$RUNNER_TEMP"/preview/Yogurt-linux-x86_64.AppImage --appimage-extract >/dev/null
+            chmod +x "$RUNNER_TEMP"/preview/PBN-Whisper-linux-x86_64.AppImage
+            "$RUNNER_TEMP"/preview/PBN-Whisper-linux-x86_64.AppImage --appimage-extract >/dev/null
             dir="$RUNNER_TEMP/appimage/squashfs-root/resources"
           fi
           ls "$dir/app.asar.unpacked/node_modules/@node-llama-cpp"

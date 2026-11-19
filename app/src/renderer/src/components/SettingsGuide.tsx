@@ -6,8 +6,8 @@ import { SettingsWindowArt } from './OnboardingArt'
 import { t } from '../../../shared/i18n'
 
 /**
- * While the person is in System Settings: where to click, with a picture of it, and that Yogurt notices by itself.
- * Some permissions only apply once Yogurt opens again, so one button does that (never while recording).
+ * While the person is in System Settings: where to click, with a picture of it, and that PBN Whisper notices by itself.
+ * Some permissions only apply once PBN Whisper opens again, so one button does that (never while recording).
  */
 export function SettingsGuide({ kind, onOpenAgain, canRelaunch, art = true }: { kind: PermissionKind; onOpenAgain(): void; canRelaunch: boolean; /** false: the picture is shown elsewhere (the first run's illustration slot) */ art?: boolean }) {
   const [relaunchFailed, setRelaunchFailed] = useState(false)
@@ -25,18 +25,18 @@ export function SettingsGuide({ kind, onOpenAgain, canRelaunch, art = true }: { 
       {(canRelaunch || kind === 'accessibility' || kind === 'systemAudio') && <details key={kind} className="ob-guide-help">
         <summary>{t('Still not working?')}</summary>
         <div className="ob-guide-help-content">
-        {(kind === 'accessibility' || kind === 'systemAudio') && <p>{t('Not in the list? Click +, then choose Yogurt in Applications.')}</p>}
-        {canRelaunch && <><p>{t('If you turned access on and this stays open, restart Yogurt.')}</p><button data-testid="settings-guide-relaunch" className="workspace-button no-drag" onClick={() => {
+        {(kind === 'accessibility' || kind === 'systemAudio') && <p>{t('Not in the list? Click +, then choose PBN Whisper in Applications.')}</p>}
+        {canRelaunch && <><p>{t('If you turned access on and this stays open, restart PBN Whisper.')}</p><button data-testid="settings-guide-relaunch" className="workspace-button no-drag" onClick={() => {
           void window.yogurt.permissions.relaunch().then((ok) => setRelaunchFailed(!ok), () => setRelaunchFailed(true))
-        }}><span>{t('Restart Yogurt')}</span></button></>}
+        }}><span>{t('Restart PBN Whisper')}</span></button></>}
       </div>
       </details>}
-      {relaunchFailed && <p role="alert" className="ob-guide-note">{t("Yogurt couldn't reopen. Quit it from the menu bar and open it again.")}</p>}
+      {relaunchFailed && <p role="alert" className="ob-guide-note">{t("PBN Whisper couldn't reopen. Quit it from the menu bar and open it again.")}</p>}
     </div>
   )
 }
 
-/** The pane as System Settings shows it, with Yogurt's switch */
+/** The pane as System Settings shows it, with PBN Whisper's switch */
 export function SettingsArt({ kind }: { kind: PermissionKind }) {
   return <SettingsWindowArt pane={permissionCopy(kind).pane} section={kind === 'systemAudio' ? t('System Audio Recording Only') : undefined} />
 }

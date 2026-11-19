@@ -9,7 +9,7 @@ export const isEssential = (k: PermissionKind) => ESSENTIAL.includes(k)
 const open = (a: Access) => a === 'unknown' || a === 'denied'
 
 /**
- * The first run: the intro (once, even if Yogurt reopens halfway), then one step per permission still open, in order.
+ * The first run: the intro (once, even if PBN Whisper reopens halfway), then one step per permission still open, in order.
  * ask: whether this run may show it at all (fake mode only when a test sets the permissions).
  * kinds: the permissions this computer has (supportedKinds in platform.ts); a Mac has them all.
  */

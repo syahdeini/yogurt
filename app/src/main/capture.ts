@@ -200,7 +200,7 @@ export const captureArgs = (dir: string, o?: CaptureOpts): string[] =>
 export function startCapture(meetingDir: string, o?: CaptureOpts): Capture {
   mkdirSync(meetingDir, { recursive: true })
   if (isFake()) return new Capture(fakeCaptureProc(meetingDir, o?.startMs ?? 0, { speech: !!o?.speech, part: o?.part, mic: o?.mic }), { startMs: o?.startMs })
-  // straight from Yogurt, never through a shell: Windows leaves the helper's parent's process tree (Yogurt) out of the call audio
+  // straight from PBN Whisper, never through a shell: Windows leaves the helper's parent's process tree (PBN Whisper) out of the call audio
   const child = spawn(audioHelperPath(), captureArgs(meetingDir, o), { stdio: ['pipe', 'pipe', 'pipe'], windowsHide: true })
   child.stderr.on('data', (d: Buffer) => console.error('yogurt-audio:', d.toString().trim()))
   // a missing or broken helper is a crash, not an exception in the main process

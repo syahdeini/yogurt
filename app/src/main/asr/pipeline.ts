@@ -95,7 +95,7 @@ export function createPipeline(p: {
   const midOf = (w: LiveWord) => (w.startMs + w.endMs) / 2
 
   const spell = (t: string) => { try { return p.respell?.(t) ?? t } catch { return t } }
-  // the mic is always the person using Yogurt
+  // the mic is always the person using PBN Whisper
   const speakerOf = (l: Line) => { if (l.track === 'me') return 'me'; try { return p.nameOf?.(l.startMs, l.endMs) ?? null } catch { return null } }
   const out = (l: Line, hidden = false): Out => ({ meetingId: p.meetingId, track: l.track, startMs: l.startMs, endMs: l.endMs, text: spell(l.text), speaker: speakerOf(l), ...(hidden ? { hidden: true } : {}) })
   const give = (lines: Line[]) => {

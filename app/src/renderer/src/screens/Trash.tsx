@@ -79,7 +79,7 @@ function EmptyTrash({ ids, onDone }: { ids: string[]; onDone: () => void }) {
   }
   return <Modal testId="trash-empty-confirm" role="alertdialog" title={t('Empty the Trash?')}
     description={osWords({ mac: t('{count} meetings, with their notes, transcripts and recordings, are removed from this Mac for good.', { count: ids.length }), other: t('{count} meetings, with their notes, transcripts and recordings, are removed from this computer for good.', { count: ids.length }) })} onCancel={onDone} busy={busy}>
-    {failed && <p className="modal-error" role="alert">{t("Yogurt couldn't delete everything in the Trash.")}</p>}
+    {failed && <p className="modal-error" role="alert">{t("PBN Whisper couldn't delete everything in the Trash.")}</p>}
     <div className="modal-actions">
       <button data-testid="trash-empty-yes" onClick={() => void yes()} disabled={busy} className="modal-button danger">{t('Empty Trash')}</button>
       <ModalClose data-testid="trash-empty-cancel" data-dialog-cancel disabled={busy} className="workspace-button">{t('Cancel')}</ModalClose>

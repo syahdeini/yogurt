@@ -88,9 +88,9 @@ import type { NoteSaveResult, StartResult } from '../shared/types'
 // the transcript's player streams each meeting's audio from here; seeking needs stream support (before ready)
 protocol.registerSchemesAsPrivileged([{ scheme: AUDIO_SCHEME, privileges: { standard: true, secure: true, stream: true } }])
 
-app.setName('Yogurt')
+app.setName('PBN Whisper')
 // Windows shows notifications only for an app with this id (the installer's shortcut carries the same one, electron-builder appId)
-if (process.platform === 'win32') app.setAppUserModelId('so.yogurt.app')
+if (process.platform === 'win32') app.setAppUserModelId('org.pbn.whisper')
 app.setPath('userData', userDataDir())
 mkdirSync(userDataDir(), { recursive: true })
 logToFile(join(userDataDir(), 'logs', 'main.log'))
@@ -102,18 +102,18 @@ process.on('uncaughtException', (err) => console.error('uncaught exception', err
 // Linux on Wayland: once more through XWayland, so the widget and the card can float (display.ts)
 const x11 = x11Relaunch(process.platform, process.argv, process.env, process.execPath)
 if (x11) { stripAppImageEnv(); app.relaunch(x11); app.exit(0) }
-// One Yogurt at a time: a second launch focuses the existing window
+// One PBN Whisper at a time: a second launch focuses the existing window
 else if (!app.requestSingleInstanceLock()) app.quit()
 let win: BrowserWindow | undefined
 let allowQuit = false
 let presentMain = (_foreground = false) => {}
 let updateMainMenu = () => {}
 let setTrayVisible = (_on: boolean) => {}
-/** whether the tray icon is there to reopen Yogurt from (Windows and Linux minimise on close without it) */
+/** whether the tray icon is there to reopen PBN Whisper from (Windows and Linux minimise on close without it) */
 let trayShown = () => true
 /** test runs: no window on screen, never takes focus from what the person is doing */
 const BACKGROUND = process.env.YOGURT_BACKGROUND === '1'
-// an AI app's yogurt-mcp starting Yogurt while it was still opening (--hidden) brings no window forward
+// an AI app's yogurt-mcp starting PBN Whisper while it was still opening (--hidden) brings no window forward
 app.on('second-instance', (_e, argv) => { if (app.isReady() && !startedHidden(process.platform, argv)) showMain() })
 
 /** Links open in the user's browser, never inside the app window. */
@@ -127,7 +127,7 @@ let sendWidgetTranscript = (_channel: string, _value: unknown) => {}
 function createWindow() {
   win = new BrowserWindow({
     width: 1100, height: 760, minWidth: 720, minHeight: 520,
-    title: 'Yogurt',
+    title: 'PBN Whisper',
     ...windowChrome(process.platform, nativeTheme.shouldUseDarkColors),
     show: false,
     // hidden pages would otherwise pause timers and animations
@@ -240,7 +240,7 @@ function goTo(next: string, resume = false) {
   if (!win) createWindow()
   win?.webContents.send('nav:go', route, resumeRequested)
   presented++
-  // The card and widget never take focus, so their explicit navigation brings Yogurt forward.
+  // The card and widget never take focus, so their explicit navigation brings PBN Whisper forward.
   presentMain(true)
 }
 /** how many times the window was asked to come forward (tests run it hidden, so they check this) */
@@ -251,9 +251,9 @@ let refreshCalendarConsumers = () => {}
 /** a call is on (recording or not): the corner never offers Restart then */
 /** fake mode: the System Settings panes the permission steps and Settings would have opened */
 const systemSettings: string[] = []
-/** fake mode: how many times Yogurt would have quit and opened again for a permission */
+/** fake mode: how many times PBN Whisper would have quit and opened again for a permission */
 let relaunched = 0
-/** fake mode: how many times Yogurt would have restarted to install a new version */
+/** fake mode: how many times PBN Whisper would have restarted to install a new version */
 let updateRestarts = 0
 
 async function readCalendar(from: number, to: number, keep?: (event: CalEvent) => boolean): Promise<CalEvent[]> {
@@ -289,6 +289,9 @@ const macName = () => (isFake() ? process.env.YOGURT_FAKE_FULL_NAME ?? 'Sam Rive
 let storeRef: Store | undefined
 let indexerRef: { schedule(): Promise<unknown> } | undefined
 
+/** Cloud mode records nothing until a Preferred by Nature account is signed in. Set once the cloud runtime exists. */
+let notesAllowed = () => true
+
 /** Notice calls, offer to take notes, stop when the call ends (or ask, with that setting off). Starts nothing without a click. */
 function startDetection() {
   if (isFake()) setHelper(fakeHelper)
@@ -302,7 +305,7 @@ function startDetection() {
     autoStop: (m) => { widget.callEnded(m.id); stopMeeting(m.id); prompts.stopped(m) },
     autoStopOn: () => stopsWhenCallEnds(loadSettings(join(userDataDir(), 'settings.json'))),
     // no "Take notes?" while onboarding is still on screen
-    ready: () => !onboardingShowing(),
+    ready: () => !onboardingShowing() && notesAllowed(),
     // fake mode: tests can shorten the grace
     graceMs: isFake() && process.env.YOGURT_FAKE_CALL_GONE_MS ? Number(process.env.YOGURT_FAKE_CALL_GONE_MS) : CALL_GONE_MS,
   })
@@ -338,6 +341,7 @@ function startDetection() {
   sendWidgetTranscript = widget.transcript
   /** The one way notes start: the card's Take notes, and home's Start notes and New note. Opens the note. */
   function begin(p: { title: string; event: CalEvent | null; app: string | null }) {
+    if (!notesAllowed()) throw new Error('sign-in required')
     const alreadyRecording = !!activeMeeting()
     const m = startMeeting(p)
     const resume = resumesNote(m)
@@ -366,6 +370,7 @@ function startDetection() {
     try {
       const event = (await eventsOn(at)).find((e) => matchesEvent(e, eventId))
       if (!event) return { error: 'gone' }
+      if (!notesAllowed()) return { error: 'failed' }
       const m = prepareMeeting(event)
       goTo(`/note/${m.id}`)
       return { id: m.id }
@@ -376,6 +381,7 @@ function startDetection() {
   })
   ipcMain.handle('meetings:start-prepared', (_e, id: unknown): StartResult => {
     if (!isId(id)) return { error: 'gone' }
+    if (!notesAllowed()) return { error: 'failed' }
     try {
       const m = startPreparedMeeting(id)
       if (!m) return { error: 'gone' }
@@ -396,7 +402,7 @@ function startDetection() {
   }
   ipcMain.handle('meetings:set-paused', (_e, id: unknown, paused: unknown) => pauseRecording(id, paused))
   ipcMain.handle('meetings:retry-stop-save', (_e, id: unknown) => isId(id) && retryStopSave(id))
-  // the menu bar: open, new note or stop, quit; Yogurt stays there with its window closed
+  // the menu bar: open, new note or stop, quit; PBN Whisper stays there with its window closed
   const tray = createTray({
     show: !BACKGROUND, visible: loadSettings(join(userDataDir(), 'settings.json')).showInMenuBar !== false,
     open: () => { presented++; showMain() },
@@ -423,7 +429,7 @@ function startDetection() {
   refreshCalendarConsumers = () => { signals.invalidateCalendar(); void tray.refreshCalendar() }
   setTrayVisible = tray.setVisible
   trayShown = tray.shown
-  // cheap, and only while Yogurt runs; more often while recording, so a call that ended stops within a few seconds
+  // cheap, and only while PBN Whisper runs; more often while recording, so a call that ended stops within a few seconds
   let timer: NodeJS.Timeout | undefined
   const watchLoop = () => { timer = setTimeout(() => { void watcher.tick().catch((e) => console.error('detect failed', e)).finally(watchLoop) }, watchEveryMs(!!activeMeeting())) }
   watchLoop()
@@ -476,12 +482,12 @@ app.whenReady().then(() => {
   nativeTheme.themeSource = settings.theme ?? 'system'
   setLanguage(localeOf(settings, systemLocale()))
   updateMainMenu = installAppMenu(() => win, showMain, process.platform)
-  // the interface language's generic titles, so one Yogurt gave in that language is known as generic
+  // the interface language's generic titles, so one PBN Whisper gave in that language is known as generic
   const generic = () => setGenericTitles({ meeting: t('Meeting'), appCall: t('{app} call', { app: '\u0000' }) })
   generic()
   onLanguage(generic)
   if (isFake()) setHelper(fakeHelper)
-  // a moved or reinstalled Yogurt loses its login item: put it back if the person wanted it
+  // a moved or reinstalled PBN Whisper loses its login item: put it back if the person wanted it
   if (!isFake()) syncLoginItem(settings.openAtLogin)
   // Windows and Linux: the calendar is a pasted private calendar address, kept sealed with the system keychain
   // a Mac: the same links, next to its own calendars (Settings → Calendars → Add a calendar link)
@@ -533,6 +539,7 @@ app.whenReady().then(() => {
   initMeetings(store)
   // the person's own names, never given to the other side: the one in Settings and the Mac's
   const settingsFile = join(userDataDir(), 'settings.json')
+  setCalendarSelection(() => loadSettings(settingsFile))
   const cloudOn = cloudModeEnabled(loadSettings(settingsFile))
   setCalendarOwnEmail(email => {
     try { if (store.rememberOwnEmail(email)) win?.webContents.send('meetings:changed') }
@@ -571,6 +578,7 @@ app.whenReady().then(() => {
   const cloud = hookCloud({ file: settingsFile, userData: userDataDir(), meetingDir: (id) => join(userDataDir(), 'meetings', id), exts: isFake() && process.env.YOGURT_FAKE_AUDIO_M4A === '1' ? ['m4a'] : audioExts(process.platform, isFake()), store, windows: () => BrowserWindow.getAllWindows(), sendSegments: (id) => {
     win?.webContents.send('transcript:speakers', id); sendWidgetTranscript('transcript:speakers', id); win?.webContents.send('meetings:changed')
   }, openBrowser: (url) => shell.openExternal(url) })
+  notesAllowed = () => !cloudOn || cloud.signedIn()
   ipcMain.handle('transcript:get', (_e, id: unknown, o: unknown) => {
     if (!isId(id)) return []
     const order = store.speakerOrder(id)
@@ -863,8 +871,8 @@ app.whenReady().then(() => {
       const flushed = await flushRenderer()
       const saved = notes.retryDrafts()
       if (!flushed || !saved) {
-        const options = { type: 'warning' as const, title: t("Yogurt couldn't finish saving"),
-          message: t("Yogurt couldn't finish saving"), detail: t('Return to your notes to try again. Quitting now may discard your latest changes.'),
+        const options = { type: 'warning' as const, title: t("PBN Whisper couldn't finish saving"),
+          message: t("PBN Whisper couldn't finish saving"), detail: t('Return to your notes to try again. Quitting now may discard your latest changes.'),
           buttons: [t('Return to notes'), t('Quit without saving')], defaultId: 0, cancelId: 0, noLink: true }
         const answer = win && !win.isDestroyed() ? await dialog.showMessageBox(win, options) : await dialog.showMessageBox(options)
         if (answer.response !== 1) {
@@ -955,7 +963,7 @@ app.whenReady().then(() => {
   })
   ipcMain.handle('meetings:trashed', () => store.trashed())
   ipcMain.handle('meetings:empty-trash', () => emptyTrash({ store, remove: removeForGood }))
-  // a meeting in the Trash for 30 days goes for good: at launch, and twice a day for a Yogurt that stays open
+  // a meeting in the Trash for 30 days goes for good: at launch, and twice a day for a PBN Whisper that stays open
   const purge = () => void purgeTrash({ store, remove: removeForGood })
   purge(); setInterval(purge, 12 * 60 * 60 * 1000).unref()
   const tidyPrepared = () => {
@@ -1085,5 +1093,5 @@ app.whenReady().then(() => {
   app.on('activate', showMain)
 })
 
-// on a Mac Yogurt lives on in the menu bar, so it still notices calls; Quit is in its menu
+// on a Mac PBN Whisper lives on in the menu bar, so it still notices calls; Quit is in its menu
 app.on('window-all-closed', () => { if (process.platform !== 'darwin') app.quit() })

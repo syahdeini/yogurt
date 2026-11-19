@@ -226,7 +226,7 @@ export function Transcript({ id, recording, inline = false, active = true, onClo
   const onScroll = () => {
     const el = list.current
     if (!el) return
-    // not Yogurt's own glide, so theirs (the scroll bar dragged, a trackpad's glide): playing keeps its hands off while it lasts
+    // not PBN Whisper's own glide, so theirs (the scroll bar dragged, a trackpad's glide): playing keeps its hands off while it lasts
     if (ours.current === null) { handsOn.current = performance.now(); theyScrolled() }
     stick.current = el.scrollHeight - el.scrollTop - el.clientHeight < STICK_PX
     setBehind(!stick.current)
@@ -243,7 +243,7 @@ export function Transcript({ id, recording, inline = false, active = true, onClo
   const following = useRef(true)
   /** where the line being played went while they looked elsewhere, for Back to playing */
   const [away, setAway] = useState<'up' | 'down' | null>(null)
-  /** stops Yogurt's own glide while it moves; its scroll events are not taken for theirs */
+  /** stops PBN Whisper's own glide while it moves; its scroll events are not taken for theirs */
   const ours = useRef<ReturnType<typeof followGlide> | null>(null)
   /** when they last turned the wheel, pressed a key or touched the list: a glide started then would swallow their scroll */
   const handsOn = useRef(0)
@@ -263,7 +263,7 @@ export function Transcript({ id, recording, inline = false, active = true, onClo
     const to = followTarget(r, view, always)
     if (to === null || !ours.current && Math.abs(to - el.scrollTop) < 2) return
     if (!ours.current) {
-      // The final scroll event arrives after done. A fresh seek in that frame still belongs to Yogurt.
+      // The final scroll event arrives after done. A fresh seek in that frame still belongs to PBN Whisper.
       const motion = followGlide(el, () => requestAnimationFrame(() => {
         if (ours.current === motion && !motion.active) ours.current = null
       }))
@@ -290,7 +290,7 @@ export function Transcript({ id, recording, inline = false, active = true, onClo
     following.current = inView(r, view)
     setAway(following.current ? null : r.top < view.scrollTop ? 'up' : 'down')
   }
-  // a wheel, a key, a touch or a press (the scroll bar too): a glide of Yogurt's still moving is stopped, so it can't carry them back
+  // a wheel, a key, a touch or a press (the scroll bar too): a glide of PBN Whisper's still moving is stopped, so it can't carry them back
   const theirs = () => {
     handsOn.current = performance.now()
     ours.current?.stop()

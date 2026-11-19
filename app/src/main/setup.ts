@@ -308,7 +308,7 @@ export class SetupController {
   }
 
   /**
-   * The first notes model downloads while Yogurt already records: it is tried until it lands (meetings recorded
+   * The first notes model downloads while PBN Whisper already records: it is tried until it lands (meetings recorded
    * meanwhile get their notes then). The bigger one follows.
    */
   private startNotes(first: Item, embed: Item) {
@@ -367,7 +367,7 @@ export class SetupController {
     })()
   }
 
-  /** The bigger notes model downloads while Yogurt is already usable. Failing here is not an error screen. */
+  /** The bigger notes model downloads while PBN Whisper is already usable. Failing here is not an error screen. */
   private startBackground(item: Item): Promise<void> {
     if (this._state.notesUpgradeSkipped || this.upgradeChange || this.paths?.recommendedLlm) return Promise.resolve()
     if (this.upgradeAbort) return this.upgradeDownload!

@@ -40,7 +40,7 @@ export function Workspace({ route, meeting, folders, go, back, forward, search, 
       if (target.panel) document.getElementById('meeting-ask')?.click()
       else void window.yogurt.conversations.current(target.chips, target.fresh).then(id => go(`/chat/${id}`)).catch(error => {
         console.error('Opening Ask failed', error)
-        toasts.add({ title: t("Yogurt couldn't make that change. Try again.") })
+        toasts.add({ title: t("PBN Whisper couldn't make that change. Try again.") })
       })
     }
     const key = (e: KeyboardEvent) => {

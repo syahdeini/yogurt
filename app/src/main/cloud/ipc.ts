@@ -20,7 +20,7 @@ export type CloudStatus = {
   configured: boolean
   forced: 'on' | 'off' | null
   account: { username: string; name: string } | null
-  error: 'not-configured' | 'cancelled' | 'keychain' | 'failed' | null
+  error: 'not-configured' | 'cancelled' | 'keychain' | 'failed' | 'wrong-org' | null
 }
 
 function errorCode(error: unknown): CloudStatus['error'] {
@@ -54,10 +54,10 @@ export function hookCloud(deps: {
     for (const window of deps.windows?.() ?? []) if (!window.isDestroyed()) window.webContents.send('cloud:status', status)
   }
   const status = async (error: CloudStatus['error'] = null): Promise<CloudStatus> => {
-    const account = await runtime.account()
+    const snap = await runtime.session()
     return {
-      enabled: runtime.enabled(), configured: runtime.configured(), forced: runtime.forced(), error,
-      account: account ? { username: account.username, name: account.name ?? '' } : null,
+      enabled: runtime.enabled(), configured: runtime.configured(), forced: runtime.forced(), error: error ?? snap.error,
+      account: snap.account ? { username: snap.account.username, name: snap.account.name ?? '' } : null,
     }
   }
   ipcMain.handle('cloud:status', () => status())

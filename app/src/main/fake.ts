@@ -70,7 +70,7 @@ const ask = (k: keyof typeof fakeAccess) => { if (fakeAccess[k] === 'unknown') f
 export const askFakeNotifications = () => { ask('notifications'); return fakeAccess.notifications }
 /** fake mode: every media-pause, media-resume and media-auth the helper was asked for; YOGURT_FAKE_MUSIC=1 has Music playing */
 export const mediaCalls: string[][] = []
-/** also on disk, so a test can see what happened while Yogurt quit */
+/** also on disk, so a test can see what happened while PBN Whisper quit */
 const logMedia = (args: string[]) => { mediaCalls.push(args); try { appendFileSync(join(userDataDir(), 'fake-media.log'), args.join(' ') + '\n') } catch { /* tests only */ } }
 let musicPlaying = process.env.YOGURT_FAKE_MUSIC === '1'
 const standupAt = Date.now() + 5 * 60_000
@@ -123,7 +123,7 @@ export const fakeHelper: Helper = async (args) => {
     case 'media-auth': mediaCalls.push(args); playerAsked = true; return { players: [] }
     case 'mic-auth': ask('mic'); return {}
     case 'audio-auth': ask('systemAudio'); return {}
-    // like the Mac: asking only puts Yogurt in the list unless YOGURT_FAKE_AX_PROMPT=grant; it is turned on in System Settings
+    // like the Mac: asking only puts PBN Whisper in the list unless YOGURT_FAKE_AX_PROMPT=grant; it is turned on in System Settings
     case 'ax-auth': if (process.env.YOGURT_FAKE_AX_PROMPT === 'grant') ask('accessibility'); return { trusted: fakeAccess.accessibility === 'granted' }
     case 'media-pause': { logMedia(args); const paused = musicPlaying ? ['com.apple.Music'] : []; musicPlaying = false; return { paused } }
     case 'media-resume': logMedia(args); if (args.includes('com.apple.Music')) musicPlaying = true; return { resumed: args.slice(1) }

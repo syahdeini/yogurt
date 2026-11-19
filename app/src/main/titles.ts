@@ -1,10 +1,10 @@
 /**
- * Where a meeting's title came from. Only a generic one (what Yogurt names a meeting with no event) or one Yogurt wrote
+ * Where a meeting's title came from. Only a generic one (what PBN Whisper names a meeting with no event) or one PBN Whisper wrote
  * from the notes may be replaced by a title from the notes; one they typed or one from the calendar never is.
  */
 export type TitleSource = 'generic' | 'calendar' | 'user' | 'auto' | 'imported'
 
-/** what Yogurt (or an older copy of it) names a meeting that has no event title */
+/** what PBN Whisper (or an older copy of it) names a meeting that has no event title */
 const ENGLISH = /^(?:.{1,40} call|meeting|untitled|new note|google meet|(?:zoom|teams|microsoft teams|webex|slack) meeting)$/i
 
 /**

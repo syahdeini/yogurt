@@ -36,11 +36,11 @@ jobs:
           - os: windows-latest
             platform: --win
             unpacked: win-unpacked
-            files: app/dist/Yogurt-windows-*.exe
+            files: app/dist/PBN-Whisper-Setup.exe
           - os: ubuntu-22.04
             platform: --linux
             unpacked: linux-unpacked
-            files: app/dist/Yogurt-linux-*.AppImage
+            files: app/dist/PBN-Whisper-linux-*.AppImage
     runs-on: ${{ matrix.os }}
     timeout-minutes: 120
     # Azure trusts sign-in tokens from this repository's signing environment only (managed identity yogurt-github-signing)
@@ -142,7 +142,7 @@ jobs:
         if: runner.os == 'Windows' && env.SIGNED == 'true'
         shell: pwsh
         run: |
-          foreach ($f in @('app/dist/Yogurt-windows-x64.exe', 'app/dist/win-unpacked/Yogurt.exe')) {
+          foreach ($f in @('app/dist/PBN-Whisper-Setup.exe', 'app/dist/win-unpacked/PBN Whisper.exe')) {
             $s = Get-AuthenticodeSignature $f
             Write-Host "$f : $($s.Status) $($s.SignerCertificate.Subject)"
             if ($s.Status -ne 'Valid') { throw "$f is not signed: $($s.Status)" }
@@ -174,13 +174,13 @@ jobs:
       - name: Install it
         run: |
           if [ "$RUNNER_OS" = Windows ]; then
-            # one-click, per user: %LOCALAPPDATA%\Programs\Yogurt, as on a person's PC
-            ./app/dist/Yogurt-windows-x64.exe //S
-            dir="$LOCALAPPDATA/Programs/Yogurt/resources"
+            # one-click, per user: %LOCALAPPDATA%\Programs\PBN Whisper, as on a person's PC
+            ./app/dist/PBN-Whisper-Setup.exe //S
+            dir="$LOCALAPPDATA/Programs/PBN Whisper/resources"
             for i in $(seq 1 60); do [ -f "$dir/bin/yogurt-audio.exe" ] && break; sleep 2; done
           else
             mkdir -p "$RUNNER_TEMP/appimage" && cd "$RUNNER_TEMP/appimage"
-            "$GITHUB_WORKSPACE"/app/dist/Yogurt-linux-x86_64.AppImage --appimage-extract >/dev/null
+            "$GITHUB_WORKSPACE"/app/dist/PBN-Whisper-linux-x86_64.AppImage --appimage-extract >/dev/null
             dir="$RUNNER_TEMP/appimage/squashfs-root/resources"
           fi
           ls -la "$dir/bin"

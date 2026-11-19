@@ -1,6 +1,6 @@
 /**
  * The one request a calendar link makes: the person's own calendar address, straight from this computer to their
- * calendar provider (Google, Outlook, …). No Yogurt server sits in between. Small and slow-proof: at most 10 MB, 20 s.
+ * calendar provider (Google, Outlook, …). No PBN Whisper server sits in between. Small and slow-proof: at most 10 MB, 20 s.
  */
 const MAX_BYTES = 10 * 2 ** 20
 const TIMEOUT_MS = 20_000

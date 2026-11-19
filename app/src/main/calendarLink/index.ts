@@ -3,7 +3,7 @@ import { loadSettings, updateSettings } from '../settings'
 import { icsEvents, icsName, type RawEvent } from './ics'
 
 /**
- * Calendar links: Windows and Linux have no system calendar Yogurt can read, so the person pastes their calendar's
+ * Calendar links: Windows and Linux have no system calendar PBN Whisper can read, so the person pastes their calendar's
  * private iCal address (Google's "Secret address in iCal format", Outlook's published calendar). It is kept only on
  * this computer, sealed with the system keychain where there is one, and read from here every few minutes. The events
  * come out in the Mac helper's shape, so the agenda, call detection and attendees work as on a Mac (calendar.ts).

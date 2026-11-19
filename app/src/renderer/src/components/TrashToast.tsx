@@ -43,7 +43,7 @@ export async function moveMeetingsToTrash(ids: string[], from?: string, bulk = t
   const result = await changeMeetingRows('trash', ids, () => trashMeetings(ids, id => window.yogurt.meetings.trash(id)), result => result.done)
   const error = result.error === 'recording' ? t('Stop the recording first, then try again.')
     : result.error === 'save-pending' ? t('Open this note and finish saving before deleting it.')
-    : result.error ? t("Yogurt couldn't move this note to the Trash. Try again.") : undefined
+    : result.error ? t("PBN Whisper couldn't move this note to the Trash. Try again.") : undefined
   if (result.trashed.length || error) show?.({ ids: result.trashed, from, bulk, error })
   return result.done
 }
@@ -96,10 +96,10 @@ export function TrashToast({ go }: { go: (route: string) => void }) {
           restoring = true
           try {
             remaining = await changeMeetingRows('restore', remaining, () => restoreMeetings(remaining, id => window.yogurt.meetings.restore(id)), failed => remaining.filter(id => !failed.includes(id)))
-            if (remaining.length) { toasts.update(id, { title: t("Yogurt couldn't make that change. Try again."), timeout: 0 }); return }
+            if (remaining.length) { toasts.update(id, { title: t("PBN Whisper couldn't make that change. Try again."), timeout: 0 }); return }
             toasts.close(id)
             if (s.from) go(s.from)
-          } catch { toasts.update(id, { title: t("Yogurt couldn't make that change. Try again."), timeout: 0 }) }
+          } catch { toasts.update(id, { title: t("PBN Whisper couldn't make that change. Try again."), timeout: 0 }) }
           finally { restoring = false }
         } },
       })
