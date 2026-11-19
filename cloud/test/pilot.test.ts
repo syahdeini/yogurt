@@ -65,3 +65,17 @@ describe('entra audience', () => {
     expect(assertPilotClaims(claims, { tenantId: tenant, audiences: withBareAppIds([`api://${id}`]), scope: 'access_as_user' })).toEqual({ oid: 'user-1' })
   })
 })
+
+describe('summary prompt', () => {
+  it('builds the user prompt with people, length, notes and the rewrite instruction', async () => {
+    const { summaryUserPrompt, SUMMARY_SYSTEM } = await import('../src/summary/parse')
+    const prompt = summaryUserPrompt({ title: 'Weekly', transcript: 'You: hi', attendees: ['Maria'], minutes: 55.6, notes: 'budget', instruction: 'shorter' })
+    expect(prompt).toContain('People invited: Maria.')
+    expect(prompt).toContain('Length: about 56 minutes.')
+    expect(prompt).toContain('<notes>\nbudget\n</notes>')
+    expect(prompt).toContain('"shorter"')
+    expect(prompt.endsWith('<transcript>\nYou: hi\n</transcript>')).toBe(true)
+    expect(summaryUserPrompt({ title: '', transcript: 'x' })).not.toContain('<notes>')
+    for (const section of ['## Summary', '## Decisions', '## Open questions', '## Next steps']) expect(SUMMARY_SYSTEM).toContain(section)
+  })
+})

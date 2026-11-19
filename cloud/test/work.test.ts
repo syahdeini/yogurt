@@ -127,3 +127,12 @@ describe('cloud worker', () => {
     expect(state.rows.get('m1')!.error).toMatch(/Summary failed after 5 attempts/)
   })
 })
+
+describe('transcript text', () => {
+  it('joins back-to-back lines from the same voice into one turn', async () => {
+    const { transcriptText } = await import('../src/work')
+    const seg = (track: 'me' | 'them', speaker: string | null, text: string, startMs: number) => ({ track, speaker, text, startMs, endMs: startMs + 1 })
+    expect(transcriptText([seg('me', null, 'Hi.', 0), seg('me', null, 'Ready?', 1), seg('them', 'Speaker 1', 'Yes.', 2), seg('them', 'Speaker 2', 'Go.', 3), seg('them', 'Speaker 2', 'Now.', 4)]))
+      .toBe('You: Hi. Ready?\nSpeaker 1: Yes.\nSpeaker 2: Go. Now.')
+  })
+})

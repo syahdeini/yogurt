@@ -3,7 +3,7 @@ import { parseSummaryJson, SUMMARY_SYSTEM, summaryUserPrompt, type ParsedSummary
 export const SUMMARY_MODEL_IDS = ['azure-openai-gpt-5-mini', 'claude', 'openai'] as const
 export type SummaryModelId = (typeof SUMMARY_MODEL_IDS)[number]
 
-export type SummaryRequest = { title: string; transcript: string; notes?: string; attendees?: string[]; instruction?: string; language?: string }
+export type SummaryRequest = { title: string; transcript: string; notes?: string; attendees?: string[]; instruction?: string; language?: string; minutes?: number }
 
 export interface SummaryProvider {
   readonly id: SummaryModelId
