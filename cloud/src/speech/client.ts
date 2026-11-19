@@ -13,10 +13,9 @@ export async function speechToken(): Promise<string> {
   return token.token
 }
 
-async function speechFetch(url: string, init?: RequestInit): Promise<Response> {
-  const token = await speechToken()
+async function speechFetch(url: string, init?: RequestInit, signed = true): Promise<Response> {
   const headers = new Headers(init?.headers)
-  headers.set('authorization', `Bearer ${token}`)
+  if (signed) headers.set('authorization', `Bearer ${await speechToken()}`)
   if (init?.body && !headers.has('content-type')) headers.set('content-type', 'application/json')
   const response = await fetch(url, { ...init, headers })
   if (!response.ok) {
@@ -75,6 +74,7 @@ export async function transcriptionSegments(self: string, track: 'me' | 'them'):
   const files = await (await speechFetch(body.links.files)).json() as { values?: Array<{ kind?: string; links?: { contentUrl?: string } }> }
   const content = files.values?.find((file) => file.kind === 'Transcription')?.links?.contentUrl
   if (!content) return []
-  const transcript = await (await speechFetch(content)).json() as { recognizedPhrases?: SpeechPhrase[] }
+  // contentUrl is a SAS link to Speech's own storage: a bearer token there fails with 401 "Issuer did not match".
+  const transcript = await (await speechFetch(content, undefined, false)).json() as { recognizedPhrases?: SpeechPhrase[] }
   return segmentsFromSpeech(track, transcript.recognizedPhrases ?? [])
 }

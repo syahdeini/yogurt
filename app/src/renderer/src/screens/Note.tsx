@@ -22,7 +22,7 @@ import { LevelBars } from '../components/LevelBars'
 import { RecordingTime } from '../components/RecordingTime'
 import { Mic, Pause, Play, Sparkles, Loader } from '../components/Icons'
 import { ShareMenu } from '../components/ShareMenu'
-import { NoteMenu, summaryAction } from '../components/NoteMenu'
+import { hasSummarySource, NoteMenu, summaryAction } from '../components/NoteMenu'
 import { DeleteNote } from '../components/DeleteNote'
 import { moveToTrash } from '../components/TrashToast'
 import { useSummaryPresentation } from '../summaryPresentation'
@@ -321,7 +321,7 @@ export function Note({ id, onTitleChange, at, folderSuggestion, onSource, onResu
     void window.yogurt.notes.writeAgain(id, note)
   }
   const hasSummary = !!notes.enhanced?.trim()
-  const generation = summaryAction({ hasSummary, hasContent: hasTranscript || !!notes.mine.trim(), recording, busy: summarizing, downloading: !!(setup?.notesDownloading || setup?.notesError), trashed })
+  const generation = summaryAction({ hasSummary, hasContent: hasSummarySource({ hasTranscript, mine: notes.mine, status: notes.status }), recording, busy: summarizing, downloading: !!(setup?.notesDownloading || setup?.notesError), trashed })
   const requestRewrite = () => {
     if (!generation || generation.reason) return
     if (hasSummary) setRewriteOpen(true)

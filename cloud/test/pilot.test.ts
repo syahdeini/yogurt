@@ -53,3 +53,15 @@ describe('summary provider', () => {
   })
 })
 
+
+describe('entra audience', () => {
+  it('accepts the bare app id that v2 access tokens carry in aud', async () => {
+    const { withBareAppIds } = await import('../src/entra')
+    const id = 'e797299f-c081-494b-8864-9fb143e2e84f'
+    expect(withBareAppIds([`api://${id}`])).toEqual([`api://${id}`, id])
+    expect(withBareAppIds([`api://${id}`, id])).toEqual([`api://${id}`, id])
+    expect(withBareAppIds(['api://custom-name'])).toEqual(['api://custom-name'])
+    const claims = { tid: tenant, ver: '2.0', aud: id, scp: 'access_as_user', azp: 'desktop', oid: 'user-1' }
+    expect(assertPilotClaims(claims, { tenantId: tenant, audiences: withBareAppIds([`api://${id}`]), scope: 'access_as_user' })).toEqual({ oid: 'user-1' })
+  })
+})
