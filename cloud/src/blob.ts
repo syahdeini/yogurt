@@ -33,7 +33,8 @@ async function sas(blobName: string, permissions: string, minutes: number): Prom
   return { url: `https://${account}.blob.core.windows.net/${container()}/${blobName}?${query}`, expiresAt: expiresOn.toISOString() }
 }
 
-export const uploadSas = (blobName: string) => sas(blobName, 'cw', 120)
+/** Read is needed too: the app lists the blob's uncommitted blocks (Get Block List) to resume an upload. */
+export const uploadSas = (blobName: string) => sas(blobName, 'rcw', 120)
 export const readSas = (blobName: string) => sas(blobName, 'r', 180)
 
 /** A block blob exists only after its block list is committed, so this is true once an upload has finished. */
