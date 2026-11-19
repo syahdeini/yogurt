@@ -1,9 +1,10 @@
-# Every push and pull request: typecheck, unit tests, then the end-to-end tests with stand-ins (YOGURT_FAKE), hidden.
-# The Mac job runs everything; Windows and Linux typecheck, unit-test, build their helpers and run the e2e specs that work there.
+# Every push and pull request: Windows and Linux typecheck, unit-test, build their helpers and run the e2e specs that work there.
+# The Mac job runs the full suite, but only when this workflow is started by hand. Hosted macOS runners are not
+# being acquired, so a push or pull request that included it stayed red.
 name: CI
 
 # Docs, the website and licence text don't run it (site.yml checks the website). A newer push to the same branch
-# stops the run before it: macOS minutes cost ten times Linux ones.
+# stops the run before it.
 on:
   push:
     branches: [main]
@@ -18,7 +19,8 @@ concurrency:
 
 jobs:
   test:
-    # Xcode 26: the helpers use macOS 26's speech APIs
+    # Xcode 26: the helpers use macOS 26's speech APIs. Manual runs only; nothing else waits on this job.
+    if: github.event_name == 'workflow_dispatch'
     runs-on: macos-26
     steps:
       - uses: actions/checkout@v4
