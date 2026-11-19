@@ -56,6 +56,9 @@ if (!existsSync(out) || newer(script, out) || newer(patch, out) || newer(vadPatc
     '-DCMAKE_BUILD_TYPE=Release', '-DBUILD_SHARED_LIBS=ON', '-DGGML_BACKEND_DL=ON', '-DGGML_CPU_ALL_VARIANTS=ON',
     '-DGGML_NATIVE=OFF', `-DGGML_VULKAN=${cpuOnly ? 'OFF' : 'ON'}`, '-DGGML_OPENMP=OFF',
     '-DWHISPER_BUILD_TESTS=OFF', '-DWHISPER_BUILD_SERVER=ON', '-DWHISPER_SDL2=OFF', '-DWHISPER_CURL=OFF',
+    // Each CPU variant is its own project. On Windows they otherwise re-run CMake in parallel and one configure fails
+    // with "Configuring incomplete, errors occurred" (MSB8066) while another is writing the same cache.
+    '-DCMAKE_SUPPRESS_REGENERATION=ON',
   ]
   if (win) {
     // the C++ runtime inside each file: a computer without the Visual C++ Redistributable runs it too
@@ -65,8 +68,14 @@ if (!existsSync(out) || newer(script, out) || newer(patch, out) || newer(vadPatc
     flags.push('-DCMAKE_BUILD_WITH_INSTALL_RPATH=ON', '-DCMAKE_INSTALL_RPATH=$ORIGIN', '-DCMAKE_PLATFORM_NO_VERSIONED_SONAME=ON')
   }
   run('cmake', ['-S', dir, '-B', build, ...flags])
-  // ggml depends on its backends (GGML_BACKEND_DL), so this builds them too
-  run('cmake', ['--build', build, '--config', 'Release', '--target', 'whisper-server', '-j', String(cpus().length)])
+  // ggml depends on its backends (GGML_BACKEND_DL), so this builds them too.
+  // One retry: a parallel Visual Studio custom rule can still lose the CMake cache race once.
+  const buildArgs = ['--build', build, '--config', 'Release', '--target', 'whisper-server', '-j', String(cpus().length)]
+  const first = spawnSync('cmake', buildArgs, { stdio: 'inherit' })
+  if (first.status !== 0) {
+    console.error('whisper-server build failed once; building again')
+    run('cmake', buildArgs)
+  }
 
   const built = win ? join(build, 'bin', 'Release') : join(build, 'bin')
   mkdirSync(bin, { recursive: true })
