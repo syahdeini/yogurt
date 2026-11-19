@@ -3,7 +3,7 @@ import os from 'node:os'
 import { createInterface } from 'node:readline'
 import { WATCH_EVERY_MS, type Watch, type WatchLine } from './index'
 
-/** Watches running now, so quitting can end them (they end by themselves when Yogurt's end of stdin closes) */
+/** Watches running now, so quitting can end them (they end by themselves when PBN Whisper's end of stdin closes) */
 const running = new Set<ChildProcess>()
 export const killAllWatches = () => { for (const c of running) c.kill('SIGKILL'); running.clear() }
 

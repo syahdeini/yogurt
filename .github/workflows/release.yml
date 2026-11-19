@@ -1,8 +1,8 @@
 # A release: `sh app/scripts/release.sh 0.3.0` sets the version, tags v0.3.0 and pushes; this builds Yogurt for Mac
 # (Apple Silicon), Windows (x64, unsigned) and Linux (x86_64 AppImage) and publishes one GitHub release with all
 # three, only once every build and its checks have worked.
-# Download links point at releases/latest/download/Yogurt-mac-arm64.dmg, Yogurt-windows-x64.exe and
-# Yogurt-linux-x86_64.AppImage, and installed copies update themselves from the same release
+# Download links point at releases/latest/download/PBN-Whisper-mac-arm64.dmg, PBN-Whisper-Setup.exe and
+# PBN-Whisper-linux-x86_64.AppImage, and installed copies update themselves from the same release
 # (latest-mac.yml, latest.yml, latest-linux.yml; app/src/main/updates.ts).
 # Running it by hand (Actions → Release → Run workflow) only builds: the files are attached to the run, nothing is published.
 # Windows and Linux are built by preview.yml, with the same checks (helpers run from the install folder, whisper-server
@@ -58,10 +58,10 @@ jobs:
           version=$(gh api "repos/$REPO/contents/app/package.json?ref=$sha" --jq .content | base64 -d | jq -r .version)
           [ "v$version" = "$DRAFT" ] || { echo "::error::The app at $sha is $version, not ${DRAFT#v}"; exit 1; }
           assets=$(echo "$r" | jq -r '.assets[].name')
-          for f in Yogurt-mac-arm64.dmg Yogurt-mac-arm64.zip latest-mac.yml; do
+          for f in PBN-Whisper-mac-arm64.dmg PBN-Whisper-mac-arm64.zip latest-mac.yml; do
             echo "$assets" | grep -qx "$f" || { echo "::error::$DRAFT has no $f: add the Mac built by hand first"; exit 1; }
           done
-          echo "$assets" | grep -qE '^(Yogurt-windows-|Yogurt-linux-|latest\.yml|latest-linux\.yml)' && { echo "::error::$DRAFT has Windows or Linux files already"; exit 1; }
+          echo "$assets" | grep -qE '^(PBN-Whisper-Setup|PBN-Whisper-linux-|latest\.yml|latest-linux\.yml)' && { echo "::error::$DRAFT has Windows or Linux files already"; exit 1; }
           echo "::notice::Building Windows and Linux for $DRAFT at $sha"
           echo "build=true" >> "$GITHUB_OUTPUT"; echo "mac=false" >> "$GITHUB_OUTPUT"; echo "ref=$sha" >> "$GITHUB_OUTPUT"
 
@@ -119,9 +119,9 @@ jobs:
         env:
           SIGNED: ${{ secrets.MAC_CERT_P12_BASE64 != '' }}
         run: |
-          node app/scripts/asar-check.mjs app/dist/mac-arm64/Yogurt.app/Contents/Resources/app.asar
-          pnpm -C app exec electron scripts/engine-smoke.cjs dist/mac-arm64/Yogurt.app/Contents/Resources/app.asar
-          if [ "$SIGNED" = true ]; then codesign --verify --deep --strict app/dist/mac-arm64/Yogurt.app; fi
+          node app/scripts/asar-check.mjs "app/dist/mac-arm64/PBN Whisper.app/Contents/Resources/app.asar"
+          pnpm -C app exec electron scripts/engine-smoke.cjs "dist/mac-arm64/PBN Whisper.app/Contents/Resources/app.asar"
+          if [ "$SIGNED" = true ]; then codesign --verify --deep --strict "app/dist/mac-arm64/PBN Whisper.app"; fi
       # the app inside is notarized by electron-builder; the disk image is checked when downloaded too
       - name: Notarize the disk image
         env:
@@ -130,9 +130,9 @@ jobs:
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
         run: |
           [ -n "$APPLE_ID" ] || exit 0
-          xcrun notarytool submit app/dist/Yogurt-mac-arm64.dmg --apple-id "$APPLE_ID" --password "$APPLE_APP_SPECIFIC_PASSWORD" --team-id "$APPLE_TEAM_ID" --wait
-          xcrun stapler staple app/dist/Yogurt-mac-arm64.dmg
-          spctl -a -t open --context context:primary-signature -v app/dist/Yogurt-mac-arm64.dmg
+          xcrun notarytool submit app/dist/PBN-Whisper-mac-arm64.dmg --apple-id "$APPLE_ID" --password "$APPLE_APP_SPECIFIC_PASSWORD" --team-id "$APPLE_TEAM_ID" --wait
+          xcrun stapler staple app/dist/PBN-Whisper-mac-arm64.dmg
+          spctl -a -t open --context context:primary-signature -v app/dist/PBN-Whisper-mac-arm64.dmg
           # stapling changed the disk image: its checksum in latest-mac.yml again
           node app/scripts/refresh-latest.mjs app/dist/latest-mac.yml
       - uses: actions/upload-artifact@v4

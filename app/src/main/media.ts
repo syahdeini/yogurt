@@ -1,6 +1,6 @@
 import type { Helper } from './calendar'
 
-/** Players Yogurt pauses while it records: they answer AppleScript */
+/** Players PBN Whisper pauses while it records: they answer AppleScript */
 export const MEDIA_APPS = ['com.apple.Music', 'com.spotify.client']
 
 /**

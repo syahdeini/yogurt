@@ -295,7 +295,7 @@ describe('finished meeting notifications', () => {
     expect(widget.snapshot().notice).toMatchObject({ title: 'Meeting captured', body: 'Review' })
     expect(state.notifications).toHaveLength(0)
   })
-  it('skips the success banner when Yogurt was in front, but still warns', async () => {
+  it('skips the success banner when PBN Whisper was in front, but still warns', async () => {
     vi.resetModules()
     const { createWidget } = await import('../src/main/widget')
     widget = createWidget({ open, stop: vi.fn(), foreground: () => true })
@@ -311,8 +311,8 @@ describe('finished meeting notifications', () => {
   it('uses the existing save warning and does not notify again when Retry succeeds', async () => {
     state.stopPending = true
     finish(); await Promise.resolve()
-    expect(widget.snapshot().notice?.title).toBe('Recording stopped. Open Yogurt to finish saving.')
-    expect(widget.snapshot().view?.note?.text).toBe('Recording stopped. Open Yogurt to finish saving.')
+    expect(widget.snapshot().notice?.title).toBe('Recording stopped. Open PBN Whisper to finish saving.')
+    expect(widget.snapshot().view?.note?.text).toBe('Recording stopped. Open PBN Whisper to finish saving.')
     state.stopPending = false; state.change!(stopped)
     await Promise.resolve()
     expect(state.notifications).toHaveLength(1)
@@ -356,7 +356,7 @@ describe('finished meeting notifications', () => {
 })
 
 describe('hidden, the recorder does no work (the audit: its 4/s clock and meter kept running behind the main window)', () => {
-  it('is throttled like any hidden window while Yogurt is in front, and runs freely while it floats', async () => {
+  it('is throttled like any hidden window while PBN Whisper is in front, and runs freely while it floats', async () => {
     let front = true
     const { createWidget } = await import('../src/main/widget')
     const w = createWidget({ open, stop: vi.fn(), foreground: () => front })

@@ -6,7 +6,7 @@ import { dirname, posix } from 'node:path'
 type MacStatus = 'not-registered' | 'enabled' | 'requires-approval' | 'not-found'
 
 /**
- * At launch: put the login item back only when the person wants it and the Mac lost it (Yogurt moved or reinstalled).
+ * At launch: put the login item back only when the person wants it and the Mac lost it (PBN Whisper moved or reinstalled).
  * Turned off in System Settings, or waiting for their approval there: theirs to decide, left alone.
  */
 export function loginOnStart(wanted: boolean | undefined, status: MacStatus): 'register' | 'unregister' | 'none' {
@@ -15,7 +15,7 @@ export function loginOnStart(wanted: boolean | undefined, status: MacStatus): 'r
   return 'none'
 }
 
-/** Windows: Yogurt starts at login with --hidden, so it waits in the tray with no window, like a Mac's login launch */
+/** Windows: PBN Whisper starts at login with --hidden, so it waits in the tray with no window, like a Mac's login launch */
 export const WINDOWS_LOGIN = { args: ['--hidden'] }
 
 /** Windows at launch: the entry follows the saved choice. Turned off in Task Manager keeps the entry, so that stays theirs. */
@@ -32,7 +32,7 @@ export const autostartFile = (env: Record<string, string | undefined>, home: str
 /** The entry: the AppImage, quoted the Desktop Entry way (any path, spaces and % included), started hidden */
 export function autostartEntry(appImage: string): string {
   const quoted = `"${appImage.replace(/(["`$\\])/g, '\\$1')}"`.replace(/\\/g, '\\\\').replace(/%/g, '%%')
-  return `[Desktop Entry]\nType=Application\nName=Yogurt\nExec=${quoted} --hidden\nX-GNOME-Autostart-enabled=true\n`
+  return `[Desktop Entry]\nType=Application\nName=PBN Whisper\nExec=${quoted} --hidden\nX-GNOME-Autostart-enabled=true\n`
 }
 
 /** on when the entry is there and not hidden (a desktop's startup settings may hide it instead of removing it) */
@@ -49,7 +49,7 @@ export function autostartPlan(wanted: boolean | undefined, existing: string | nu
 }
 
 const os = process.platform
-/** Only a real, installed Yogurt touches login items (a dev or test run would register Electron itself); on Linux only the AppImage */
+/** Only a real, installed PBN Whisper touches login items (a dev or test run would register Electron itself); on Linux only the AppImage */
 const real = () => app.isPackaged && (os === 'darwin' || os === 'win32' || (os === 'linux' && !!process.env.APPIMAGE))
 
 const file = () => autostartFile(process.env, homedir())

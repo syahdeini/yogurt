@@ -36,7 +36,7 @@ export function FoldersNav({ folders, route, go, collapsed = false, sidebarMotio
       if (!await window.yogurt.folders.reorder(next)) throw new Error('Folder list changed')
     } catch {
       setOrder(undefined)
-      toasts.add({ title: t("Yogurt couldn't make that change. Try again.") })
+      toasts.add({ title: t("PBN Whisper couldn't make that change. Try again.") })
     } finally { setBusy(false) }
   }
   const move = (id: string, step: number) => {
@@ -131,7 +131,7 @@ function FolderItem({ folder, collapsed, sidebarMotion, current, go, onRename, o
         const ids = draggedMeetings(e.dataTransfer.getData(MEETING_DRAG))
         if (ids.length) {
           e.preventDefault()
-          void addMeetingsToFolder(folder.id, ids).catch(() => toasts.add({ title: t("Yogurt couldn't add this note to the folder. Try again.") }))
+          void addMeetingsToFolder(folder.id, ids).catch(() => toasts.add({ title: t("PBN Whisper couldn't add this note to the folder. Try again.") }))
         }
       }}>
       <FolderGlyph appearance={folder} /><span>{folder.name}</span>

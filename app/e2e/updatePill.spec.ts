@@ -22,8 +22,8 @@ test('a ready version is visible immediately and can restart', async () => {
     await expect(pill).toHaveText('Update ready')
     await expect(page.getByTestId('update-toast')).toHaveCount(0)
     await pill.click()
-    await expect(popup).toContainText('Yogurt 9.9.9')
-    await expect(popup).toContainText('Installs when you restart Yogurt')
+    await expect(popup).toContainText('PBN Whisper 9.9.9')
+    await expect(popup).toContainText('Installs when you restart PBN Whisper')
     await page.keyboard.press('Escape')
     await expect(popup).toHaveCount(0); await expect(pill).toBeVisible()
     expect(await restarts(app)).toBe(0)
@@ -65,7 +65,7 @@ for (const failure of ['false', 'reject'] as const) test(`keeps the update ready
       ipcMain.handle('updates:restart', () => { if (failure === 'reject') throw new Error('unavailable'); return false })
     }, failure)
     await page.getByTestId('update-ready').click(); await page.getByTestId('update-restart').click()
-    await expect(page.getByTestId('update-popover').getByRole('alert')).toHaveText("Yogurt couldn't restart. Try again.")
+    await expect(page.getByTestId('update-popover').getByRole('alert')).toHaveText("PBN Whisper couldn't restart. Try again.")
     await expect(page.getByTestId('update-ready')).toBeVisible()
     await expect(page.getByTestId('update-restart')).toBeEnabled()
     expect(await restarts(app)).toBe(0)
@@ -157,7 +157,7 @@ test('a newer ready version is visible after Later', async () => {
       })
     })
     await page.getByTestId('update-ready').click()
-    await expect(page.getByTestId('update-popover')).toContainText('Yogurt 9.9.10')
+    await expect(page.getByTestId('update-popover')).toContainText('PBN Whisper 9.9.10')
   } finally { await app.close() }
 })
 

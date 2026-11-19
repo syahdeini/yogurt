@@ -12,7 +12,7 @@ export function summaryAction({ hasSummary, hasContent, recording, busy, downloa
   if (trashed || (!hasSummary && !hasContent)) return undefined
   return {
     label: hasSummary ? t('Regenerate summary') : t('Generate summary'),
-    reason: recording ? t('Available after recording') : downloading ? t('Waiting for Yogurt AI to download') : busy ? t('Writing the summary') : undefined,
+    reason: recording ? t('Available after recording') : downloading ? t('Waiting for PBN Whisper AI to download') : busy ? t('Writing the summary') : undefined,
   }
 }
 

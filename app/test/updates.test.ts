@@ -3,7 +3,7 @@ import { isPreviewBuild, updatesOn } from '../src/main/updates'
 
 const installed = { packaged: true, fake: false, profile: false, feed: true }
 
-it('an installed Yogurt looks for new versions', () => {
+it('an installed PBN Whisper looks for new versions', () => {
   expect(updatesOn(installed)).toBe(true)
 })
 

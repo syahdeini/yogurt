@@ -7,7 +7,7 @@ import { helperEntitlements } from '../scripts/sign.cjs'
 
 const build = join(__dirname, '../build')
 const keys = (file: string) => [...readFileSync(file, 'utf8').matchAll(/<key>([^<]+)<\/key>/g)].map((m) => m[1]).sort()
-const bin = '/x/Yogurt.app/Contents/Resources/bin'
+const bin = '/x/PBN Whisper.app/Contents/Resources/bin'
 
 describe('each helper gets only what it uses', () => {
   it('yogurt-audio: the microphone', () => {
@@ -20,7 +20,7 @@ describe('each helper gets only what it uses', () => {
     expect(keys(helperEntitlements(`${bin}/whisper-server`, build))).toEqual([])
   })
   it("Electron's own files keep electron-builder's choice; an unknown helper is an error", () => {
-    expect(helperEntitlements('/x/Yogurt.app/Contents/Frameworks/Yogurt Helper.app', build)).toBeNull()
+    expect(helperEntitlements('/x/PBN Whisper.app/Contents/Frameworks/PBN Whisper Helper.app', build)).toBeNull()
     expect(() => helperEntitlements(`${bin}/something-new`, build)).toThrow(/something-new/)
   })
 })
@@ -57,12 +57,12 @@ it('local signing disables timestamps for every file; release signing keeps its 
     vi.stubEnv('YOGURT_SIGN_ID', 'Yogurt Local'); vi.stubEnv('YOGURT_NOTARIZE', '0')
     await sign(options)
     const local = signed.mock.calls[0][0] as typeof options
-    for (const file of [`${bin}/yogurt-audio`, '/x/Yogurt.app/Contents/Frameworks/file']) {
+    for (const file of [`${bin}/yogurt-audio`, '/x/PBN Whisper.app/Contents/Frameworks/file']) {
       expect(local.optionsForFile(file)).toMatchObject({ timestamp: 'none', hardenedRuntime: true })
     }
     vi.stubEnv('YOGURT_SIGN_ID', 'Developer ID')
     await sign(options)
     const release = signed.mock.calls[1][0] as typeof options
-    expect(release.optionsForFile('/x/Yogurt.app')).toMatchObject({ timestamp: 'release-server', hardenedRuntime: true })
+    expect(release.optionsForFile('/x/PBN Whisper.app')).toMatchObject({ timestamp: 'release-server', hardenedRuntime: true })
   } finally { signed.mockRestore(); vi.unstubAllEnvs() }
 })

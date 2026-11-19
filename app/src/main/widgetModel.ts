@@ -12,7 +12,7 @@ export class WidgetModel {
   private get mac() { return this.os === 'darwin' }
   /** Windows blocks desktop apps from the mic in its Privacy settings; Linux has no such switch, so its sound settings */
   private noMic(): string {
-    return this.os === 'win32' ? t("Yogurt can't hear your mic. Turn on microphone access for desktop apps in Windows Settings.") : t("Yogurt can't hear your mic. Check your sound settings.")
+    return this.os === 'win32' ? t("PBN Whisper can't hear your mic. Turn on microphone access for desktop apps in Windows Settings.") : t("PBN Whisper can't hear your mic. Check your sound settings.")
   }
   private m: { id: string; title: string; startedAt: number } | null = null
   private kind: 'recording' | 'captured' = 'recording'
@@ -65,14 +65,14 @@ export class WidgetModel {
     let note: WidgetView['note'] = null
     if (this.kind === 'recording') {
       if (now < this.hiccupUntil) note = { tone: 'hiccup', text: this.pausedAt !== null ? t('Recording is still paused after an interruption.') : t('Recording resumed after an interruption.') }
-      else if (this.missingAudio.size === 2) note = { tone: 'hint', code: 'no-mic', missingAudio: ['mic', 'systemAudio'], text: this.mac ? t("Yogurt can't hear your microphone or the call. Turn on microphone and call audio in System Settings.") : this.noMic() }
-      else if (this.missingAudio.has('mic')) note = { tone: 'hint', code: 'no-mic', text: this.mac ? t("Yogurt can't hear your mic. Allow it in System Settings.") : this.noMic() }
-      else if (this.missingAudio.has('systemAudio')) note = { tone: 'hint', code: 'no-system-audio', text: this.mac ? t("Yogurt can't hear the call audio. Allow it in System Settings.") : t("Yogurt can't hear the call audio on this computer.") }
+      else if (this.missingAudio.size === 2) note = { tone: 'hint', code: 'no-mic', missingAudio: ['mic', 'systemAudio'], text: this.mac ? t("PBN Whisper can't hear your microphone or the call. Turn on microphone and call audio in System Settings.") : this.noMic() }
+      else if (this.missingAudio.has('mic')) note = { tone: 'hint', code: 'no-mic', text: this.mac ? t("PBN Whisper can't hear your mic. Allow it in System Settings.") : this.noMic() }
+      else if (this.missingAudio.has('systemAudio')) note = { tone: 'hint', code: 'no-system-audio', text: this.mac ? t("PBN Whisper can't hear the call audio. Allow it in System Settings.") : t("PBN Whisper can't hear the call audio on this computer.") }
       else if (this.textHint === 'transcribe-failed') note = { tone: 'hint', text: t("Some of this meeting couldn't be transcribed.") }
       else if (this.textHint === 'no-speech-model') note = { tone: 'hint', text: t("The speech model isn't ready yet, so only audio is being saved.") }
-      else if (this.textHint === 'falling-behind') note = { tone: 'hint', text: t('Yogurt is falling behind. Some lines may be missing.') }
+      else if (this.textHint === 'falling-behind') note = { tone: 'hint', text: t('PBN Whisper is falling behind. Some lines may be missing.') }
     }
-    else if (this.savePending) note = { tone: 'hint', text: t('Recording stopped. Open Yogurt to finish saving.') }
+    else if (this.savePending) note = { tone: 'hint', text: t('Recording stopped. Open PBN Whisper to finish saving.') }
     return {
       kind: this.kind, meetingId: m.id, title: m.title,
       elapsedMs: Math.max(0, end - m.startedAt - this.pausedMs), at: now, note, crashed: this.crashed,

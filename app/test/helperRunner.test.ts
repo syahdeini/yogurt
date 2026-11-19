@@ -21,7 +21,7 @@ it.skipIf(process.platform === 'win32')('answers with the helper\'s JSON', async
   expect(r.running()).toEqual([])
 })
 
-it.skipIf(process.platform === 'win32')('quitting kills a helper still waiting, so none outlives Yogurt', async () => {
+it.skipIf(process.platform === 'win32')('quitting kills a helper still waiting, so none outlives PBN Whisper', async () => {
   const r = createHelperRunner(fakeHelper)
   const waiting = r.run(['wait'])
   await new Promise((res) => setTimeout(res, 200))

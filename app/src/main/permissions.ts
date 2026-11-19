@@ -1,7 +1,7 @@
 import type { Helper } from './calendar'
 
 /**
- * What Yogurt may use. unknown: not asked yet. restricted: the Mac is managed by an organisation, which decides.
+ * What PBN Whisper may use. unknown: not asked yet. restricted: the Mac is managed by an organisation, which decides.
  * asked: notifications only, requested already (this bridge does not read the person's answer).
  */
 export type Access = 'granted' | 'denied' | 'unknown' | 'restricted' | 'asked'
@@ -23,7 +23,7 @@ export const SETTINGS_URL: Record<PermissionKind, string> = {
 /**
  * yogurt-mac permissions says: mic as AVFoundation names it (authorized, denied, restricted, notDetermined),
  * systemAudio as TCC's preflight number (0 allowed, 1 denied, 2 not asked), calendar as the helper's calendar-status,
- * accessibility as true or false only (the Mac never says whether it was asked: axAsked, Yogurt's own memory, tells).
+ * accessibility as true or false only (the Mac never says whether it was asked: axAsked, PBN Whisper's own memory, tells).
  */
 export function parseStatus(raw: unknown, o: { axAsked?: boolean } = {}): Omit<PermissionStatus, 'notifications'> {
   const r = (raw && typeof raw === 'object' ? raw : {}) as Record<string, unknown>
@@ -40,7 +40,7 @@ export const WINDOWS_SETTINGS: Partial<Record<PermissionKind, string>> = { mic: 
 const ASK: Record<Exclude<PermissionKind, 'notifications'>, string> = { mic: 'mic-auth', systemAudio: 'audio-auth', calendar: 'calendar-auth', accessibility: 'ax-auth' }
 
 /**
- * Reads and asks for what Yogurt needs. The helper asks with the Mac's own prompts; notifications go through Electron,
+ * Reads and asks for what PBN Whisper needs. The helper asks with the Mac's own prompts; notifications go through Electron,
  * whose first notification makes the Mac ask. Nothing here throws: a helper that fails reads as unknown.
  */
 export function createPermissions(d: { helper: Helper; notifications(): Access | Promise<Access>; askNotifications(): Promise<Access>; open(url: string): void

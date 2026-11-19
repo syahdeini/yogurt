@@ -4,7 +4,7 @@ import type { Spoken } from '../../shared/spoken'
 /**
  * Apple's on-device speech (SpeechAnalyzer and SpeechTranscriber, macOS 26 on Apple Silicon) for the live words: it
  * reads on the Neural Engine and gives volatile text as someone talks. Never SFSpeechRecognizer, which can send audio
- * away. Its model is downloaded once through AssetInventory, like Yogurt's own models; no audio leaves the Mac.
+ * away. Its model is downloaded once through AssetInventory, like PBN Whisper's own models; no audio leaves the Mac.
  * Whisper stays everywhere else, and for the saved transcript: on real meetings whisper got 19.5% of words wrong, Apple 25.0%.
  */
 export type SpeechHost = { platform: string; arch: string; /** the kernel's version, e.g. 25.4.0 (macOS 26 is Darwin 25) */ osRelease: string }

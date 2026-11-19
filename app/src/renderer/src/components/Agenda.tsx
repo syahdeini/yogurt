@@ -142,7 +142,7 @@ export function Agenda({ revision, recording, onStart, onOpen, jumpTo }: Actions
     <LoadingContent key={selected} pending={!calendar} skeleton={<div className="agenda-events">{[0, 1].map(n => <Event key={n} loading event={{ id: String(n), title: '', url: null, start: selected, end: selected, attendees: [] }} me="" now={now} near={false} initial={false} selected={false} onInspect={() => {}} />)}</div>}>
     {calendar && (calendar.status !== 'granted' ? <section className="agenda-status" data-testid={calendar.status === 'error' ? 'calendar-error' : 'calendar-off'}>
         <CalendarDays size={22} aria-hidden="true" />
-        <h3>{calendar.status === 'error' ? t("Yogurt couldn't read your calendar") : calendar.status === 'denied' ? t('Calendar access is off') : t('See your meetings here')}</h3>
+        <h3>{calendar.status === 'error' ? t("PBN Whisper couldn't read your calendar") : calendar.status === 'denied' ? t('Calendar access is off') : t('See your meetings here')}</h3>
         <p>{calendar.status === 'error' ? t('Try reading the calendars on this Mac again.') : (window.yogurt.capabilities.calendarLink ? t('Connect a calendar to see your meetings.') : t('Connect the calendars on this Mac to see your upcoming meetings.'))}</p>
         <button className="workspace-button" onClick={calendar.status === 'error' ? () => void load() : connect}>{calendar.status === 'error' ? t('Try again') : calendar.status === 'denied' ? t('Open System Settings') : t('Connect calendar')}</button>
       </section>
@@ -249,7 +249,7 @@ function EventDetails({ motionProps, event, recording, onOpen, onStart, now, onC
     {url && <a className="workspace-button" title={t('Join meeting')} href={url} target="_blank" rel="noreferrer"><span>{t('Join meeting')}</span><ExternalLink size={12} aria-hidden="true" /></a>}
     </div>}
     </div>}
-    {failed && <p role="alert" className="text-danger">{t("Yogurt couldn't start the notes. Try again in a moment.")}</p>}
+    {failed && <p role="alert" className="text-danger">{t("PBN Whisper couldn't start the notes. Try again in a moment.")}</p>}
     </div>
   </dialog>
 }

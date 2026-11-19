@@ -2,7 +2,7 @@ import { PERMISSION_KINDS } from '../main/permissions'
 import type { PermissionKind } from './types'
 
 /**
- * What Yogurt can do on each computer, in one place, so main and the windows hide the same things.
+ * What PBN Whisper can do on each computer, in one place, so main and the windows hide the same things.
  * A Mac has everything, as it always had. Windows and Linux turn features on here as each one gets its own helper.
  */
 export type Capabilities = {
@@ -38,7 +38,7 @@ export function settingsPage(platform: string, kind: PermissionKind): boolean {
   return platform === 'darwin' || (platform === 'win32' && WINDOWS_PAGES.has(kind))
 }
 
-/** The computer Yogurt runs on. Only fake mode may pretend to be another one (YOGURT_FAKE_PLATFORM), so Mac tests can try the others' screens. */
+/** The computer PBN Whisper runs on. Only fake mode may pretend to be another one (YOGURT_FAKE_PLATFORM), so Mac tests can try the others' screens. */
 export function platformOf(real: string, env: Record<string, string | undefined>): string {
   const fake = env.YOGURT_FAKE === '1' ? env.YOGURT_FAKE_PLATFORM : undefined
   return fake === 'darwin' || fake === 'win32' || fake === 'linux' ? fake : real

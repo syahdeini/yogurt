@@ -1,9 +1,9 @@
 // Linux icon: Simple Icons, CC0 1.0 (https://simpleicons.org). Bundled locally.
-export const release = "https://github.com/FrigadeHQ/yogurt/releases/latest/download/"
+export const release = "https://github.com/syahdeini/yogurt/releases/latest/download/"
 export const platforms = {
   "mac": {
     "name": "Mac",
-    "file": "Yogurt-mac-arm64.dmg",
+    "file": "PBN-Whisper-mac-arm64.dmg",
     "requirements": [
       "macOS 14.4+",
       "Apple Silicon (M1+)"
@@ -12,7 +12,7 @@ export const platforms = {
   },
   "windows": {
     "name": "Windows",
-    "file": "Yogurt-windows-x64.exe",
+    "file": "PBN-Whisper-Setup.exe",
     "requirements": [
       "Windows x64"
     ],
@@ -20,7 +20,7 @@ export const platforms = {
   },
   "linux": {
     "name": "Linux",
-    "file": "Yogurt-linux-x86_64.AppImage",
+    "file": "PBN-Whisper-linux-x86_64.AppImage",
     "requirements": [
       "Linux x64 (AppImage)"
     ],
@@ -41,7 +41,7 @@ if(typeof document!=='undefined'){
       chooser.className='mobile-download'
       const summary=document.createElement('summary')
       summary.className=button.className
-      summary.textContent='Download Yogurt'
+      summary.textContent='Download PBN Whisper'
       const list=document.createElement('div')
       list.className='mobile-download-list'
       for(const platform of Object.values(platforms)){

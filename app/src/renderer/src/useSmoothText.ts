@@ -3,7 +3,7 @@ import { stillShown, TextSmoother } from '../../shared/smoothText'
 import { useReducedMotion } from './motion'
 
 /**
- * Text that streams in, revealed smoothly a few characters a frame (see `TextSmoother`): every place Yogurt shows
+ * Text that streams in, revealed smoothly a few characters a frame (see `TextSmoother`): every place PBN Whisper shows
  * words as they are written uses this, with the `.stream-caret` dot after the last word while `live`. Once `live`
  * turns false the full text is returned at once, so the end is never held back.
  * - `minCommitMs`: draw at most this often (a heavy view, like the notes editor, needn't redraw every frame)

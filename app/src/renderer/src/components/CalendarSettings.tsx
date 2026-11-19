@@ -38,7 +38,7 @@ export function CalendarSettings() {
   const selected = view?.calendars.filter(c => c.enabled) ?? []
   // the Mac's own calendars, apart from calendar links next to them
   const sys = view?.systemStatus ?? view?.status
-  // Yogurt holds no calendar accounts: disconnecting unticks every calendar; the Mac's own access stays in System Settings
+  // PBN Whisper holds no calendar accounts: disconnecting unticks every calendar; the Mac's own access stays in System Settings
   const removeLink = async (id: string) => {
     setBusy(true); setError(false)
     try { if (!await window.yogurt.calendar.removeLink(id)) throw new Error('Calendar unavailable') } catch { setError(true) } finally { setBusy(false); reload() }
@@ -54,7 +54,7 @@ export function CalendarSettings() {
     } catch { setError(true); reload() } finally { setBusy(false) }
   }
   const summary = !view ? t('Loading calendars…')
-    : view.status === 'error' ? t("Yogurt couldn't read your calendars.")
+    : view.status === 'error' ? t("PBN Whisper couldn't read your calendars.")
     : view.status !== 'granted' ? (link ? t('Connect a calendar to see your meetings.') : t('Allow calendar access to choose your calendars.'))
     : !view.calendars.length ? (link ? t('Connect a calendar to see your meetings.') : t('No calendars found on this Mac.'))
     : !selected.length ? t('No calendars selected.')
@@ -66,14 +66,14 @@ export function CalendarSettings() {
       <button type="button" data-testid="calendar-settings-toggle" aria-expanded={open} aria-controls="settings-calendar-list" onClick={() => { expanded = !open; setOpen(expanded) }} className="settings-row settings-disclosure">
         <span className="settings-row-copy">
           <LoadingContent pending={!view} skeleton={<span className="settings-label settings-calendar-summary"><span className="loading-bar" style={{ width: 150 }} /></span>}><span data-testid="calendar-settings-summary" className="settings-label settings-calendar-summary" title={summary}>{summary}</span></LoadingContent>
-          <span className="settings-description block">{t('Yogurt reads these calendars and never changes them.')}</span>
+          <span className="settings-description block">{t('PBN Whisper reads these calendars and never changes them.')}</span>
         </span>
         <ChevronDown size={16} aria-hidden="true" />
       </button>
       <div id="settings-calendar-list" className="accordion" data-open={open} inert={!open || undefined}><div className="settings-calendar-list">
         <LoadingContent pending={!view} skeleton={<Loading layout="calendars" />}>{view && (link && (view.status !== 'granted' || !view.calendars.length) ? <div className="settings-row settings-calendar-link"><CalendarLinkForm onConnected={reload} /></div>
           : <>{!link && sys !== 'granted' && <div className="settings-row">
-            <p className="settings-description settings-row-copy">{sys === 'error' ? t("Yogurt couldn't read your calendars.") : t('Allow calendar access to choose your calendars.')}</p>
+            <p className="settings-description settings-row-copy">{sys === 'error' ? t("PBN Whisper couldn't read your calendars.") : t('Allow calendar access to choose your calendars.')}</p>
             <button className="workspace-button" onClick={() => { if (sys === 'error') reload(); else void window.yogurt.calendar.connect().then(reload) }}>{sys === 'error' ? t('Try again') : t('Connect calendar')}</button>
           </div>}
           {!link && sys === 'granted' && !view.calendars.some((c) => !c.link) && <p className="settings-row settings-description">{t('No calendars found on this Mac.')}</p>}
@@ -100,11 +100,11 @@ export function CalendarSettings() {
               onClick={() => void hideWithoutLink()} className="settings-toggle"><span className="settings-toggle-knob" /></button>
           </div>
           <div className="settings-row">
-            <span className="settings-row-copy"><span className="settings-label">{t('Disconnect calendars')}</span><span className="settings-description block">{t('Yogurt stops using these calendars.')}</span></span>
+            <span className="settings-row-copy"><span className="settings-label">{t('Disconnect calendars')}</span><span className="settings-description block">{t('PBN Whisper stops using these calendars.')}</span></span>
             <button type="button" data-testid="calendar-disconnect-all" className="workspace-button shrink-0" disabled={busy || (link ? !view.calendars.length : !selected.length)} onClick={() => void disconnect()}>{t('Disconnect')}</button>
           </div>
           {!link && <div className="settings-row">
-            <span className="settings-row-copy"><span className="settings-label">{t('Calendar access')}</span><span className="settings-description block">{t('Remove Yogurt’s access in System Settings.')}</span></span>
+            <span className="settings-row-copy"><span className="settings-label">{t('Calendar access')}</span><span className="settings-description block">{t('Remove PBN Whisper’s access in System Settings.')}</span></span>
             <button type="button" className="workspace-button shrink-0" onClick={() => void window.yogurt.permissions.open('calendar')}>{t('Open System Settings')}</button>
           </div>}
         </div>}

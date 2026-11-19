@@ -57,7 +57,7 @@ export function SpokenMenu() {
   if (!spoken) return null
   const row = 'flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-start text-sm hover:bg-[var(--line)] focus-visible:bg-[var(--line)] focus-visible:outline-none'
   const tick = (on: boolean) => <Check size={15} aria-hidden="true" className={`ms-auto shrink-0 ${on ? '' : 'invisible'}`} />
-  const about = t('Yogurt listens for the language being spoken. Pick it for meetings that are not in English.')
+  const about = t('PBN Whisper listens for the language being spoken. Pick it for meetings that are not in English.')
   return (
     <div ref={root} className="relative flex min-w-0 items-center">
       <button ref={button} data-testid="spoken-chip" aria-haspopup="menu" aria-expanded={!!open} title={t('Spoken language')}

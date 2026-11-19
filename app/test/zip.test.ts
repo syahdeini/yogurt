@@ -71,7 +71,7 @@ async function evilZip(safe: string, evil: string): Promise<string> {
 
 describe('backup zip, everywhere', () => {
   it('packs and unpacks a folder unchanged: both audio formats, spaces and names in other scripts', async () => {
-    const zip = join(tmp(), 'Yogurt backup.zip'), out = tmp()
+    const zip = join(tmp(), 'PBN Whisper backup.zip'), out = tmp()
     await packPortable(sample(), zip)
     await unpackPortable(zip, out)
     same(out)

@@ -39,7 +39,7 @@ for (const theme of ['light', 'dark'] as const) for (const status of ['notDeterm
           await app.evaluate(() => (globalThis as any).__fake__.calendarStatus('granted'))
           await page.evaluate(() => window.dispatchEvent(new Event('focus')))
         } else if (status === 'error') {
-          await expect(card).toContainText("Yogurt couldn't read your calendar")
+          await expect(card).toContainText("PBN Whisper couldn't read your calendar")
           await app.evaluate(() => (globalThis as any).__fake__.calendarStatus('granted'))
           await action.click()
         } else if (status === 'notDetermined') {

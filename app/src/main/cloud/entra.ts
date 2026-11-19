@@ -2,6 +2,7 @@ import { createServer, type Server } from 'node:http'
 import { randomBytes, createHash } from 'node:crypto'
 import { PublicClientApplication, type AccountInfo, type Configuration } from '@azure/msal-node'
 import type { CloudAccount, MsalClient, TokenResult } from './auth'
+import { entraAuthority } from './tenant'
 
 /** PKCE S256, the same transform MSAL uses for a public desktop client. */
 export async function createPkce(): Promise<{ verifier: string; challenge: string }> {
@@ -30,7 +31,7 @@ export function listenForAuthCode(timeoutMs = 3 * 60 * 1000): Promise<{ redirect
       const error = url.searchParams.get('error')
       res.writeHead(200, { 'content-type': 'text/html; charset=utf-8' })
       res.end(code
-        ? '<p>You are signed in to Yogurt. You can close this window.</p>'
+        ? '<p>You are signed in to PBN Whisper. You can close this window.</p>'
         : '<p>Sign-in did not finish. You can close this window.</p>')
       if (code) finish(undefined, code)
       else finish(new Error(error === 'access_denied' ? 'cancelled' : 'cancelled'))
@@ -57,16 +58,21 @@ export function createMsalClient(o: { clientId: string; tenantId: string }): Msa
     },
   }
   const configuration: Configuration = {
-    auth: { clientId: o.clientId, authority: `https://login.microsoftonline.com/${o.tenantId}` },
+    auth: { clientId: o.clientId, authority: entraAuthority(o.tenantId) },
     cache: { cachePlugin },
   }
   const app = new PublicClientApplication(configuration)
-  const toAccount = (account: AccountInfo): CloudAccount => ({
-    homeAccountId: account.homeAccountId, localAccountId: account.localAccountId, username: account.username, name: account.name,
+  const toAccount = (account: AccountInfo, claims?: { tid?: string; preferred_username?: string; email?: string }): CloudAccount => ({
+    homeAccountId: account.homeAccountId,
+    localAccountId: account.localAccountId,
+    username: claims?.preferred_username || claims?.email || account.username,
+    name: account.name,
+    tid: claims?.tid || account.tenantId,
   })
-  const toResult = (result: { accessToken: string; expiresOn: Date | null; account: AccountInfo | null }): TokenResult => {
+  const toResult = (result: { accessToken: string; expiresOn: Date | null; account: AccountInfo | null; idTokenClaims?: object | null }): TokenResult => {
     if (!result.account) throw new Error('Sign-in did not return an account')
-    return { accessToken: result.accessToken, expiresOn: result.expiresOn?.getTime() ?? Date.now() + 3_600_000, account: toAccount(result.account) }
+    const claims = result.idTokenClaims as { tid?: string; preferred_username?: string; email?: string } | undefined
+    return { accessToken: result.accessToken, expiresOn: result.expiresOn?.getTime() ?? Date.now() + 3_600_000, account: toAccount(result.account, claims) }
   }
   return {
     getAuthCodeUrl: (req) => app.getAuthCodeUrl({ ...req, prompt: 'select_account' }),

@@ -1,9 +1,9 @@
 import type { BrowserWindow } from 'electron'
 
 /**
- * What closing the window does: hide it into the menu bar or tray, where Yogurt keeps noticing calls.
+ * What closing the window does: hide it into the menu bar or tray, where PBN Whisper keeps noticing calls.
  * Windows and Linux without a tray icon (turned off, or GNOME without its extension) minimise instead,
- * so Yogurt never keeps running out of sight.
+ * so PBN Whisper never keeps running out of sight.
  */
 export const closeAction = (os: string, trayShown: boolean): 'hide' | 'minimize' => (os === 'darwin' || trayShown ? 'hide' : 'minimize')
 

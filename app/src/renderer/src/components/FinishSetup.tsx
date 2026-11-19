@@ -12,7 +12,7 @@ import { toasts } from './TrashToast'
 
 /**
  * The sidebar's "Finish setup": what was put off in the first run, the ones recording needs first, each with its own
- * Turn on. Put away, it stays away until something else goes missing. Rechecked whenever Yogurt comes forward.
+ * Turn on. Put away, it stays away until something else goes missing. Rechecked whenever PBN Whisper comes forward.
  */
 /** the permissions this computer has (no calendar or names from calls on Windows and Linux) */
 const kinds = () => supportedKinds(window.yogurt.capabilities)
@@ -58,11 +58,11 @@ export function FinishSetup({ collapsed = false }: { collapsed?: boolean }) {
           restoring = true
           ++readRevision.current
           try { await window.yogurt.onboarding.restoreNudge(); ++readRevision.current; reload(); toasts.close(id) }
-          catch { toasts.update(id, { title: t("Yogurt couldn't make that change. Try again."), timeout: 0 }) }
+          catch { toasts.update(id, { title: t("PBN Whisper couldn't make that change. Try again."), timeout: 0 }) }
           finally { restoring = false }
         } },
       })
-    } catch { toasts.add({ title: t("Yogurt couldn't make that change. Try again.") }) }
+    } catch { toasts.add({ title: t("PBN Whisper couldn't make that change. Try again.") }) }
     finally { hiding.current = false }
   }
   useEffect(() => {

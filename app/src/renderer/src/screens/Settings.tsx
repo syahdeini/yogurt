@@ -18,10 +18,10 @@ import { Swap, SwapText } from '../components/Swap'
 
 const THEMES = () => [['system', osWords({ mac: t('Match my Mac'), windows: t('Match Windows'), linux: t('Match my system') })], ['light', t('Light')], ['dark', t('Dark')]] as const
 // each computer's own words for starting at login and its icon's place: the menu bar, the notification area, the tray
-const loginLabel = () => osWords({ mac: t('Open Yogurt when your Mac starts'), windows: t('Open Yogurt when Windows starts'), linux: t('Open Yogurt when you log in') })
-const trayLabel = () => window.yogurt.os === 'win32' ? t('Show Yogurt in the notification area') : t('Show Yogurt in the tray')
+const loginLabel = () => osWords({ mac: t('Open PBN Whisper when your Mac starts'), windows: t('Open PBN Whisper when Windows starts'), linux: t('Open PBN Whisper when you log in') })
+const trayLabel = () => window.yogurt.os === 'win32' ? t('Show PBN Whisper in the notification area') : t('Show PBN Whisper in the tray')
 
-/** Settings, kept small: what Yogurt may use, your name, open at login, stop when the call ends, light or dark, a backup and updates. Nothing technical. */
+/** Settings, kept small: what PBN Whisper may use, your name, open at login, stop when the call ends, light or dark, a backup and updates. Nothing technical. */
 /** focus: the setting a toast's Settings button opens, recordings or notes-model */
 export function Settings({ revision = 0, focus }: { revision?: number; focus?: string }) {
   const [perms, setPerms] = useState<PermissionStatus>()
@@ -89,7 +89,7 @@ export function Settings({ revision = 0, focus }: { revision?: number; focus?: s
             <div className="settings-row">
               <div className="settings-row-copy">
                 <label htmlFor="settings-name" className="settings-label">{t('Your name')}</label>
-                <p className="settings-description">{t('Yogurt uses your name to identify you in calls.')}</p>
+                <p className="settings-description">{t('PBN Whisper uses your name to identify you in calls.')}</p>
               </div>
               <input id="settings-name" data-testid="settings-name" value={name} maxLength={80} autoComplete="name" spellCheck={false}
                 onChange={(e) => setName(e.target.value)} onBlur={saveName} onKeyDown={(e) => { if (e.key === 'Enter') e.currentTarget.blur() }}
@@ -106,7 +106,7 @@ export function Settings({ revision = 0, focus }: { revision?: number; focus?: s
               </button>
             </div>
             {onMac() ? <div className="settings-row">
-              <label htmlFor="settings-visibility" className="settings-label settings-row-copy truncate">{t('Show Yogurt in')}</label>
+              <label htmlFor="settings-visibility" className="settings-label settings-row-copy truncate">{t('Show PBN Whisper in')}</label>
               <span className="settings-select-wrap">
                 <select id="settings-visibility" data-testid="settings-visibility" value={prefs?.appVisibility ?? 'both'} disabled={!prefs}
                   onChange={(e) => void visibility(e.target.value as AppVisibility)} className="settings-select">
@@ -147,7 +147,7 @@ export function Settings({ revision = 0, focus }: { revision?: number; focus?: s
             <NotesModel reveal={focus === 'notes-model'} />
           </LoadingContent></div>
 
-          <h2 className="settings-section-heading">{t('What Yogurt can use')}</h2>
+          <h2 className="settings-section-heading">{t('What PBN Whisper can use')}</h2>
           <LoadingContent pending={!perms}><ul className="settings-group">
             {supportedKinds(window.yogurt.capabilities).map((k) => <PermissionRow key={k} kind={k} status={perms?.[k]} onAsk={() => void window.yogurt.permissions.request(k).then(reload)} />)}
           </ul></LoadingContent>
@@ -176,7 +176,7 @@ export function Settings({ revision = 0, focus }: { revision?: number; focus?: s
               <div className="settings-row" key={keys}><dt>{label}</dt><dd><kbd>{keys}</kbd></dd></div>)}
           </dl>
 
-          <p className="settings-privacy"><Lock size={12} aria-hidden="true" />{t('Yogurt stores your meetings, notes and audio on this computer.')}</p>
+          <p className="settings-privacy"><Lock size={12} aria-hidden="true" />{t('PBN Whisper stores your meetings, notes and audio on this computer.')}</p>
         </div>
       </div>
     </div>
@@ -206,7 +206,8 @@ function CloudNotes() {
     void run.then(setStatus).finally(() => setBusy(false))
   }
   const problem = status.error === 'cancelled' ? t('Sign-in was cancelled.')
-    : status.error === 'keychain' ? t("Yogurt couldn't use the system keychain to keep you signed in.")
+    : status.error === 'wrong-org' ? t('Only Preferred by Nature accounts can use PBN Whisper.')
+    : status.error === 'keychain' ? t("PBN Whisper couldn't use the system keychain to keep you signed in.")
     : status.error === 'not-configured' ? t('Add the cloud tenant, client and API address first.')
     : status.error === 'failed' ? t("Sign-in didn't finish. Try again.")
     : ''
@@ -226,7 +227,7 @@ function CloudNotes() {
         <div className="settings-row">
           <div className="settings-row-copy">
             <p className="settings-label">{account ? t('Signed in as {name}', { name: account.name || account.username }) : t('Sign in')}</p>
-            <p className="settings-description">{t('Restart Yogurt to switch between this computer and the cloud.')}</p>
+            <p className="settings-description">{t('Restart PBN Whisper to switch between this computer and the cloud.')}</p>
             {problem && <p data-testid="cloud-error" className="settings-description">{problem}</p>}
           </div>
           <button data-testid="cloud-sign" type="button" disabled={busy} onClick={sign} className="ghost-btn">{account ? t('Sign out') : t('Sign in')}</button>
@@ -269,7 +270,7 @@ function NotesModel({ reveal = false }: { reveal?: boolean }) {
         : t("More detailed, accurate notes. Replaces the current model, so you don't keep both.")}</p>
       {setup.notesRestoreFraction !== undefined && <p className="settings-description">{t('The larger model keeps running summaries and Ask until then, and is removed after.')}</p>}
       {setup.notesUpgradeError && <p className="settings-description">{setup.notesUpgradeError}</p>}
-      {failed && <p role="alert" className="settings-description">{t("Yogurt couldn't change the notes model.")}</p>}
+      {failed && <p role="alert" className="settings-description">{t("PBN Whisper couldn't change the notes model.")}</p>}
     </div>
     <button data-testid="settings-notes-model-action" className="workspace-button settings-action" aria-busy={busy || setup.notesUpgradeChanging} disabled={busy || setup.notesUpgradeChanging} onClick={() => void act()}>
       {setup.notesUpgradeInstalled ? (busy || setup.notesUpgradeChanging ? t('Removing…') : t('Remove')) : downloading ? t('Skip') : t('Download ({size} GB)', { size: notesUpgradeSize(setup.notesUpgradeBytes) })}
@@ -291,7 +292,7 @@ function AppLanguage() {
       <span className="settings-permission-icon"><Globe size={17} strokeWidth={1.75} aria-hidden="true" /></span>
       <div className="settings-row-copy">
         <label htmlFor="settings-app-language" className="settings-label">{t('App language')}</label>
-        <p className="settings-description">{t("This changes the language of Yogurt's menus and buttons.")}</p>
+        <p className="settings-description">{t("This changes the language of PBN Whisper's menus and buttons.")}</p>
       </div>
       <span className="settings-select-wrap">
       <select id="settings-app-language" data-testid="settings-app-language" value={s?.language ?? ''} disabled={!s} onChange={(e) => pick(e.target.value)} className="settings-select">
@@ -389,8 +390,8 @@ function Backup() {
     if (r.ok) { setSaid({ kind: 'imported', added: r.added, skipped: r.skipped }); return }
     const text = {
       cancelled: '', recording: t('You can import once the recording stops.'),
-      newer: t('This backup is from a newer Yogurt. Update Yogurt, then try again.'),
-      invalid: t("That file isn't a Yogurt backup."),
+      newer: t('This backup is from a newer PBN Whisper. Update PBN Whisper, then try again.'),
+      invalid: t("That file isn't a PBN Whisper backup."),
       failed: t("Couldn't import that backup. Try again."),
     }[r.error]
     if (text) setSaid({ kind: 'error', text })
@@ -474,7 +475,7 @@ function AiApps() {
   )
 }
 
-/** the version, and in a build that updates itself: the switch, what it's doing, Check now, and Restart Yogurt once a new version is ready */
+/** the version, and in a build that updates itself: the switch, what it's doing, Check now, and Restart PBN Whisper once a new version is ready */
 function Updates() {
   const [status, setStatus] = useState<UpdateStatus>()
   const [blocked, setBlocked] = useState(false)
@@ -486,7 +487,7 @@ function Updates() {
   const restart = () => void window.yogurt.updates.restart().then((ok) => setBlocked(!ok))
   const said = status?.available ? {
     idle: '', latest: t('Up to date'), checking: t('Checking for updates…'), error: t("Couldn't check for updates."),
-    downloading: t('Downloading version {version}…', { version: status.next ?? '' }), ready: t('Yogurt {version} is ready', { version: status.next ?? '' }),
+    downloading: t('Downloading version {version}…', { version: status.next ?? '' }), ready: t('PBN Whisper {version} is ready', { version: status.next ?? '' }),
   }[status.state] : ''
   return (
     <>
@@ -495,10 +496,10 @@ function Updates() {
         {status?.available &&
           <div className="settings-row">
             <div className="settings-row-copy">
-              <p className="settings-label">{t('Update Yogurt automatically')}</p>
+              <p className="settings-label">{t('Update PBN Whisper automatically')}</p>
               <p className="settings-description">{t('New versions download in the background and install when you quit.')}</p>
             </div>
-            <button data-testid="updates-toggle" role="switch" aria-checked={status.on} aria-label={t('Update Yogurt automatically')} onClick={toggle} className="settings-toggle">
+            <button data-testid="updates-toggle" role="switch" aria-checked={status.on} aria-label={t('Update PBN Whisper automatically')} onClick={toggle} className="settings-toggle">
               <span className="settings-toggle-knob" />
             </button>
           </div>}
@@ -509,7 +510,7 @@ function Updates() {
             {blocked && <p className="settings-description">{t('You can restart once the recording stops.')}</p>}
           </div>
           {status?.state === 'ready' &&
-            <button data-testid="updates-restart" onClick={restart} className="workspace-button settings-action primary">{t('Restart Yogurt')}</button>}
+            <button data-testid="updates-restart" onClick={restart} className="workspace-button settings-action primary">{t('Restart PBN Whisper')}</button>}
           {status?.available && status.on && (status.state === 'idle' || status.state === 'latest' || status.state === 'error') &&
             <button data-testid="updates-check" onClick={() => void window.yogurt.updates.check()} className="workspace-button settings-action">{status.state === 'error' ? t('Try again') : t('Check now')}</button>}
         </div>

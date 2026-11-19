@@ -427,7 +427,7 @@ export function Note({ id, onTitleChange, at, folderSuggestion, onSource, onResu
             {m.stopSavePending && (
               <div data-testid="note-stop-unsaved" role="alert" className="mt-5 flex flex-wrap items-start gap-3 rounded-xl border border-line bg-card px-4 py-3 text-[13px] leading-relaxed">
                 <TriangleAlert size={16} aria-hidden="true" className="mt-0.5 shrink-0 text-danger" />
-                <p className="min-w-48 flex-1">{t("Recording stopped. Yogurt couldn't save when it ended. Keep Yogurt open and try again.")}</p>
+                <p className="min-w-48 flex-1">{t("Recording stopped. PBN Whisper couldn't save when it ended. Keep PBN Whisper open and try again.")}</p>
                 <button data-testid="note-stop-retry" disabled={retryingStop} className="workspace-button" onClick={() => {
                   setRetryingStop(true)
                   void window.yogurt.meetings.retryStopSave(id).then((saved) => {
@@ -448,7 +448,7 @@ export function Note({ id, onTitleChange, at, folderSuggestion, onSource, onResu
               <button data-testid="note-save-retry" className="text-action" onClick={() => { void saveAll() }}>{t('Try again')}</button>
             </InlineError>
           )}
-          {startFailed && <p role="alert" className="pointer-events-auto mx-auto mt-3 w-fit text-[13px] text-danger">{t("Yogurt couldn't start the notes. Try again in a moment.")}</p>}
+          {startFailed && <p role="alert" className="pointer-events-auto mx-auto mt-3 w-fit text-[13px] text-danger">{t("PBN Whisper couldn't start the notes. Try again in a moment.")}</p>}
           {resumeFailed && <p data-testid="note-resume-failed" role="alert" className="pointer-events-auto mx-auto mt-3 w-fit max-w-[calc(100%-32px)] text-[13px] text-danger">{t("Couldn't resume recording. Your existing note and audio are kept. Try again.")}</p>}
           {pauseFailed && recording && <p role="alert" className="pointer-events-auto mx-auto mt-3 w-fit text-[13px] text-danger">{pauseFailed === 'pause' ? t("Couldn't pause the recording. Try again.") : t("Couldn't resume the recording. Try again.")}</p>}
           {recording && hint && <RecordingHint hint={hint} />}
@@ -463,7 +463,7 @@ export function Note({ id, onTitleChange, at, folderSuggestion, onSource, onResu
               <span aria-hidden="true">·</span>
             </>}
             {minutes != null && <><span data-testid="note-duration">{t('{count} min', { count: minutes })}</span><span aria-hidden="true">·</span></>}
-            {t('Yogurt can make mistakes.')}
+            {t('PBN Whisper can make mistakes.')}
           </div>
           <Ask id={id} recording={recording} anchor={chatAnchor} onSource={onSource} />
           </div>
@@ -519,7 +519,7 @@ function Enhanced({ notes, presentation, disabled, onChange, onBlur, onRetry, fo
   if (presentation === 'failed') {
     return (
       <InlineError testId="note-enhanced-failed">
-        <span>{t("Yogurt couldn't generate this summary.")}</span>
+        <span>{t("PBN Whisper couldn't generate this summary.")}</span>
         <button onClick={onRetry} className="text-action">{t('Try again')}</button>
       </InlineError>
     )
@@ -532,7 +532,7 @@ function Enhanced({ notes, presentation, disabled, onChange, onBlur, onRetry, fo
   if (presentation === 'waiting') {
     return (
       <NotesModelWait downloading={(percent) => (
-        <p data-testid="note-enhanced-model-download" role="status" className="text-[15px] text-muted">{t("Your summary is waiting for Yogurt's AI to download.")} {percent && <span className="whitespace-nowrap">{percent}</span>}</p>
+        <p data-testid="note-enhanced-model-download" role="status" className="text-[15px] text-muted">{t("Your summary is waiting for PBN Whisper's AI to download.")} {percent && <span className="whitespace-nowrap">{percent}</span>}</p>
       )}>
         <SummaryWaiting part={status === 'writing' ? notes.part : undefined} />
       </NotesModelWait>
@@ -541,7 +541,7 @@ function Enhanced({ notes, presentation, disabled, onChange, onBlur, onRetry, fo
   return (
     <div data-testid="note-enhanced" data-status={status} className={presentation === 'streaming' ? 'streaming' : ''}>
       {status === 'failed' && <InlineError testId="note-enhanced-rewrite-failed" className="mb-6">
-        <span>{t("Yogurt couldn't regenerate the summary, so your previous version is still shown.")}</span>
+        <span>{t("PBN Whisper couldn't regenerate the summary, so your previous version is still shown.")}</span>
         <button onClick={onRetry} className="text-action">{t('Try again')}</button>
       </InlineError>}
       {rewriting && <SummaryWaiting outline={false} part={status === 'writing' ? notes.part : undefined} />}

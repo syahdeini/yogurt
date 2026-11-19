@@ -14,10 +14,15 @@ describe('entra claims', () => {
   })
   it('rejects another tenant, audience, client or a missing scope', () => {
     const check = { tenantId: tenant, audiences: [audience], scope: 'access_as_user' }
-    expect(() => assertPilotClaims({ ...good, tid: 'other' }, check)).toThrow(HttpError)
-    expect(() => assertPilotClaims({ ...good, aud: 'https://graph.microsoft.com' }, check)).toThrow(HttpError)
-    expect(() => assertPilotClaims({ ...good, scp: 'User.Read' }, check)).toThrow(HttpError)
-    expect(() => assertPilotClaims({ ...good, azp: 'other-app' }, { ...check, clientId: 'desktop' })).toThrow(HttpError)
+    const status = (payload: Record<string, unknown>, expected = check) => {
+      try { assertPilotClaims(payload, expected) } catch (error) { return error instanceof HttpError ? error.status : 0 }
+      return 0
+    }
+    expect(status({ ...good, tid: 'other' })).toBe(403)
+    expect(status({ ...good, iss: 'https://login.microsoftonline.com/other/v2.0' })).toBe(403)
+    expect(status({ ...good, aud: 'https://graph.microsoft.com' })).toBe(403)
+    expect(status({ ...good, scp: 'User.Read' })).toBe(401)
+    expect(status({ ...good, azp: 'other-app' }, { ...check, clientId: 'desktop' })).toBe(401)
   })
 })
 

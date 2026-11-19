@@ -54,7 +54,7 @@ const realLookup: ProcessLookup = {
 }
 
 /**
- * A whisper-server left over from a Yogurt that was killed would hold memory and a port forever.
+ * A whisper-server left over from a PBN Whisper that was killed would hold memory and a port forever.
  * The pid file names it; it is killed only if that pid is still a program called whisper-server (pids get reused).
  */
 export function killStale(pidFile: string, deps: ProcessLookup = realLookup) {

@@ -8,10 +8,11 @@ import { createCloudSummaryProvider } from '../notes/cloudSummary'
 import type { Segment, Store } from '../store'
 import type { Settings } from '../settings'
 import { createCloudApi, type CloudMeeting } from './api'
-import { createCloudAuth, type CloudAccount, type MsalClient } from './auth'
+import { CloudAuthError, createCloudAuth, type CloudAccount, type MsalClient } from './auth'
 import { cloudConfigured, cloudForce, readCloudConfig, type CloudConfig } from './config'
 import { createMsalClient, createPkce, listenForAuthCode } from './entra'
 import { KeychainUnavailableError, type TokenSeal } from './tokens'
+import { pilotAccountAllowed } from './tenant'
 import { audioContentType, fileSource, uploadBlockBlob } from './upload'
 
 export type CloudRuntimeDeps = {
@@ -149,16 +150,66 @@ export function createCloudRuntime(deps: CloudRuntimeDeps) {
     return run
   }
 
+  type SessionError = 'not-configured' | 'keychain' | 'failed' | 'wrong-org' | null
+  let session: 'in' | 'out' = 'out'
+  let sessionError: SessionError = null
+  const allowed = (account: CloudAccount | null) => (account && pilotAccountAllowed(account, config().tenantId) ? account : null)
+  const boot = (async () => {
+    if (!config().enabled) return
+    if (!cloudConfigured(config())) { sessionError = 'not-configured'; return }
+    try {
+      const existing = await auth.account()
+      if (!existing) return
+      await Promise.race([
+        auth.getAccessToken(),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 12_000)),
+      ])
+      const fresh = allowed(await auth.account())
+      if (!fresh) {
+        await auth.signOut()
+        sessionError = 'wrong-org'
+        return
+      }
+      session = 'in'
+      sessionError = null
+    } catch (error) {
+      session = 'out'
+      if (error instanceof KeychainUnavailableError) sessionError = 'keychain'
+    }
+  })()
+
   return {
     enabled: () => config().enabled,
     configured: () => cloudConfigured(config()),
     forced: () => cloudForce(env),
-    account: (): Promise<CloudAccount | null> => auth.account().catch(() => null),
-    async signIn() {
-      if (!deps.seal.available()) throw new KeychainUnavailableError()
-      return auth.signIn()
+    signedIn: () => session === 'in',
+    async session(): Promise<{ account: CloudAccount | null; error: SessionError }> {
+      await boot
+      const account = session === 'in' ? allowed(await auth.account().catch(() => null)) : null
+      if (!account) session = 'out'
+      return { account, error: sessionError }
     },
-    signOut: () => auth.signOut(),
+    account: async (): Promise<CloudAccount | null> => (await (async () => { await boot; return session === 'in' ? auth.account().catch(() => null) : null })()),
+    async signIn() {
+      await boot
+      if (!deps.seal.available()) throw new KeychainUnavailableError()
+      const account = allowed(await auth.signIn())
+      if (!account) {
+        await auth.signOut()
+        session = 'out'
+        sessionError = 'wrong-org'
+        throw new CloudAuthError('wrong-org', 'Only Preferred by Nature accounts can use PBN Whisper')
+      }
+      session = 'in'
+      sessionError = null
+      return account
+    },
+    async signOut() {
+      await boot
+      await auth.signOut()
+      session = 'out'
+      sessionError = null
+    },
     async prepare(id: string, signal?: AbortSignal) { await prepare(id, signal) },
     async summarize(id: string, input: { title: string; instruction?: string; language?: string }, signal?: AbortSignal): Promise<SummaryOutput> {
       const meeting = await prepare(id, signal)

@@ -311,7 +311,7 @@
 @keyframes ob-from { 0%,28%,100% { opacity:1;filter:blur(0); } 32%,74% { opacity:0;filter:blur(2px); } 78% { opacity:1;filter:blur(0); } }
 @keyframes ob-to { 0%,28%,100% { opacity:0;filter:blur(2px); } 32%,74% { opacity:1;filter:blur(0); } 78% { opacity:0;filter:blur(2px); } }
 
-/* System Settings, drawn small: the pane, Yogurt's switch turning on, and + under the list */
+/* System Settings, drawn small: the pane, PBN Whisper's switch turning on, and + under the list */
 .ob-settings { display:grid;grid-template-columns:92px minmax(0,1fr);width:100%;max-width:380px;overflow:hidden;border:1px solid var(--line);border-radius:12px;background:var(--float);box-shadow:var(--ob-card-shadow);text-align:start; }
 .ob-settings-side { display:flex;flex-direction:column;gap:8px;padding:11px 10px;border-inline-end:1px solid var(--line);background:var(--chrome); }
 .ob-settings-dots { display:flex;gap:5px;margin-bottom:8px; }

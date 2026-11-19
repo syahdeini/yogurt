@@ -52,7 +52,7 @@ test('live, each turn says who: You on the mic, and the name the call app shows 
     await expect(whoOf(page, 'Can we go over the launch plan')).toHaveText('You', { timeout: 15_000 })
     await expect(whoOf(page, 'The site goes live on Tuesday')).toHaveText('Ann Lee')
     await expect(whoOf(page, 'She will send a draft')).toHaveText('Bo Park')
-    // everyone seen in the call is at the meeting now, the person using Yogurt left out
+    // everyone seen in the call is at the meeting now, the person using PBN Whisper left out
     const id = (await page.evaluate(() => window.yogurt.nav.current())).slice('/note/'.length)
     await expect.poll(async () => (await page.evaluate((i) => window.yogurt.meetings.get(i), id))?.attendees.map((a) => a.name)).toEqual(['Ann Lee', 'Bo Park', 'Cy Dao'])
   } finally { await app.close() }
@@ -160,7 +160,7 @@ test('transcription trouble shows in the widget in plain words', async () => {
     await fake(app, 'warn', 'falling-behind')
     // the recorder shows a warning sign; the words are inside the expanded recorder
     const w = await windowOf(app, '#widget')
-    await expect(w.getByTestId('widget-note')).toHaveText('Yogurt is falling behind. Some lines may be missing.')
+    await expect(w.getByTestId('widget-note')).toHaveText('PBN Whisper is falling behind. Some lines may be missing.')
     await fake(app, 'warn', 'transcribe-failed')
     await expect(w.getByTestId('widget-note')).toHaveText("Some of this meeting couldn't be transcribed.")
   } finally { await app.close() }

@@ -70,7 +70,7 @@ export class Watcher {
 
   private idle(s: Signals, now: number, justStopped = false) {
     this.rec = null
-    // the recording just ended while its call app still holds the mic (Finish in Yogurt, then Zoom closes a few seconds
+    // the recording just ended while its call app still holds the mic (Finish in PBN Whisper, then Zoom closes a few seconds
     // later): that call is done, as if its card were closed. It is forgiven once the app lets go of the mic, as below.
     if (justStopped) for (let p = decide(s, now, this.dismissed); p; p = decide(s, now, this.dismissed)) this.dismissed.add(p.key)
     this.idleMic = new Set(s.micApps.flatMap((m) => callAppName(m.bundleId, s.runningApps) ?? []))

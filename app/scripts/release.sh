@@ -54,14 +54,14 @@ trap 'git checkout -q app/package.json' EXIT
 sh app/scripts/release-mac.sh
 D=app/dist
 # only a notarized Developer ID build goes in a release
-xcrun stapler validate "$D/Yogurt-mac-arm64.dmg"
-codesign -dv "$D/mac-arm64/Yogurt.app" 2>&1 | grep -q 'TeamIdentifier=2JNSQVN3N8' || { echo "the app isn't signed with the Developer ID" >&2; exit 1; }
+xcrun stapler validate "$D/PBN-Whisper-mac-arm64.dmg"
+codesign -dv "$D/mac-arm64/PBN Whisper.app" 2>&1 | grep -q 'TeamIdentifier=2JNSQVN3N8' || { echo "the app isn't signed with the Developer ID" >&2; exit 1; }
 trap - EXIT
 git commit -qm "Yogurt $VERSION" app/package.json
 git push -q origin main
 SHA=$(git rev-parse HEAD)
 gh release create "v$VERSION" --draft --target "$SHA" --title "Yogurt $VERSION" --generate-notes \
-  "$D/Yogurt-mac-arm64.dmg" "$D/Yogurt-mac-arm64.dmg.blockmap" "$D/Yogurt-mac-arm64.zip" "$D/Yogurt-mac-arm64.zip.blockmap" "$D/latest-mac.yml"
+  "$D/PBN-Whisper-mac-arm64.dmg" "$D/PBN-Whisper-mac-arm64.dmg.blockmap" "$D/PBN-Whisper-mac-arm64.zip" "$D/PBN-Whisper-mac-arm64.zip.blockmap" "$D/latest-mac.yml"
 gh workflow run release.yml --ref main -f draft="v$VERSION"
 echo "Building Windows and Linux for the draft: $REPO_URL/actions/workflows/release.yml"
 sleep 15

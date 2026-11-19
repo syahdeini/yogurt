@@ -38,7 +38,7 @@ export function FolderName({ folder, onDone }: { folder?: Folder; onDone: (made?
             className="h-full min-w-0 flex-1 bg-transparent text-[13px] outline-none placeholder:text-muted" />
         </div>
         {!folder && <FolderChoices value={appearance} onChange={setAppearance} disabled={busy} />}
-        {failed && <p className="modal-error" role="alert">{t("Yogurt couldn't save this folder.")}</p>}
+        {failed && <p className="modal-error" role="alert">{t("PBN Whisper couldn't save this folder.")}</p>}
         <div className="modal-actions">
           <button data-testid="folder-name-save" type="submit" disabled={busy || !name.trim()} className="modal-button primary">{folder ? t('Rename') : t('Create folder')}</button>
           <ModalClose data-testid="folder-name-cancel" type="button" data-dialog-cancel disabled={busy} className="workspace-button">{t('Cancel')}</ModalClose>
@@ -59,7 +59,7 @@ export function DeleteFolder({ folder, onDone }: { folder: Folder; onDone: (dele
   return (
     <Modal testId="folder-delete-confirm" role="alertdialog" title={t('Delete “{name}”?', { name: folder.name })}
       description={t('Only the folder is deleted. Its meetings stay in Meetings.')} onCancel={() => onDone(false)} busy={busy}>
-      {failed && <p className="modal-error" role="alert">{t("Yogurt couldn't delete this folder.")}</p>}
+      {failed && <p className="modal-error" role="alert">{t("PBN Whisper couldn't delete this folder.")}</p>}
       <div className="modal-actions">
         <button data-testid="folder-delete-yes" onClick={() => void yes()} disabled={busy} className="modal-button danger">{t('Delete folder')}</button>
         <ModalClose data-testid="folder-delete-cancel" data-dialog-cancel disabled={busy} className="workspace-button">{t('Cancel')}</ModalClose>
@@ -83,7 +83,7 @@ export function FolderAppearanceDialog({ folder, onDone }: { folder: Folder; onD
   return <Modal testId="folder-appearance" title={t('Change icon')} onCancel={onDone} busy={busy}>
     <div className="folder-appearance-preview"><span className="folder-preview-tile" data-folder-color={appearance.color}><FolderGlyph appearance={appearance} size={23} /></span><strong>{folder.name}</strong></div>
     <FolderChoices value={appearance} onChange={setAppearance} disabled={busy} />
-    {failed && <p className="modal-error" role="alert">{t("Yogurt couldn't save this folder.")}</p>}
+    {failed && <p className="modal-error" role="alert">{t("PBN Whisper couldn't save this folder.")}</p>}
     <div className="modal-actions">
       <button data-testid="folder-appearance-save" onClick={() => void save()} disabled={busy} className="modal-button primary">{t('Save')}</button>
       <ModalClose data-dialog-cancel disabled={busy} className="workspace-button">{t('Cancel')}</ModalClose>

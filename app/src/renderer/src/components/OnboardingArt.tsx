@@ -52,7 +52,7 @@ export function ScreenArt({ id, on }: { id: ScreenId; on: readonly PermissionKin
   }
 }
 
-/** The two things Yogurt hears: you through the mic, everyone else through the Mac's sound. Each comes alive once it is on. */
+/** The two things PBN Whisper hears: you through the mic, everyone else through the Mac's sound. Each comes alive once it is on. */
 function RecordArt({ on }: { on: readonly PermissionKind[] }) {
   const lanes = [
     { kind: 'mic' as const, Icon: Mic, who: t('You'), from: t('Microphone') },
@@ -136,7 +136,7 @@ export function SpeakerNamesArt() {
   )
 }
 
-/** Where to click in System Settings: its pane with Yogurt in the list, the switch turning on, and + for when it isn't listed */
+/** Where to click in System Settings: its pane with PBN Whisper in the list, the switch turning on, and + for when it isn't listed */
 export function SettingsWindowArt({ pane, section }: { pane: string; section?: string }) {
   return (
     <div data-testid="settings-window-art" className="ob-settings">
@@ -151,7 +151,7 @@ export function SettingsWindowArt({ pane, section }: { pane: string; section?: s
           <div className="ob-settings-row ob-settings-other"><span className="ob-app-icon" /><span className="ob-app-name" /><span className="ob-switch" /></div>
           <div className="ob-settings-row ob-settings-yogurt">
             <span className="ob-app-icon ob-app-yogurt"><Logo size={12} className="text-[#fff]" /></span>
-            <span className="ob-settings-app">Yogurt</span>
+            <span className="ob-settings-app">PBN Whisper</span>
             <span className="ob-switch ob-switch-on" />
           </div>
           <div className="ob-settings-tools"><Plus size={11} strokeWidth={2.25} /><span className="ob-settings-minus" /></div>

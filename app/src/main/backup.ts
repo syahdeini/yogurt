@@ -143,7 +143,7 @@ const scratch = (name: string) => name.endsWith('.f32')
 // Cleanup cannot undo a committed export/import or replace the original failure.
 const cleanup = (dir: string) => rm(dir, { recursive: true, force: true }).catch((e) => console.warn('backup cleanup failed', dir, e))
 
-/** Everything to one zip: a snapshot of the database (safe while Yogurt runs), each meeting's recordings, and a manifest */
+/** Everything to one zip: a snapshot of the database (safe while PBN Whisper runs), each meeting's recordings, and a manifest */
 export async function exportBackup(o: { db: DatabaseSync; meetingsDir: string; out: string; appVersion: string; now?: number }): Promise<{ meetings: number }> {
   const work = await mkdtemp(join(tmpdir(), 'yogurt-export-'))
   let staging: string | undefined

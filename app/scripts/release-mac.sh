@@ -1,5 +1,5 @@
 #!/bin/sh
-# Signed (+ notarized) Mac installer to share: app/dist/Yogurt-mac-arm64.dmg
+# Signed (+ notarized) Mac installer to share: app/dist/PBN-Whisper-mac-arm64.dmg
 # Needs the Developer ID certificate in the keychain and, to notarize, a notarytool profile:
 #   xcrun notarytool store-credentials yogurt-notary --apple-id <Apple ID> --team-id 2JNSQVN3N8
 # YOGURT_NOTARIZE=0 signs and checks without sending anything to Apple (a build to try on this Mac).
@@ -15,7 +15,7 @@ if [ "$ID" = 'Yogurt Local' ]; then
 fi
 cd "$(dirname "$0")/.."
 PROFILE="${YOGURT_NOTARY_PROFILE:-yogurt-notary}"
-APP=dist/mac-arm64/Yogurt.app
+APP=dist/mac-arm64/PBN Whisper.app
 set --
 if [ "$LOCAL" = 1 ]; then
   # Pin the exact certificate; never silently fall back to ad-hoc or a different signer.
@@ -70,12 +70,12 @@ codesign -d --entitlements - "$APP/Contents/Resources/bin/yogurt-audio" 2>/dev/n
 if [ "${YOGURT_FUSES:-1}" != 0 ]; then
   pnpm exec electron-fuses read --app "$APP" | grep -q "RunAsNode is Disabled" || { echo "Electron's fuses aren't set" >&2; exit 1; }
 fi
-DMG=dist/Yogurt-mac-arm64.dmg
+DMG=dist/PBN-Whisper-mac-arm64.dmg
 # electron-builder signed the disk image too (dmg.sign); signing it again here would change it after latest-mac.yml
 verify_identity "$DMG"
 if [ "$LOCAL" = 1 ]; then
   [ ! -e "$APP/Contents/Resources/app-update.yml" ] || { echo 'Local builds must not have a release feed' >&2; exit 1; }
-  [ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$APP/Contents/Info.plist")" = so.yogurt.app ] || exit 1
+  [ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$APP/Contents/Info.plist")" = org.pbn.whisper ] || exit 1
 
 fi
 if [ "${YOGURT_NOTARIZE:-1}" = 0 ]; then

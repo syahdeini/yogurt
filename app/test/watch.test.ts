@@ -79,11 +79,11 @@ describe('start cards', () => {
     await w.tick()
     expect(w.dismissed.has('app:us.zoom.xos')).toBe(true)
   })
-  it('finishing in Yogurt while the call app still holds the mic: no card for that call, and the next call still gets one', async () => {
+  it('finishing in PBN Whisper while the call app still holds the mic: no card for that call, and the next call still gets one', async () => {
     reading = { micApps: [zoom], events: [] }
     active = meeting()
     await w.tick(); await w.tick()
-    // Finish in Yogurt; Zoom keeps the mic a few seconds longer
+    // Finish in PBN Whisper; Zoom keeps the mic a few seconds longer
     active = null; w.cleared()
     await w.tick(); clock += 5000; await w.tick()
     expect(log.filter((l) => l.startsWith('offer'))).toEqual([])

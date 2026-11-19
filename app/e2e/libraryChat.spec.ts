@@ -23,7 +23,7 @@ test('asking across meetings from Chat: the answer streams in with sources that 
     await expect(page.getByTestId('chat-page')).toBeVisible()
     await expect(page.getByTestId('nav-chat')).toHaveAttribute('aria-current', 'page')
     await expect(page.getByTestId('chat-empty')).toBeVisible()
-    // Chat has its own box: no Ask Yogurt bar under it
+    // Chat has its own box: no Ask PBN Whisper bar under it
     await expect(page.getByTestId('assistant-open')).toHaveCount(0)
     const input = page.getByTestId('chat-page-input')
     await expect(input).toBeFocused()

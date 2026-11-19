@@ -64,8 +64,8 @@ const HELPERS_BY_OS: Record<string, Record<string, string>> = {
   win32: { 'cpthost.exe': 'zoom.exe', 'zoomwebviewhost.exe': 'zoom.exe' },
   linux: {},
 }
-/** Yogurt's own recorder holds the mic while it records; yogurt-system lists it like any app off a Mac */
-const OWN_BY_OS: Record<string, string[]> = { darwin: [], win32: ['yogurt-audio.exe', 'yogurt.exe'], linux: ['yogurt-audio', 'yogurt', 'Yogurt'] }
+/** PBN Whisper's own recorder holds the mic while it records; yogurt-system lists it like any app off a Mac */
+const OWN_BY_OS: Record<string, string[]> = { darwin: ['org.pbn.whisper'], win32: ['yogurt-audio.exe', 'PBN Whisper.exe'], linux: ['yogurt-audio', 'yogurt', 'PBN Whisper'] }
 let APPS = MAC_APPS
 let HELPERS = MAC_HELPERS
 let OWN: string[] = []
@@ -75,7 +75,7 @@ export function useCallApps(platform: string) {
   HELPERS = HELPERS_BY_OS[platform] ?? MAC_HELPERS
   OWN = OWN_BY_OS[platform] ?? []
 }
-/** Yogurt's own recorder (or Yogurt) on the mic: never a call */
+/** PBN Whisper's own recorder (or PBN Whisper) on the mic: never a call */
 export const isOwnMicApp = (bundleId: string): boolean => OWN.includes(bundleId)
 const appOf = (bundleId: string) => {
   if (OWN.includes(bundleId)) return undefined
@@ -106,7 +106,7 @@ export function matchEvent(events: CalEvent[], now: number): CalEvent | null {
   return near[0] ?? null
 }
 
-/** Should Yogurt offer to take notes now? A call app using the mic is the trigger; a meeting on the calendar alone waits for the call. */
+/** Should PBN Whisper offer to take notes now? A call app using the mic is the trigger; a meeting on the calendar alone waits for the call. */
 export function decide(s: Signals, now: number, recent: Dismissals): Prompt | null {
   if (s.recording) return null
   const event = matchEvent(s.events, now)

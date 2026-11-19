@@ -97,7 +97,7 @@ function Card({ m, me, motionProps, chip, onClose }: { m: Meeting; me: string; m
   useEffect(() => { if (adding) input.current?.focus({ preventScroll: true }) }, [adding])
   const save = async (people: Person[]) => {
     try { await window.yogurt.meetings.setAttendees(m.id, people); return true }
-    catch { toasts.add({ title: t("Yogurt couldn't make that change. Try again.") }); return false }
+    catch { toasts.add({ title: t("PBN Whisper couldn't make that change. Try again.") }); return false }
   }
   const add = async (p = parsePerson(text)) => {
     if (!p) return
@@ -170,7 +170,7 @@ function Row({ name, email, mine, onRemove, onRename }: { name: string; email?: 
     try {
       if (!await onRename?.(draft)) throw new Error('Attendee no longer available')
       stopEditing()
-    } catch { toasts.add({ title: t("Yogurt couldn't make that change. Try again.") }) }
+    } catch { toasts.add({ title: t("PBN Whisper couldn't make that change. Try again.") }) }
     finally { setSaving(false) }
   }
   return (

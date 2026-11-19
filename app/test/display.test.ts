@@ -16,5 +16,5 @@ it('never twice, never without XWayland, never on X11, a Mac or Windows, and nev
   expect(x11Relaunch('win32', ['y'], wayland, 'y')).toBeNull()
   expect(x11Relaunch('linux', ['y'], { ...wayland, YOGURT_FAKE: '1' }, 'y')).toBeNull()
   // the AppImage's launcher picks X11 itself: starting it again couldn't mount it (#8)
-  expect(x11Relaunch('linux', ['/tmp/.mount_x/yogurt-bin'], { ...wayland, APPIMAGE: '/home/sam/Yogurt.AppImage' }, '/tmp/.mount_x/yogurt-bin')).toBeNull()
+  expect(x11Relaunch('linux', ['/tmp/.mount_x/yogurt-bin'], { ...wayland, APPIMAGE: '/home/sam/PBN Whisper.AppImage' }, '/tmp/.mount_x/yogurt-bin')).toBeNull()
 })

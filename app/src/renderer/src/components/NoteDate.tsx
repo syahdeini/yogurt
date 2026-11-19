@@ -126,7 +126,7 @@ function DateCard({ m, details, refreshLinked, chip, motionProps, onClose }: { m
     </div>
   </div>
   const recoveryAction = result && !available ? <div className="note-date-access flex flex-wrap items-center gap-x-3 gap-y-2">
-    <p role="status" className="text-xs text-muted">{result.status === 'error' ? t("Yogurt couldn't read your calendar") : t('Calendar access is off')}</p>
+    <p role="status" className="text-xs text-muted">{result.status === 'error' ? t("PBN Whisper couldn't read your calendar") : t('Calendar access is off')}</p>
     <div className="ms-auto flex shrink-0"><button ref={recovery} className="workspace-button" onClick={result.status === 'error' ? refresh : connect}>{result.status === 'error' ? t('Try again') : result.status === 'denied' ? t('Open System Settings') : t('Connect calendar')}</button></div>
   </div> : null
   return <div ref={card} data-testid="note-date-card" {...motionProps} data-anchor="start" data-picking={browsing || picking} role="dialog" aria-label={t('Date')}
@@ -213,7 +213,7 @@ function EventPicker({ open = true, keyboard, m, day, result, loading, previous,
         </button>)}
     </div></ScrollFade>}
     {m.eventId && <button ref={unlink} data-testid="note-date-unlink" className="note-date-link" disabled={linking} onClick={() => void link(null)}><Link2Off size={14} aria-hidden="true" /><span>{t('Unlink calendar event')}<small>{t('Keep the title, attendees and notes.')}</small></span></button>}
-    {linkError && <p role="alert" className="text-xs text-danger">{t("Yogurt couldn't update the calendar link. Try again.")}</p>}
+    {linkError && <p role="alert" className="text-xs text-danger">{t("PBN Whisper couldn't update the calendar link. Try again.")}</p>}
   </div>
 }
 

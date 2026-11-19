@@ -118,7 +118,7 @@ export function Ask({ id, recording, anchor, onSource }: { id: string; recording
     onCancel={event => { event.preventDefault(); close() }}>
     <div ref={surface} className="chat-morph-surface" aria-hidden="true" />
     <div ref={contents} className="chat-panel-contents">
-      {error && <p role="alert">{t("Yogurt couldn't answer that.")}</p>}
+      {error && <p role="alert">{t("PBN Whisper couldn't answer that.")}</p>}
       <AskConversation key={`${id}/${conversationVersion}`} id={conversationId ?? ''} pendingDraftKey={`meeting/${id}`} loadError={error} panel recording={recording} onSelect={next => { setConversationId(next); setConversationVersion(version => version + 1) }} onClose={() => close()}
         onExpand={conversationId ? () => { rememberScrollPositions(); close(false); window.yogurt.nav.go(`/chat/${conversationId}`) } : undefined}
         onDeleted={() => { close(false); setConversationId(undefined); window.yogurt.nav.go('/chat') }}
@@ -127,13 +127,13 @@ export function Ask({ id, recording, anchor, onSource }: { id: string; recording
   </dialog>
   return <>
     <button id="meeting-ask" ref={trigger} data-testid="chat-open" className="workspace-button chat-trigger" type="button" aria-expanded={open} aria-controls="meeting-chat"
-      title={onMac() ? t('Ask Yogurt (⌘J)') : `${t('Ask Yogurt')} (${keys('⌘J')})`} onClick={() => {
+      title={onMac() ? t('Ask PBN Whisper (⌘J)') : `${t('Ask PBN Whisper')} (${keys('⌘J')})`} onClick={() => {
         if (open && !closing.current) { close(); return }
         // Programmatic and pointer opens share the same anchored motion.
         if (closing.current) { closing.current = false; morph(true) }
         animateOpen.current = true; setError(false); setOpen(true)
         panel.current?.querySelector('textarea')?.focus({ preventScroll: true })
-      }}><MessageCircle size={16} strokeWidth={1.75} aria-hidden="true" /><span>{t('Ask Yogurt')}</span><kbd aria-hidden="true">{keys('⌘J')}</kbd></button>
+      }}><MessageCircle size={16} strokeWidth={1.75} aria-hidden="true" /><span>{t('Ask PBN Whisper')}</span><kbd aria-hidden="true">{keys('⌘J')}</kbd></button>
     {anchor && createPortal(conversation, anchor)}
   </>
 }

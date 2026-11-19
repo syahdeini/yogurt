@@ -26,7 +26,7 @@ export function companyOf(email: string): string | null {
   return parts.map((p) => p[0].toUpperCase() + p.slice(1)).join('-')
 }
 
-/** the person using Yogurt: their name, and their own addresses as the calendar shows them on invites */
+/** the person using PBN Whisper: their name, and their own addresses as the calendar shows them on invites */
 let ownerName = () => ''
 const ownEmails = new Set<string>()
 export const setOwnerName = (f: () => string): void => { ownerName = f }

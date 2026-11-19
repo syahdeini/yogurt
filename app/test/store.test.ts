@@ -504,7 +504,7 @@ describe('meetings recorded before transcripts were tracked (#30)', () => {
     const finished = s.createMeeting({ title: 'notes came out empty', startedAt: 5, endedAt: 6, eventId: null, app: null, attendees: [], state: 'done' })
     const heard = s.createMeeting({ title: 'had words', startedAt: 3, endedAt: 4, eventId: null, app: null, attendees: [], state: 'stopped' })
     s.addSegments([{ meetingId: heard.id, track: 'them', startMs: 0, endMs: 900, text: 'hello', speaker: null }])
-    // as an older Yogurt left it: nothing marked, and the store never looked
+    // as an older PBN Whisper left it: nothing marked, and the store never looked
     ;(s as unknown as { db: { exec(q: string): void } }).db.exec('PRAGMA user_version = 0')
     s.close()
     s = openStore(file)

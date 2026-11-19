@@ -1,11 +1,14 @@
 # Preferred by Nature pilot. Run from Windows with the Azure CLI:
 #   pwsh -File cloud/deploy.ps1 -SqlDatabaseName <existing-db> -CreateEntraApps -PilotUserUpns user1@pbn.org,user2@pbn.org
+# Lock the apps that already exist, without deploying anything:
+#   pwsh -File cloud/deploy.ps1 -LockExistingApps
 # Requires: az (logged in, or this script runs az login), Node.js, pnpm, npm.
 # Does not deploy into rg-dat-bui-asana. SQL stays where it is.
+# Both registrations stay AzureADMyOrg. Both enterprise apps require assignment.
 #Requires -Version 5.1
-[CmdletBinding()]
+[CmdletBinding(DefaultParameterSetName = 'Deploy')]
 param(
-  [Parameter(Mandatory = $true)]
+  [Parameter(Mandatory = $true, ParameterSetName = 'Deploy')]
   [string]$SqlDatabaseName,
   [string]$SubscriptionId = '18221f37-3034-427f-a822-284fa053a35d',
   [string]$TenantId = '6a94fd93-b4dc-42db-9712-8defab2a3e93',
@@ -20,8 +23,25 @@ param(
   [string]$ApiAudience = '',
   [string]$DesktopClientId = '',
   [switch]$CreateEntraApps,
+  [Parameter(Mandatory = $true, ParameterSetName = 'Lock')]
+  [switch]$LockExistingApps,
+  [string]$ExistingDesktopAppId = '9e9aa69e-3390-42f4-8076-a5f1f6ce16f6',
+  [string]$ExistingApiAppId = 'e797299f-c081-494b-8864-9fb143e2e84f',
   [string[]]$PilotUserUpns = @()
 )
+
+function Lock-PilotApps {
+  param([string]$DesktopAppId, [string]$ApiAppId)
+  foreach ($appId in @($DesktopAppId, $ApiAppId)) {
+    if (-not $appId) { throw 'Missing Entra app id' }
+    Invoke-Az ad app update --id $appId --sign-in-audience AzureADMyOrg
+    $sp = az ad sp list --filter "appId eq '$appId'" --query '[0].id' -o tsv
+    if (-not $sp) { $sp = az ad sp create --id $appId --query id -o tsv }
+    if (-not $sp) { throw "No enterprise app for $appId" }
+    Invoke-Az ad sp update --id $sp --set appRoleAssignmentRequired=true
+    Write-Host "Locked $appId : signInAudience AzureADMyOrg, appRoleAssignmentRequired true"
+  }
+}
 
 $ErrorActionPreference = 'Stop'
 if ($ResourceGroup -eq $SqlResourceGroup) {
@@ -141,6 +161,11 @@ az account show --query id -o tsv 1>$null 2>$null
 if ($LASTEXITCODE -ne 0) { Invoke-Az login --tenant $TenantId }
 Invoke-Az account set --subscription $SubscriptionId
 
+if ($PSCmdlet.ParameterSetName -eq 'Lock') {
+  Lock-PilotApps -DesktopAppId $ExistingDesktopAppId -ApiAppId $ExistingApiAppId
+  return
+}
+
 $cloud = $PSScriptRoot
 $repo = Split-Path $cloud -Parent
 $scopeId = $null
@@ -180,8 +205,7 @@ if ($CreateEntraApps) {
   if (-not $desktopSp) { $desktopSp = az ad sp create --id $desktop --query id -o tsv }
   $apiSp = az ad sp list --filter "appId eq '$api'" --query '[0].id' -o tsv
   if (-not $apiSp) { $apiSp = az ad sp create --id $api --query id -o tsv }
-  Invoke-Az ad sp update --id $desktopSp --set appRoleAssignmentRequired=true
-  Invoke-Az ad sp update --id $apiSp --set appRoleAssignmentRequired=true
+  Lock-PilotApps -DesktopAppId $desktop -ApiAppId $api
 
   $group = az ad group list --filter "displayName eq 'Yogurt Pilot'" --query '[0].id' -o tsv
   if (-not $group) {
