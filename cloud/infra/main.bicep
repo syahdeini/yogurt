@@ -48,7 +48,7 @@ param entraAllowedClientId string = ''
 @description('Create the Event Grid subscription. Turn this on after the function code is published, so the function exists.')
 param includeEventSubscription bool = false
 
-@description('Global Standard throughput for gpt-5-mini, in thousands of tokens per minute. Pay-as-you-go, not reserved.')
+@description('Global Standard throughput for each model (gpt-5, gpt-5-mini), in thousands of tokens per minute. Pay-as-you-go, not reserved.')
 param openAiCapacity int = 50
 
 var compact = toLower(replace(namePrefix, '-', ''))
@@ -208,6 +208,17 @@ resource gpt5mini 'Microsoft.CognitiveServices/accounts/deployments@2024-10-01' 
   }
 }
 
+// The summary model. gpt-5-mini stays deployed as a cheap fallback (set AZURE_OPENAI_DEPLOYMENT back to it).
+resource gpt5 'Microsoft.CognitiveServices/accounts/deployments@2024-10-01' = {
+  parent: openai
+  name: 'gpt-5'
+  sku: { name: 'GlobalStandard', capacity: openAiCapacity }
+  properties: {
+    model: { format: 'OpenAI', name: 'gpt-5', version: '2025-08-07' }
+  }
+  dependsOn: [ gpt5mini ]
+}
+
 resource functionApp 'Microsoft.Web/sites@2024-04-01' = {
   name: functionName
   location: location
@@ -250,7 +261,7 @@ resource appSettings 'Microsoft.Web/sites/config@2024-04-01' = {
     STORAGE_CONTAINER: containerName
     SPEECH_ENDPOINT: speech.properties.endpoint
     AZURE_OPENAI_ENDPOINT: openai.properties.endpoint
-    AZURE_OPENAI_DEPLOYMENT: 'gpt-5-mini'
+    AZURE_OPENAI_DEPLOYMENT: 'gpt-5'
     SUMMARY_PROVIDER: 'azure-openai-gpt-5-mini'
   }
 }
