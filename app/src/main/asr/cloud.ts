@@ -24,7 +24,10 @@ export function createCloudTranscriptionProvider(deps: {
         }, signal)
       meetingId = created.meetingId
       deps.jobs?.set(input.localId, meetingId)
-      for (const file of input.files) {
+      // After a restart the server may already have the audio and be transcribing; uploading again would
+      // overwrite blobs Speech is reading.
+      const needsUpload = created.status === 'uploaded'
+      for (const file of needsUpload ? input.files : []) {
         const target = created.uploads.find((upload) => upload.track === file.track)
         if (!target) throw new Error(`Cloud API did not offer an upload for ${file.track}`)
         await deps.upload(target, file, signal)

@@ -35,3 +35,12 @@ async function sas(blobName: string, permissions: string, minutes: number): Prom
 
 export const uploadSas = (blobName: string) => sas(blobName, 'cw', 120)
 export const readSas = (blobName: string) => sas(blobName, 'r', 180)
+
+/** A block blob exists only after its block list is committed, so this is true once an upload has finished. */
+export async function blobExists(blobName: string): Promise<boolean> {
+  return client().getContainerClient(container()).getBlobClient(blobName).exists()
+}
+
+export async function deleteBlob(blobName: string): Promise<void> {
+  await client().getContainerClient(container()).getBlobClient(blobName).deleteIfExists()
+}

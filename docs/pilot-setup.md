@@ -106,9 +106,11 @@ CREATE USER [func-yogurt-pilot] FROM EXTERNAL PROVIDER;
 ALTER ROLE notes_app ADD MEMBER [func-yogurt-pilot];
 ```
 
-Do not add that user to `db_owner`. Owners skip row-level security. On the SQL server firewall, allow Azure services to connect. The script does not change the firewall or anything else in `rg-dat-bui-asana`.
+Do not add that user to `db_owner`. Owners can switch row-level security off. The security policy only lets members of `notes_app` see any row, so other users of this database (analysts with `db_datareader`, for example) see nothing in `notes`, even if they set `SESSION_CONTEXT` themselves. Keep the database's owners to people who may read meeting transcripts. On the SQL server firewall, allow Azure services to connect. The script does not change the firewall or anything else in `rg-dat-bui-asana`.
 
 The HTTP API sets `SESSION_CONTEXT` `user_oid` and clears `bypass`, and every query also filters on `user_oid`. The timer that finishes transcription sets `bypass = worker` so it can see every in-progress meeting, then writes each row with that meeting's object id.
+
+Re-running `001_notes.sql` on a database that already has the `notes` tables adds the `lease_until` and `attempts` columns and recreates the policy.
 
 ## 4. Configure Yogurt
 
@@ -149,4 +151,4 @@ Give each person the installer, put them in the Yogurt Pilot group, and give the
 
 ## What the function does
 
-`POST /api/meetings` checks the Entra token and returns a user-delegation SAS (managed identity, no account key). The app uploads the block blob. Event Grid `Microsoft.Storage.BlobCreated` starts Azure AI Speech batch transcription with diarization. A timer finishes the job, asks GPT-5 mini for notes and action items, and stores them in `notes`. `GET /api/meetings/{id}` returns that person's transcript and summary. `POST /api/meetings/{id}/summarize` writes the notes again, including a rewrite instruction.
+`POST /api/meetings` checks the Entra token and returns a user-delegation SAS (managed identity, no account key). The app uploads the block blobs. Speech starts only once every track's blob is committed: Event Grid `Microsoft.Storage.BlobCreated` and a one-minute timer both check, and a short lease on the meeting row stops them starting the same job twice. Azure AI Speech runs batch transcription with diarization. The timer then asks GPT-5 mini for notes and action items and stores them in `notes`. A summary that fails 5 times marks the meeting failed. When the app retries a failed meeting, the API deletes the old audio, resets the meeting and the app uploads again. `GET /api/meetings/{id}` returns that person's transcript and summary. `POST /api/meetings/{id}/summarize` writes the notes again, including a rewrite instruction.

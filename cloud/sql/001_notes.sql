@@ -1,7 +1,7 @@
 -- Preferred by Nature pilot. Run as a Microsoft Entra admin of the EXISTING database
 -- on sql-external-landing-pbn (resource group rg-dat-bui-asana). This script does not
 -- create a server or a database, and nothing in rg-yogurt-pilot writes to that resource group.
--- Re-running keeps the tables. It replaces the row-level security policy.
+-- Re-running keeps the tables, adds any missing columns, and replaces the row-level security policy.
 
 IF NOT EXISTS (SELECT 1 FROM sys.schemas WHERE name = N'notes') EXEC(N'CREATE SCHEMA notes');
 GO
@@ -55,17 +55,31 @@ CREATE TABLE notes.action_items (
 );
 GO
 
+-- Drop the policy first so the column changes below never meet a schema-bound policy. It is recreated below.
+IF EXISTS (SELECT 1 FROM sys.security_policies WHERE name = N'meeting_isolation' AND schema_id = SCHEMA_ID(N'notes'))
+  DROP SECURITY POLICY notes.meeting_isolation;
+GO
+
+-- Worker lease (one worker per meeting at a time) and the summary retry count. Added separately so
+-- re-running upgrades a database that already has the first version of notes.meetings.
+IF COL_LENGTH(N'notes.meetings', N'lease_until') IS NULL
+  ALTER TABLE notes.meetings ADD lease_until DATETIME2 NULL;
+GO
+IF COL_LENGTH(N'notes.meetings', N'attempts') IS NULL
+  ALTER TABLE notes.meetings ADD attempts INT NOT NULL CONSTRAINT df_meetings_attempts DEFAULT 0;
+GO
+
 IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = N'ix_meetings_status' AND object_id = OBJECT_ID(N'notes.meetings'))
   CREATE INDEX ix_meetings_status ON notes.meetings(status);
 GO
 
--- The function's managed identity is one database user. HTTP calls set SESSION_CONTEXT
--- user_oid and clear bypass. The timer sets bypass = worker so it can finish every
--- meeting, then still writes each row with that meeting's user_oid. A caller who is
--- not db_owner cannot read another person's rows.
-IF EXISTS (SELECT 1 FROM sys.security_policies WHERE name = N'meeting_isolation' AND schema_id = SCHEMA_ID(N'notes'))
-  DROP SECURITY POLICY notes.meeting_isolation;
-GO
+-- The function's managed identity is one database user, in role notes_app. HTTP calls set SESSION_CONTEXT
+-- user_oid and clear bypass. The timer sets bypass = worker so it can finish every meeting, then still writes
+-- each row with that meeting's user_oid.
+-- Anyone can call sp_set_session_context, so the predicate also requires membership of notes_app. Other users
+-- of this database (analysts with db_datareader, for example) see no rows in notes, whatever they set.
+-- db_owner members can still drop or alter this policy, so keep owners of this database to the people who
+-- are allowed to read meeting transcripts.
 
 CREATE OR ALTER FUNCTION notes.fn_user_filter(@user_oid NVARCHAR(64))
 RETURNS TABLE
@@ -73,8 +87,9 @@ WITH SCHEMABINDING
 AS
 RETURN
   SELECT 1 AS allow_row
-  WHERE CONVERT(NVARCHAR(64), SESSION_CONTEXT(N'user_oid')) = @user_oid
-     OR CONVERT(NVARCHAR(10), SESSION_CONTEXT(N'bypass')) = N'worker';
+  WHERE IS_ROLEMEMBER(N'notes_app') = 1
+    AND (CONVERT(NVARCHAR(64), SESSION_CONTEXT(N'user_oid')) = @user_oid
+      OR CONVERT(NVARCHAR(10), SESSION_CONTEXT(N'bypass')) = N'worker');
 GO
 
 CREATE SECURITY POLICY notes.meeting_isolation
@@ -102,5 +117,5 @@ GO
 -- replacing the name (the deploy script prints the finished statements):
 --   CREATE USER [func-yogurt-pilot] FROM EXTERNAL PROVIDER;
 --   ALTER ROLE notes_app ADD MEMBER [func-yogurt-pilot];
--- Do not add the function to db_owner. Owners skip row-level security.
+-- Do not add the function to db_owner. Owners can switch row-level security off.
 -- Also allow Azure services through the server firewall. This script does not change it.

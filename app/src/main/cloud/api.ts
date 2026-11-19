@@ -16,7 +16,8 @@ export type CloudMeeting = {
 
 export type UploadTarget = { track: CloudTrack; blobName: string; sasUrl: string; expiresAt: string }
 
-export type CreatedUpload = { meetingId: string; uploads: UploadTarget[] }
+/** status is where the server already is; anything past uploaded means the audio is already there. */
+export type CreatedUpload = { meetingId: string; status: CloudMeetingStatus; uploads: UploadTarget[] }
 
 const STATUSES: readonly string[] = ['uploaded', 'transcribing', 'summarizing', 'ready', 'failed']
 
@@ -66,7 +67,8 @@ export function parseCreated(value: unknown): CreatedUpload {
   const meetingId = typeof body.meetingId === 'string' ? body.meetingId : ''
   const uploads = Array.isArray(body.uploads) ? body.uploads.map(parseUpload) : []
   if (!meetingId || !uploads.length) throw new Error('Cloud API did not return an upload')
-  return { meetingId, uploads }
+  const status = typeof body.status === 'string' && STATUSES.includes(body.status) ? body.status as CloudMeetingStatus : 'uploaded'
+  return { meetingId, status, uploads }
 }
 
 function parseUpload(value: unknown): UploadTarget {
@@ -120,7 +122,8 @@ export async function pollUntilReady(get: () => Promise<CloudMeeting>, o: {
   now?: () => number
 } = {}): Promise<CloudMeeting> {
   const interval = o.intervalMs ?? 3_000
-  const timeout = o.timeoutMs ?? 20 * 60 * 1000
+  // Batch transcription of a long meeting can queue; an hour leaves room before the app gives up.
+  const timeout = o.timeoutMs ?? 60 * 60 * 1000
   const sleep = o.sleep ?? ((ms) => new Promise((resolve) => setTimeout(resolve, ms)))
   const now = o.now ?? Date.now
   const start = now()
