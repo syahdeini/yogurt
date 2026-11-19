@@ -1,9 +1,18 @@
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
+import { createRequire } from 'node:module'
 import { expect, it } from 'vitest'
+
+const require = createRequire(import.meta.url)
 
 // Windows checks the file out with CRLF line endings
 const config = readFileSync(join(__dirname, '../electron-builder.yml'), 'utf8').replaceAll('\r\n', '\n')
+
+it('the publish block is valid YAML and points updates at syahdeini/yogurt', () => {
+  const yaml = require('js-yaml') as { load(text: string): { publish: { provider: string; owner: string; repo: string; releaseType: string } } }
+  const parsed = yaml.load(config)
+  expect(parsed.publish).toEqual({ provider: 'github', owner: 'syahdeini', repo: 'yogurt', releaseType: 'release' })
+})
 
 it('uninstalling on Windows never deletes the profile: it holds every meeting', () => {
   expect(config).toMatch(/^nsis:\n(?:  .*\n)*  deleteAppDataOnUninstall: false$/m)
