@@ -14,9 +14,19 @@ export const LEASE_SECONDS = 600
 /** A summary that fails this many times in a row marks the meeting failed instead of retrying every minute. */
 export const MAX_SUMMARY_ATTEMPTS = 5
 
-function transcriptText(segments: CloudSegment[]): string {
-  return segments.map((segment) => `${segment.track === 'me' ? 'You' : segment.speaker || 'Them'}: ${segment.text}`).join('\n')
+/** One line per turn: back-to-back segments from the same voice are joined, which reads better and costs fewer tokens. */
+export function transcriptText(segments: CloudSegment[]): string {
+  const turns: Array<{ who: string; text: string }> = []
+  for (const segment of segments) {
+    const who = segment.track === 'me' ? 'You' : segment.speaker || 'Speaker 1'
+    const last = turns.at(-1)
+    if (last && last.who === who) last.text += ` ${segment.text}`
+    else turns.push({ who, text: segment.text })
+  }
+  return turns.map((turn) => `${turn.who}: ${turn.text}`).join('\n')
 }
+
+const minutesOf = (segments: CloudSegment[]) => segments.length ? Math.max(...segments.map((segment) => segment.endMs)) / 60_000 : undefined
 
 const message = (error: unknown) => error instanceof Error ? error.message : 'error'
 
@@ -84,7 +94,7 @@ async function step(row: MeetingRow, log: Log): Promise<void> {
     for (const track of tracks) segments.push(...await transcriptionSegments(track.speechUrl!, track.track))
     segments.sort((a, b) => a.startMs - b.startMs || a.track.localeCompare(b.track))
     const provider = createSummaryProvider()
-    const summary = await provider.summarize({ title: row.title || 'Meeting', transcript: transcriptText(segments), attendees: [] })
+    const summary = await provider.summarize({ title: row.title || 'Meeting', transcript: transcriptText(segments), attendees: [], minutes: minutesOf(segments) })
     await storeResult(row, segments, { ...summary, model: provider.id }, null)
     log(`meeting ${row.id} ready segments=${segments.length} model=${provider.id}`)
   } catch (error) {
@@ -119,6 +129,7 @@ export async function resumarize(row: MeetingRow, input: { title?: string; notes
   const summary = await provider.summarize({
     title: input.title || row.title || 'Meeting',
     transcript: transcriptText(saved.segments),
+    minutes: minutesOf(saved.segments),
     notes: input.notes,
     attendees: input.attendees,
     instruction: input.instruction,
