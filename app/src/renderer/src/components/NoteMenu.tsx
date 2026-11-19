@@ -6,6 +6,15 @@ import { RegenerateForm } from './RegenerateForm'
 import { t } from '../../../shared/i18n'
 
 /** Only show generation when it can produce a summary; explain temporary waits. */
+/**
+ * Whether the note has something to summarize. A summary that failed or was stopped always may be tried again:
+ * in cloud mode the transcript only arrives from the cloud, so a failed first attempt leaves no local transcript,
+ * and the main process decides (uploading the audio first) whether there is anything to write up.
+ */
+export function hasSummarySource({ hasTranscript, mine, status }: { hasTranscript: boolean; mine: string; status?: string }): boolean {
+  return hasTranscript || !!mine.trim() || status === 'failed' || status === 'stopped'
+}
+
 export function summaryAction({ hasSummary, hasContent, recording, busy, downloading, trashed }: {
   hasSummary: boolean; hasContent: boolean; recording: boolean; busy: boolean; downloading: boolean; trashed: boolean
 }) {

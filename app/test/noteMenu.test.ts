@@ -1,7 +1,7 @@
 import { createElement } from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { afterEach, expect, it, vi } from 'vitest'
-import { NoteMenu, summaryAction } from '../src/renderer/src/components/NoteMenu'
+import { hasSummarySource, NoteMenu, summaryAction } from '../src/renderer/src/components/NoteMenu'
 import { LOCALES, setLanguage } from '../src/shared/i18n'
 
 vi.mock('../src/renderer/src/motion', () => ({ usePopoverPresence: () => ({ value: 'keyboard', props: {} }) }))
@@ -41,4 +41,15 @@ it('renders a focusable but unavailable menu item with a separate accessible des
       if (locale.id !== 'en') expect(generation.reason).not.toMatch(/^(Available after recording|Writing the summary|Waiting for Yogurt AI to download)$/)
     }
   }
+})
+
+it('lets a failed or stopped summary be tried again with no local transcript (cloud mode)', () => {
+  const none = { hasTranscript: false, mine: '  ' }
+  expect(hasSummarySource(none)).toBe(false)
+  expect(hasSummarySource({ ...none, status: 'idle' })).toBe(false)
+  expect(hasSummarySource({ ...none, status: 'failed' })).toBe(true)
+  expect(hasSummarySource({ ...none, status: 'stopped' })).toBe(true)
+  expect(hasSummarySource({ ...none, hasTranscript: true })).toBe(true)
+  expect(hasSummarySource({ ...none, mine: 'x' })).toBe(true)
+  expect(summaryAction({ ...available, hasSummary: false, hasContent: hasSummarySource({ ...none, status: 'failed' }) })).toEqual({ label: 'Generate summary', reason: undefined })
 })
