@@ -25,8 +25,7 @@ export function segmentsFromSpeech(track: 'me' | 'them', phrases: SpeechPhrase[]
     const startMs = ticksToMs(phrase.offsetInTicks)
     const endMs = Math.max(startMs + 1, startMs + ticksToMs(phrase.durationInTicks))
     const speaker = phrase.speaker
-    const named = speaker != null && (track === 'them' ? many : many) ? `Speaker ${speaker}` : null
-    return [{ track, speaker: track === 'me' && !many ? null : named, startMs, endMs, text }]
+    return [{ track, speaker: speaker != null && many ? `Speaker ${speaker}` : null, startMs, endMs, text }]
   })
 }
 

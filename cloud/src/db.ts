@@ -20,7 +20,11 @@ export type MeetingRow = {
   tracks: string
   language: string | null
   error: string | null
+  attempts: number
 }
+
+const COLUMNS = 'id, user_oid, local_id, title, status, tracks, language, error, attempts'
+const ACTIVE = "N'uploaded', N'transcribing', N'summarizing'"
 
 let pool: sql.ConnectionPool | undefined
 
@@ -60,7 +64,7 @@ export function tracksOf(raw: string | null): TrackState[] {
 
 export async function findOwnByLocal(oid: string, localId: string): Promise<MeetingRow | undefined> {
   const result = await query(userContext, `
-    SELECT id, user_oid, local_id, title, status, tracks, language, error
+    SELECT ${COLUMNS}
     FROM notes.meetings WHERE user_oid = @oid AND local_id = @localId`, (request) => {
     request.input('oid', sql.NVarChar(64), oid)
     request.input('localId', sql.NVarChar(64), localId)
@@ -70,7 +74,7 @@ export async function findOwnByLocal(oid: string, localId: string): Promise<Meet
 
 export async function findOwn(oid: string, id: string): Promise<MeetingRow | undefined> {
   const result = await query(userContext, `
-    SELECT id, user_oid, local_id, title, status, tracks, language, error
+    SELECT ${COLUMNS}
     FROM notes.meetings WHERE user_oid = @oid AND id = @id`, (request) => {
     request.input('oid', sql.NVarChar(64), oid)
     request.input('id', sql.UniqueIdentifier, id)
@@ -113,14 +117,65 @@ export async function markFailed(id: string, oid: string, error: string): Promis
 
 export async function activeMeetings(): Promise<MeetingRow[]> {
   const result = await query(workerContext, `
-    SELECT id, user_oid, local_id, title, status, tracks, language, error
-    FROM notes.meetings WHERE status IN (N'uploaded', N'transcribing', N'summarizing')`, () => {})
+    SELECT ${COLUMNS}
+    FROM notes.meetings WHERE status IN (${ACTIVE})`, () => {})
   return result.recordset as MeetingRow[]
+}
+
+/**
+ * Takes a short lease on an active meeting so the Event Grid trigger and the timer never work on it at the
+ * same time. Returns the freshly read row, or nothing when someone else holds the lease or the meeting is done.
+ */
+export async function claimLease(id: string, oid: string, seconds: number): Promise<MeetingRow | undefined> {
+  const result = await query(workerContext, `
+    UPDATE notes.meetings SET lease_until = DATEADD(second, @seconds, SYSUTCDATETIME())
+    OUTPUT ${COLUMNS.split(', ').map((column) => `inserted.${column}`).join(', ')}
+    WHERE id = @id AND user_oid = @oid AND status IN (${ACTIVE})
+      AND (lease_until IS NULL OR lease_until < SYSUTCDATETIME())`, (request) => {
+    request.input('id', sql.UniqueIdentifier, id)
+    request.input('oid', sql.NVarChar(64), oid)
+    request.input('seconds', sql.Int, seconds)
+  })
+  return result.recordset[0] as MeetingRow | undefined
+}
+
+export async function releaseLease(id: string, oid: string): Promise<void> {
+  await query(workerContext, `
+    UPDATE notes.meetings SET lease_until = NULL WHERE id = @id AND user_oid = @oid`, (request) => {
+    request.input('id', sql.UniqueIdentifier, id)
+    request.input('oid', sql.NVarChar(64), oid)
+  })
+}
+
+/** Counts a failed summary attempt and returns the new count. */
+export async function bumpAttempts(id: string, oid: string, error: string): Promise<number> {
+  const result = await query(workerContext, `
+    UPDATE notes.meetings SET attempts = attempts + 1, error = @error, updated_at = SYSUTCDATETIME()
+    OUTPUT inserted.attempts
+    WHERE id = @id AND user_oid = @oid`, (request) => {
+    request.input('id', sql.UniqueIdentifier, id)
+    request.input('oid', sql.NVarChar(64), oid)
+    request.input('error', sql.NVarChar(2000), error.slice(0, 2000))
+  })
+  return Number((result.recordset[0] as { attempts?: number } | undefined)?.attempts ?? 0)
+}
+
+/** Puts a failed meeting back to uploaded with fresh tracks, so a new upload runs the whole pipeline again. */
+export async function resetFailed(id: string, oid: string, tracks: TrackState[]): Promise<boolean> {
+  const result = await query(userContext, `
+    UPDATE notes.meetings
+    SET status = N'uploaded', tracks = @tracks, error = NULL, attempts = 0, lease_until = NULL, updated_at = SYSUTCDATETIME()
+    WHERE id = @id AND user_oid = @oid AND status = N'failed'`, (request) => {
+    request.input('id', sql.UniqueIdentifier, id)
+    request.input('oid', sql.NVarChar(64), oid)
+    request.input('tracks', sql.NVarChar(sql.MAX), JSON.stringify(tracks))
+  })
+  return (result.rowsAffected.at(-1) ?? 0) > 0
 }
 
 export async function findByBlob(blobName: string): Promise<MeetingRow | undefined> {
   const result = await query(workerContext, `
-    SELECT id, user_oid, local_id, title, status, tracks, language, error
+    SELECT ${COLUMNS}
     FROM notes.meetings WHERE tracks LIKE @like AND status <> N'failed'`, (request) => {
     request.input('like', sql.NVarChar(400), `%${blobName.replace(/[%_]/g, '')}%`)
   })
@@ -152,7 +207,7 @@ export async function storeResult(row: MeetingRow, segments: CloudSegment[], sum
       WHEN MATCHED THEN UPDATE SET markdown = @markdown, model = @model, user_oid = @oid, created_at = SYSUTCDATETIME()
       WHEN NOT MATCHED THEN INSERT (meeting_id, user_oid, model, markdown) VALUES (@id, @oid, @model, @markdown);
       DELETE FROM notes.action_items WHERE meeting_id = @id;
-      UPDATE notes.meetings SET status = N'ready', language = @language, error = NULL, updated_at = SYSUTCDATETIME()
+      UPDATE notes.meetings SET status = N'ready', language = @language, error = NULL, attempts = 0, updated_at = SYSUTCDATETIME()
       WHERE id = @id AND user_oid = @oid;
     `)
     for (const item of summary.actionItems) {

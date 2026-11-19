@@ -1,8 +1,8 @@
 import { randomUUID } from 'node:crypto'
 import type { HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions'
-import { blobNameFor, uploadSas } from './blob.js'
+import { blobNameFor, deleteBlob, uploadSas } from './blob.js'
 import { HttpError } from './claims.js'
-import { findOwn, findOwnByLocal, insertMeeting, readResult, type MeetingRow, type TrackState } from './db.js'
+import { findOwn, findOwnByLocal, insertMeeting, readResult, resetFailed, tracksOf, type MeetingRow, type TrackState } from './db.js'
 import { bearer, verifyEntraToken } from './entra.js'
 import { resumarize } from './work.js'
 
@@ -29,6 +29,25 @@ function view(row: MeetingRow, result?: Awaited<ReturnType<typeof readResult>>) 
   }
 }
 
+/**
+ * A retry after a failure uploads the recording again. Drop the old blobs and Speech jobs first, so the worker
+ * only starts once the new upload has been committed, and put the meeting back in the pipeline.
+ */
+async function retryIfFailed(row: MeetingRow, context: InvocationContext): Promise<MeetingRow> {
+  if (row.status !== 'failed') return row
+  const fresh = tracksOf(row.tracks).map(({ track, blobName, contentType }): TrackState => ({ track, blobName, contentType }))
+  await Promise.all(fresh.map((track) => deleteBlob(track.blobName)))
+  if (await resetFailed(row.id, row.user_oid, fresh)) context.log(`meeting ${row.id} reset for a new upload`)
+  return { ...row, status: 'uploaded', tracks: JSON.stringify(fresh), error: null, attempts: 0 }
+}
+
+async function uploadsFor(tracks: TrackState[]) {
+  return Promise.all(tracks.map(async (track) => {
+    const sas = await uploadSas(track.blobName)
+    return { track: track.track, blobName: track.blobName, sasUrl: sas.url, expiresAt: sas.expiresAt }
+  }))
+}
+
 export async function health(): Promise<HttpResponseInit> {
   return json(200, { ok: true })
 }
@@ -43,19 +62,17 @@ export async function createMeeting(request: HttpRequest, context: InvocationCon
       return [{ track: track.track, contentType: track.contentType, blobName: '' }]
     })
     if (!localId || !tracks.length) return json(400, { error: 'localId and tracks are required' })
-    const existing = await findOwnByLocal(oid, localId)
+    const found = await findOwnByLocal(oid, localId)
+    const existing = found ? await retryIfFailed(found, context) : undefined
     const id = existing?.id ?? randomUUID()
-    const stored: TrackState[] = tracks.map((track) => ({
+    const stored: TrackState[] = existing ? tracksOf(existing.tracks) : tracks.map((track) => ({
       ...track,
       blobName: blobNameFor(oid, id, track.track, track.contentType),
     }))
     if (!existing) await insertMeeting({ id, oid, localId, title: typeof body.title === 'string' ? body.title : 'Meeting', tracks: stored })
-    const uploads = await Promise.all(stored.map(async (track) => {
-      const sas = await uploadSas(track.blobName)
-      return { track: track.track, blobName: track.blobName, sasUrl: sas.url, expiresAt: sas.expiresAt }
-    }))
+    const uploads = await uploadsFor(stored)
     context.log(`upload sas for meeting ${id} tracks=${uploads.length}`)
-    return json(existing ? 200 : 201, { meetingId: id, uploads })
+    return json(existing ? 200 : 201, { meetingId: id, status: existing?.status ?? 'uploaded', uploads })
   } catch (error) { return fail(context, error) }
 }
 
@@ -63,13 +80,10 @@ export async function refreshSas(request: HttpRequest, context: InvocationContex
   try {
     const { oid } = await user(request)
     const id = request.params.id ?? ''
-    const row = await findOwn(oid, id)
-    if (!row) return json(404, { error: 'Meeting not found' })
-    const uploads = await Promise.all((JSON.parse(row.tracks) as TrackState[]).map(async (track) => {
-      const sas = await uploadSas(track.blobName)
-      return { track: track.track, blobName: track.blobName, sasUrl: sas.url, expiresAt: sas.expiresAt }
-    }))
-    return json(200, { meetingId: row.id, uploads })
+    const found = await findOwn(oid, id)
+    if (!found) return json(404, { error: 'Meeting not found' })
+    const row = await retryIfFailed(found, context)
+    return json(200, { meetingId: row.id, status: row.status, uploads: await uploadsFor(tracksOf(row.tracks)) })
   } catch (error) { return fail(context, error) }
 }
 
