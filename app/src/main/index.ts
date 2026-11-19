@@ -539,6 +539,7 @@ app.whenReady().then(() => {
   initMeetings(store)
   // the person's own names, never given to the other side: the one in Settings and the Mac's
   const settingsFile = join(userDataDir(), 'settings.json')
+  setCalendarSelection(() => loadSettings(settingsFile))
   const cloudOn = cloudModeEnabled(loadSettings(settingsFile))
   setCalendarOwnEmail(email => {
     try { if (store.rememberOwnEmail(email)) win?.webContents.send('meetings:changed') }

@@ -70,7 +70,7 @@ test('the compact sidebar keeps navigation and folder actions available, includi
     expect(await page.locator('.workspace-sidebar-body').evaluate(el => getComputedStyle(el).overflowX)).toBe('hidden')
     await page.evaluate(() => { document.documentElement.dir = 'rtl' })
     const logoClip = (await page.locator('.workspace-wordmark').boundingBox())!
-    const mark = (await page.getByTestId('wordmark').locator('path').first().boundingBox())!
+    const mark = (await page.getByTestId('wordmark').boundingBox())!
     expect(mark.x).toBeGreaterThanOrEqual(logoClip.x)
     expect(mark.x + mark.width).toBeLessThanOrEqual(logoClip.x + logoClip.width)
 

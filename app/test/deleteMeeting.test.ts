@@ -95,7 +95,7 @@ describe('deleting a meeting', () => {
     expect(s.log).toEqual([`cancel ${m.id}`])
   })
   it('times out without deleting while a writer remains active, then permits retry once it finishes', async () => {
-    vi.useFakeTimers()
+    vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout', 'setInterval', 'clearInterval'] })
     const s = setup(), m = s.make('done')
     let finish!: () => void
     const writing = new Promise<void>((resolve) => { finish = resolve })
@@ -116,6 +116,7 @@ describe('deleting a meeting', () => {
     expect(vi.getTimerCount()).toBe(0)
   })
   it('an unknown or odd id deletes nothing, never a folder outside the meetings', async () => {
+    vi.useRealTimers()
     const s = setup()
     writeFileSync(join(s.root, 'keep.txt'), 'x')
     for (const bad of ['nope', '..', '../keep.txt', '', 42, null]) expect(await deleteMeeting(bad, s.deps)).toBe('missing')

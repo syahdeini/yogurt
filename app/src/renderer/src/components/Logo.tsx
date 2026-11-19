@@ -3,7 +3,8 @@ import wordmarkUrl from '../assets/wordmark.png'
 
 /** The PBN Whisper mark. */
 export function Logo({ size = 28, className = '' }: { size?: number; className?: string }) {
-  return <img data-testid="logo" src={markUrl} alt="" width={size} height={size} className={`shrink-0 ${className}`} draggable={false} />
+  // Explicit CSS size: Tailwind's img rule (max-width 100%, height auto) collapses an image in the widget's absolute pill.
+  return <img data-testid="logo" src={markUrl} alt="" width={size} height={size} style={{ width: size, height: size }} className={`shrink-0 ${className}`} draggable={false} />
 }
 
 /** The wordmark. Sized by its height. */
