@@ -21,7 +21,9 @@ export function createSummaryProvider(env: NodeJS.ProcessEnv = process.env): Sum
       model: deployment,
       messages: [{ role: 'system', content: system }, { role: 'user', content: user }],
       response_format: { type: 'json_object' },
-      max_completion_tokens: 4000,
+      // Reasoning tokens count against this too: gpt-5 on an hour-long transcript can spend several thousand before
+      // it writes a word, and a cap it hits returns an empty summary. Only tokens used are billed.
+      max_completion_tokens: 16000,
       stream: false,
     } as Parameters<AzureOpenAI['chat']['completions']['create']>[0])
     const completion = response as { choices?: Array<{ message?: { content?: string | null } }> }
